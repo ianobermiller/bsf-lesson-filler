@@ -168,9 +168,20 @@ export async function scanForVerses(text: string): Promise<VerseScan[]> {
     return [];
   }
 
+  // Check local storage for cached results
+  const key = `scanForVerses-${text}`;
+  const cached = localStorage.getItem(key);
+  if (cached) {
+    return JSON.parse(cached);
+  }
+
   const result = await fetch(
     `https://api.biblia.com/v1/bible/scan?text=${text}&key=${BIBLIA_API_KEY}`,
   );
   const json = await result.json();
-  return json.results;
+  const verses = json.results;
+
+  localStorage.setItem(key, JSON.stringify(verses));
+
+  return verses;
 }
