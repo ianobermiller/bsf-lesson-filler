@@ -1,6 +1,7 @@
-import {css, cx} from 'emotion';
-import React, {useEffect, useRef, useState} from 'react';
-import {LessonEntry, Study} from './API';
+import {css} from 'emotion';
+import React, {useState} from 'react';
+import {Study} from './API';
+import {LessonListItem} from './LessonListItem';
 
 export function LessonList({
   isExpandedInitially,
@@ -24,7 +25,7 @@ export function LessonList({
           {study.lessons.map(lesson => {
             const isSelected = selectedLessonID === lesson.id;
             return (
-              <LessonItem
+              <LessonListItem
                 key={lesson.id}
                 isSelected={isSelected}
                 lesson={lesson}
@@ -35,39 +36,6 @@ export function LessonList({
         </ul>
       )}
     </div>
-  );
-}
-
-function LessonItem({
-  isSelected,
-  lesson,
-  onSelectLesson,
-}: {
-  isSelected: boolean;
-  lesson: LessonEntry;
-  onSelectLesson: (lessonID: string) => void;
-}): JSX.Element {
-  const ref = useRef<HTMLLIElement>(null);
-  useEffect(() => {
-    if (isSelected) {
-      ref.current && (ref.current as any).scrollIntoViewIfNeeded();
-    }
-  }, [isSelected]);
-  return (
-    <li
-      className={cx(
-        styles.lessonListItem,
-        isSelected && styles.lessonListItemSelected,
-      )}
-      onClick={() => onSelectLesson(lesson.id)}
-      ref={ref}>
-      <h2 className={styles.lessonListItemName}>
-        {lesson.verses} - Lesson {lesson.number}
-      </h2>
-      <div className={styles.lessonListItemDate}>
-        {lesson.date.toLocaleDateString()}
-      </div>
-    </li>
   );
 }
 
@@ -84,23 +52,4 @@ const styles = {
     list-style-type: none;
     padding: 0;
   `,
-  lessonListItem: css`
-    cursor: pointer;
-    padding: 12px 24px;
-
-    &:hover {
-      background: var(--control-background-hover);
-    }
-  `,
-  lessonListItemSelected: css`
-    background: var(--control-background-selected);
-
-    &:hover {
-      background: var(--control-background-selected);
-    }
-  `,
-  lessonListItemName: css`
-    margin: 0 0 4px 0;
-  `,
-  lessonListItemDate: css``,
 };
