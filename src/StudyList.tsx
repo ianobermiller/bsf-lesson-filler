@@ -1,3 +1,4 @@
+import { css } from "emotion";
 import React from "react";
 import { Study } from "./API";
 import { LessonList } from "./LessonList";
@@ -12,7 +13,7 @@ export function StudyList({
   studies: Study[];
 }): JSX.Element {
   return (
-    <div className="StudyList">
+    <div className={styles.studyList}>
       {studies.map((study, index) => (
         <LessonList
           isExpandedInitially={index === 0}
@@ -25,3 +26,11 @@ export function StudyList({
     </div>
   );
 }
+
+const styles = {
+  studyList: css`
+    width: 400px;
+    flex-shrink: 0;
+    overflow: auto;
+  `
+};

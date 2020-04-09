@@ -1,8 +1,8 @@
+import { css } from "emotion";
 import React, { useEffect, useState } from "react";
-import "./App.scss";
-import { Study, fetchStudies } from "./API";
-import { StudyList } from "./StudyList";
+import { fetchStudies, Study } from "./API";
 import { LessonEditor } from "./LessonEditor";
+import { StudyList } from "./StudyList";
 
 function App() {
   const [studies, setStudies] = useState<Study[] | null>(null);
@@ -23,7 +23,7 @@ function App() {
   }
 
   return (
-    <div className="App">
+    <div className={styles.app}>
       <StudyList
         onSelectLesson={setSelectedLessonID}
         selectedLessonID={selectedLessonID}
@@ -33,5 +33,16 @@ function App() {
     </div>
   );
 }
+
+const styles = {
+  app: css`
+    background: #111;
+    color: #eee;
+    font-family: system-ui;
+    display: flex;
+    overflow: hidden;
+    height: 100vh;
+  `
+};
 
 export default App;

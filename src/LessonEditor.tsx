@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { Lesson, fetchLesson } from "./API";
+import { css } from "emotion";
+import React, { useEffect, useState } from "react";
+import { fetchLesson, Lesson } from "./API";
 
 export function LessonEditor({ lessonID }: { lessonID: string }): JSX.Element {
   const [lesson, setLesson] = useState<Lesson | null>(null);
@@ -12,11 +13,11 @@ export function LessonEditor({ lessonID }: { lessonID: string }): JSX.Element {
   }, [lessonID]);
 
   if (!lesson) {
-    return <div className="LessonEditor" />;
+    return <div className={styles.lessonEditor} />;
   }
 
   return (
-    <div className="LessonEditor">
+    <div className={styles.lessonEditor}>
       <h1>Lesson {lesson.id}</h1>
       {Object.entries(lesson.dayQuestions).map(([dayKey, day]) => {
         return (
@@ -36,3 +37,11 @@ export function LessonEditor({ lessonID }: { lessonID: string }): JSX.Element {
     </div>
   );
 }
+
+const styles = {
+  lessonEditor: css`
+    flex: 1 1 auto;
+    padding: 0 24px;
+    overflow: auto;
+  `
+};
