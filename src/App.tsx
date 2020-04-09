@@ -1,24 +1,35 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import "./App.scss";
+import { Study, fetchStudies } from "./API";
+import { StudyList } from "./StudyList";
+import { LessonEditor } from "./LessonEditor";
 
 function App() {
+  const [studies, setStudies] = useState<Study[] | null>(null);
+  const [selectedLessonID, setSelectedLessonID] = useState<string | null>(null);
+  useEffect(() => {
+    fetchStudies().then(studies => {
+      setStudies(studies);
+      setSelectedLessonID(
+        studies
+          .flatMap(s => s.lessons)
+          .find(lesson => lesson.date.getTime() > Date.now())?.id ?? null
+      );
+    });
+  }, []);
+
+  if (!studies) {
+    return null;
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <StudyList
+        onSelectLesson={setSelectedLessonID}
+        selectedLessonID={selectedLessonID}
+        studies={studies}
+      />
+      {selectedLessonID && <LessonEditor lessonID={selectedLessonID} />}
     </div>
   );
 }
