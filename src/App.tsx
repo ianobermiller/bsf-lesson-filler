@@ -40,6 +40,7 @@ const styles = {
     background: var(--background-empty);
     color: var(--content-primary);
     font-family: system-ui;
+    font-size: var(--font-size-m);
     display: flex;
     overflow: hidden;
     height: 100vh;

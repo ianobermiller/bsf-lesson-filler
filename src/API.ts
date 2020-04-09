@@ -109,17 +109,11 @@ export type Lesson = {
   verses: string;
   number: number;
   memoryVerse: string;
-  dayQuestions: {
-    one: LessonDay;
-    two: LessonDay;
-    three: LessonDay;
-    four: LessonDay;
-    five: LessonDay;
-    six: LessonDay;
-  };
+  days: LessonDay[];
 };
 type LessonDay = {
   title: string;
+  note: string;
   questions: Question[];
   readVerse?: Quote[];
 };
@@ -140,12 +134,43 @@ export async function fetchLesson(
   const result = await fetch(`${HOST}/lessons/${lessonID}?lang=eng`, {
     signal,
   });
-  const apiLesson: APILesson = await result.json();
+  const {dayQuestions, ...otherApiLesson}: APILesson = await result.json();
   return {
-    ...apiLesson,
+    ...otherApiLesson,
     verses:
       cachedStudies?.flatMap(s => s.lessons).find(l => l.id === lessonID)
         ?.verses ?? '',
     number: Number(/(\d+$)/.exec(lessonID)?.[1]),
+    days: Object.values(dayQuestions).map(apiDay => {
+      const [title, note] = apiDay.title.split('\n');
+      return {
+        title,
+        note,
+        questions: apiDay.questions,
+        readVerse: apiDay.readVerse,
+      };
+    }),
   };
+}
+
+// default from biblia.com, only works on localhost
+const BIBLIA_API_KEY = 'fd37d8f28e95d3be8cb4fbc37e15e18e';
+
+export type VerseScan = {
+  passage: string;
+  textIndex: number;
+  textLength: number;
+};
+
+export async function scanForVerses(text: string): Promise<VerseScan[]> {
+  // Don't scan if the only number is at the front (like the question number)
+  if (text.match(/^(\d+\.)?\D+$/)) {
+    return [];
+  }
+
+  const result = await fetch(
+    `https://api.biblia.com/v1/bible/scan?text=${text}&key=${BIBLIA_API_KEY}`,
+  );
+  const json = await result.json();
+  return json.results;
 }

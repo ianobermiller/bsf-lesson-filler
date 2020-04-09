@@ -1,6 +1,6 @@
 import {css} from 'emotion';
 import React, {useEffect, useState} from 'react';
-import {fetchLesson, Lesson} from './API';
+import {fetchLesson, Lesson, scanForVerses, VerseScan} from './API';
 
 export function LessonEditor({lessonID}: {lessonID: string}): JSX.Element {
   const [lesson, setLesson] = useState<Lesson | null>(null);
@@ -21,14 +21,17 @@ export function LessonEditor({lessonID}: {lessonID: string}): JSX.Element {
       <h1 className={styles.title}>
         {lesson.verses} - Lesson {lesson.number}
       </h1>
-      {Object.entries(lesson.dayQuestions).map(([dayKey, day]) => {
+      {lesson.days.map((day, index) => {
         return (
-          <div key={dayKey}>
+          <div key={index}>
             <h2 className={styles.dayHeading}>{day.title}</h2>
+            <i>{day.note}</i>
             {day.questions.map(question => {
               return (
                 <div key={question.id}>
-                  <h3 className={styles.question}>{question.questionText}</h3>
+                  <h3 className={styles.question}>
+                    <TextWithBibleVerses text={question.questionText} />
+                  </h3>
                   <textarea className={styles.textarea} />
                 </div>
               );
@@ -38,6 +41,37 @@ export function LessonEditor({lessonID}: {lessonID: string}): JSX.Element {
       })}
     </div>
   );
+}
+
+function TextWithBibleVerses({text}: {text: string}): JSX.Element {
+  const [verses, setVerses] = useState<VerseScan[]>();
+  useEffect(() => {
+    scanForVerses(text).then(setVerses);
+  }, [text]);
+
+  if (!verses?.length) {
+    return <>{text}</>;
+  }
+
+  const parts: (JSX.Element | string)[] = [];
+  let index = 0;
+  for (const verse of verses) {
+    if (index < verse.textIndex) {
+      parts.push(text.slice(index, verse.textIndex));
+    }
+    const endIndex = verse.textIndex + verse.textLength;
+    parts.push(
+      <abbr key={verse.textIndex} title={verse.passage}>
+        {text.slice(verse.textIndex, endIndex)}
+      </abbr>,
+    );
+    index = endIndex;
+  }
+  if (index < text.length) {
+    parts.push(text.slice(index));
+  }
+
+  return <>{parts}</>;
 }
 
 const styles = {
