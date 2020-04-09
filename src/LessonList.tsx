@@ -73,7 +73,7 @@ function LessonItem({
 
 const styles = {
   studyName: css`
-    background: #111;
+    background: var(--background-empty);
     cursor: pointer;
     left: 0;
     padding: 0 24px;
@@ -89,11 +89,15 @@ const styles = {
     padding: 12px 24px;
 
     &:hover {
-      background: #222;
+      background: var(--control-background-hover);
     }
   `,
   lessonListItemSelected: css`
-    background: #222;
+    background: var(--control-background-selected);
+
+    &:hover {
+      background: var(--control-background-selected);
+    }
   `,
   lessonListItemName: css`
     margin: 0 0 4px 0;

@@ -1,6 +1,7 @@
 import {css} from 'emotion';
 import React, {useEffect, useState} from 'react';
 import {fetchStudies, Study} from './API';
+import './Colors';
 import {LessonEditor} from './LessonEditor';
 import {StudyList} from './StudyList';
 
@@ -36,8 +37,8 @@ function App() {
 
 const styles = {
   app: css`
-    background: #111;
-    color: #eee;
+    background: var(--background-empty);
+    color: var(--content-primary);
     font-family: system-ui;
     display: flex;
     overflow: hidden;
