@@ -18,7 +18,9 @@ export function LessonEditor({ lessonID }: { lessonID: string }): JSX.Element {
 
   return (
     <div className={styles.lessonEditor}>
-      <h1>Lesson {lesson.id}</h1>
+      <h1>
+        {lesson.verses} - Lesson {lesson.number}
+      </h1>
       {Object.entries(lesson.dayQuestions).map(([dayKey, day]) => {
         return (
           <div key={dayKey}>

@@ -25,10 +25,11 @@ export type Study = {
   title: string;
 };
 
+let cachedStudies: Study[] | null;
 export async function fetchStudies(): Promise<Study[]> {
   const result = await fetch(`${HOST}/lessons?lang=eng`);
   const json = await result.json();
-  return json.booklist.map((study: APIStudy) => {
+  const studies = json.booklist.map((study: APIStudy) => {
     let title = "";
     let startYear = 2000;
     let endYear = 2000;
@@ -71,6 +72,8 @@ export async function fetchStudies(): Promise<Study[]> {
       })
     };
   });
+  cachedStudies = studies;
+  return studies;
 }
 
 type APILesson = {
@@ -101,7 +104,34 @@ type APIQuote = {
   verse: string;
 };
 
-export type Lesson = APILesson;
+export type Lesson = {
+  id: string;
+  verses: string;
+  number: number;
+  memoryVerse: string;
+  dayQuestions: {
+    one: LessonDay;
+    two: LessonDay;
+    three: LessonDay;
+    four: LessonDay;
+    five: LessonDay;
+    six: LessonDay;
+  };
+};
+type LessonDay = {
+  title: string;
+  questions: Question[];
+  readVerse?: Quote[];
+};
+type Question = {
+  id: string;
+  questionText: string;
+  quotes: Quote;
+};
+type Quote = {
+  book: string;
+  verse: string;
+};
 
 export async function fetchLesson(
   lessonID: string,
@@ -110,6 +140,12 @@ export async function fetchLesson(
   const result = await fetch(`${HOST}/lessons/${lessonID}?lang=eng`, {
     signal
   });
-  const json = await result.json();
-  return json;
+  const apiLesson: APILesson = await result.json();
+  return {
+    ...apiLesson,
+    verses:
+      cachedStudies?.flatMap(s => s.lessons).find(l => l.id === lessonID)
+        ?.verses ?? "",
+    number: Number(/(\d+$)/.exec(lessonID)?.[1])
+  };
 }
