@@ -1,12 +1,12 @@
-import { css } from "emotion";
-import React from "react";
-import { Study } from "./API";
-import { LessonList } from "./LessonList";
+import {css} from 'emotion';
+import React from 'react';
+import {Study} from './API';
+import {LessonList} from './LessonList';
 
 export function StudyList({
   onSelectLesson,
   selectedLessonID,
-  studies
+  studies,
 }: {
   onSelectLesson: (lessonID: string) => void;
   selectedLessonID: string | null;
@@ -32,5 +32,5 @@ const styles = {
     width: 400px;
     flex-shrink: 0;
     overflow: auto;
-  `
+  `,
 };

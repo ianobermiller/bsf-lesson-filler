@@ -1,12 +1,12 @@
-import { css, cx } from "emotion";
-import React, { useEffect, useRef, useState } from "react";
-import { LessonEntry, Study } from "./API";
+import {css, cx} from 'emotion';
+import React, {useEffect, useRef, useState} from 'react';
+import {LessonEntry, Study} from './API';
 
 export function LessonList({
   isExpandedInitially,
   onSelectLesson,
   selectedLessonID,
-  study
+  study,
 }: {
   isExpandedInitially: boolean;
   onSelectLesson: (lessonID: string) => void;
@@ -41,7 +41,7 @@ export function LessonList({
 function LessonItem({
   isSelected,
   lesson,
-  onSelectLesson
+  onSelectLesson,
 }: {
   isSelected: boolean;
   lesson: LessonEntry;
@@ -57,11 +57,10 @@ function LessonItem({
     <li
       className={cx(
         styles.lessonListItem,
-        isSelected && styles.lessonListItemSelected
+        isSelected && styles.lessonListItemSelected,
       )}
       onClick={() => onSelectLesson(lesson.id)}
-      ref={ref}
-    >
+      ref={ref}>
       <h2 className={styles.lessonListItemName}>
         {lesson.verses} - Lesson {lesson.number}
       </h2>
@@ -99,5 +98,5 @@ const styles = {
   lessonListItemName: css`
     margin: 0 0 4px 0;
   `,
-  lessonListItemDate: css``
+  lessonListItemDate: css``,
 };

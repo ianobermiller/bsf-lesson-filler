@@ -1,8 +1,8 @@
-import { css } from "emotion";
-import React, { useEffect, useState } from "react";
-import { fetchStudies, Study } from "./API";
-import { LessonEditor } from "./LessonEditor";
-import { StudyList } from "./StudyList";
+import {css} from 'emotion';
+import React, {useEffect, useState} from 'react';
+import {fetchStudies, Study} from './API';
+import {LessonEditor} from './LessonEditor';
+import {StudyList} from './StudyList';
 
 function App() {
   const [studies, setStudies] = useState<Study[] | null>(null);
@@ -13,7 +13,7 @@ function App() {
       setSelectedLessonID(
         studies
           .flatMap(s => s.lessons)
-          .find(lesson => lesson.date.getTime() > Date.now())?.id ?? null
+          .find(lesson => lesson.date.getTime() > Date.now())?.id ?? null,
       );
     });
   }, []);
@@ -42,7 +42,7 @@ const styles = {
     display: flex;
     overflow: hidden;
     height: 100vh;
-  `
+  `,
 };
 
 export default App;

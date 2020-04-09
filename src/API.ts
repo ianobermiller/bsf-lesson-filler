@@ -1,4 +1,4 @@
-const HOST = "https://bsf.turbozv.com";
+const HOST = 'https://bsf.turbozv.com';
 
 type APILessonEntry = {
   id: string;
@@ -30,7 +30,7 @@ export async function fetchStudies(): Promise<Study[]> {
   const result = await fetch(`${HOST}/lessons?lang=eng`);
   const json = await result.json();
   const studies = json.booklist.map((study: APIStudy) => {
-    let title = "";
+    let title = '';
     let startYear = 2000;
     let endYear = 2000;
     const result = /(.*)(\d{4})-(\d{2})/.exec(study.title);
@@ -45,21 +45,21 @@ export async function fetchStudies(): Promise<Study[]> {
       endYear,
       lessons: study.lessons.map((lesson: APILessonEntry) => {
         let number = 0;
-        let verses = "";
+        let verses = '';
         let date = new Date();
         const result = /Lesson(\d+) ([^ ]+) \((\d+)\/(\d+)\)/.exec(lesson.name);
         if (result) {
           number = Number(result[1]);
           verses = result[2]
             // Add spaces between <number><letter>
-            .replace(/(\d)([a-z])/gi, "$1 $2")
+            .replace(/(\d)([a-z])/gi, '$1 $2')
             // Add spaces between <letter><number>
-            .replace(/([a-z])(\d)/gi, "$1 $2");
+            .replace(/([a-z])(\d)/gi, '$1 $2');
           const month = Number(result[3]);
           date = new Date(
             month >= 9 ? startYear : endYear,
             month - 1,
-            Number(result[4])
+            Number(result[4]),
           );
         }
         return {
@@ -67,9 +67,9 @@ export async function fetchStudies(): Promise<Study[]> {
           rawName: lesson.name,
           number,
           verses,
-          date
+          date,
         };
-      })
+      }),
     };
   });
   cachedStudies = studies;
@@ -135,17 +135,17 @@ type Quote = {
 
 export async function fetchLesson(
   lessonID: string,
-  signal: AbortSignal
+  signal: AbortSignal,
 ): Promise<Lesson> {
   const result = await fetch(`${HOST}/lessons/${lessonID}?lang=eng`, {
-    signal
+    signal,
   });
   const apiLesson: APILesson = await result.json();
   return {
     ...apiLesson,
     verses:
       cachedStudies?.flatMap(s => s.lessons).find(l => l.id === lessonID)
-        ?.verses ?? "",
-    number: Number(/(\d+$)/.exec(lessonID)?.[1])
+        ?.verses ?? '',
+    number: Number(/(\d+$)/.exec(lessonID)?.[1]),
   };
 }

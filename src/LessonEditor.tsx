@@ -1,8 +1,8 @@
-import { css } from "emotion";
-import React, { useEffect, useState } from "react";
-import { fetchLesson, Lesson } from "./API";
+import {css} from 'emotion';
+import React, {useEffect, useState} from 'react';
+import {fetchLesson, Lesson} from './API';
 
-export function LessonEditor({ lessonID }: { lessonID: string }): JSX.Element {
+export function LessonEditor({lessonID}: {lessonID: string}): JSX.Element {
   const [lesson, setLesson] = useState<Lesson | null>(null);
   useEffect(() => {
     const controller = new AbortController();
@@ -45,5 +45,5 @@ const styles = {
     flex: 1 1 auto;
     padding: 0 24px;
     overflow: auto;
-  `
+  `,
 };
