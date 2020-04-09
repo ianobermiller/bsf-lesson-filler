@@ -1,3 +1,5 @@
+const HOST = "https://bsf.turbozv.com";
+
 type APILessonEntry = {
   id: string;
   name: string;
@@ -24,7 +26,7 @@ export type Study = {
 };
 
 export async function fetchStudies(): Promise<Study[]> {
-  const result = await fetch("http://bsf.turbozv.com/lessons?lang=eng");
+  const result = await fetch(`${HOST}/lessons?lang=eng`);
   const json = await result.json();
   return json.booklist.map((study: APIStudy) => {
     let title = "";
@@ -105,10 +107,9 @@ export async function fetchLesson(
   lessonID: string,
   signal: AbortSignal
 ): Promise<Lesson> {
-  const result = await fetch(
-    `http://bsf.turbozv.com/lessons/${lessonID}?lang=eng`,
-    { signal }
-  );
+  const result = await fetch(`${HOST}/lessons/${lessonID}?lang=eng`, {
+    signal
+  });
   const json = await result.json();
   return json;
 }
