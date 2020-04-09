@@ -43,7 +43,7 @@ export function LessonEditor({lessonID}: {lessonID: string}): JSX.Element {
 const styles = {
   lessonEditor: css`
     flex: 1 1 auto;
-    padding: 0 var(--l);
+    padding: 0 var(--l) var(--l) var(--l);
     overflow: auto;
   `,
   title: css`
@@ -60,7 +60,11 @@ const styles = {
     background: var(--control-background);
     border-radius: var(--radius-s);
     border: none;
+    color: var(--content-primary);
+    font-family: system-ui;
+    font-size: var(--font-size-m);
     height: 100px;
+    padding: var(--s);
     width: 400px;
   `,
 };
