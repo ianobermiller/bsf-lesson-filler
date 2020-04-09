@@ -18,18 +18,18 @@ export function LessonEditor({lessonID}: {lessonID: string}): JSX.Element {
 
   return (
     <div className={styles.lessonEditor}>
-      <h1>
+      <h1 className={styles.title}>
         {lesson.verses} - Lesson {lesson.number}
       </h1>
       {Object.entries(lesson.dayQuestions).map(([dayKey, day]) => {
         return (
           <div key={dayKey}>
-            <h2>{day.title}</h2>
+            <h2 className={styles.dayHeading}>{day.title}</h2>
             {day.questions.map(question => {
               return (
                 <div key={question.id}>
-                  <h3>{question.questionText}</h3>
-                  <textarea />
+                  <h3 className={styles.question}>{question.questionText}</h3>
+                  <textarea className={styles.textarea} />
                 </div>
               );
             })}
@@ -43,7 +43,24 @@ export function LessonEditor({lessonID}: {lessonID: string}): JSX.Element {
 const styles = {
   lessonEditor: css`
     flex: 1 1 auto;
-    padding: 0 24px;
+    padding: 0 var(--l);
     overflow: auto;
+  `,
+  title: css`
+    font-size: var(--font-size-xl);
+  `,
+  dayHeading: css`
+    font-size: var(--font-size-l);
+  `,
+  question: css`
+    font-size: var(--font-size-m);
+    font-weight: normal;
+  `,
+  textarea: css`
+    background: var(--control-background);
+    border-radius: var(--radius-s);
+    border: none;
+    height: 100px;
+    width: 400px;
   `,
 };

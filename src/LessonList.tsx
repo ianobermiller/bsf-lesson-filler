@@ -43,8 +43,9 @@ const styles = {
   studyName: css`
     background: var(--background-empty);
     cursor: pointer;
+    font-size: var(--font-size-xl);
     left: 0;
-    padding: 0 24px;
+    padding: var(--m) var(--l);
     position: sticky;
     top: 0;
   `,

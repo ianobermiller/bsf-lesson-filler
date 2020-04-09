@@ -25,9 +25,9 @@ export function LessonListItem({
       )}
       onClick={() => onSelectLesson(lesson.id)}
       ref={ref}>
-      <h2 className={styles.lessonListItemName}>
+      <div className={styles.lessonListItemName}>
         {lesson.verses} - Lesson {lesson.number}
-      </h2>
+      </div>
       <div className={styles.lessonListItemDate}>
         {lesson.date.toLocaleDateString()}
       </div>
@@ -38,6 +38,7 @@ export function LessonListItem({
 const styles = {
   lessonListItem: css`
     cursor: pointer;
+    font-size: var(--font-size-l);
     padding: 12px 24px;
 
     &:hover {
@@ -52,7 +53,11 @@ const styles = {
     }
   `,
   lessonListItemName: css`
+    font-weight: bold;
     margin: 0 0 4px 0;
   `,
-  lessonListItemDate: css``,
+  lessonListItemDate: css`
+    color: var(--content-secondary);
+    font-size: var(--font-size-m);
+  `,
 };

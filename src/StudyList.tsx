@@ -29,8 +29,8 @@ export function StudyList({
 
 const styles = {
   studyList: css`
-    width: 400px;
     flex-shrink: 0;
     overflow: auto;
+    width: 300px;
   `,
 };
