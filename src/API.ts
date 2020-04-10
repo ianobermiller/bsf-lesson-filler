@@ -188,10 +188,13 @@ export const scanForVerses = cacheInLocalStorage(
 
 const ESV_API_KEY = 'af6bd99bf499439955bc65857f56eb432ab657ad';
 
-async function fetchVerseHTMLUncached(verse: string): Promise<any> {
+async function fetchVerseHTMLUncached(
+  verse: string,
+  signal: AbortSignal,
+): Promise<any> {
   const result = await fetch(
     `https://api.esv.org/v3/passage/html/?q=${verse}`,
-    {headers: {Authorization: `Token ${ESV_API_KEY}`}},
+    {headers: {Authorization: `Token ${ESV_API_KEY}`}, signal},
   );
   const json = await result.json();
   return json.passages[0];

@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {fetchVerseHTML, scanForVerses, VerseScan} from './API';
+import {scanForVerses, VerseScan} from './API';
 
 export default function TextWithBibleVerses({
   text,
-  verseRef,
+  onVerseClicked,
 }: {
   text: string;
-  verseRef: React.RefObject<HTMLElement>;
+  onVerseClicked: (verse: string) => void;
 }): JSX.Element {
   const [verses, setVerses] = useState<VerseScan[]>();
   useEffect(() => {
@@ -27,11 +27,8 @@ export default function TextWithBibleVerses({
     parts.push(
       <abbr
         key={verse.textIndex}
-        onClick={async () => {
-          const html = await fetchVerseHTML(verse.passage);
-          if (verseRef.current) {
-            verseRef.current.innerHTML = html;
-          }
+        onClick={() => {
+          onVerseClicked(verse.passage);
         }}
         title={verse.passage}>
         {text.slice(verse.textIndex, endIndex)}
