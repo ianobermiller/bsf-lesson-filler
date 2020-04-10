@@ -1,6 +1,15 @@
 import {css} from 'emotion';
-import React, {useEffect, useState} from 'react';
-import {fetchLesson, Lesson, scanForVerses, Study, VerseScan} from './API';
+import React, {useEffect, useRef, useState} from 'react';
+import {
+  fetchLesson,
+  fetchVerseHTML,
+  Lesson,
+  LessonDay,
+  Question,
+  scanForVerses,
+  Study,
+  VerseScan,
+} from './API';
 
 export function LessonEditor({
   lessonID,
@@ -30,29 +39,45 @@ export function LessonEditor({
       <h1 className={styles.title}>
         {verses} - Lesson {lesson.number}
       </h1>
-      {lesson.days.map((day, index) => {
-        return (
-          <div key={index}>
-            <h2 className={styles.dayHeading}>{day.title}</h2>
-            <i>{day.note}</i>
-            {day.questions.map(question => {
-              return (
-                <div key={question.id}>
-                  <h3 className={styles.question}>
-                    <TextWithBibleVerses text={question.questionText} />
-                  </h3>
-                  <textarea className={styles.textarea} />
-                </div>
-              );
-            })}
-          </div>
-        );
-      })}
+      {lesson.days.map((day, index) => (
+        <LessonEditorDay day={day} key={index} />
+      ))}
     </div>
   );
 }
 
-function TextWithBibleVerses({text}: {text: string}): JSX.Element {
+function LessonEditorDay({day}: {day: LessonDay}) {
+  return (
+    <div>
+      <h2 className={styles.dayHeading}>{day.title}</h2>
+      <i>{day.note}</i>
+      {day.questions.map(question => (
+        <LessonEditorQuestion key={question.id} question={question} />
+      ))}
+    </div>
+  );
+}
+
+function LessonEditorQuestion({question}: {question: Question}) {
+  const verseRef = useRef<HTMLDivElement>(null);
+  return (
+    <div key={question.id}>
+      <h3 className={styles.question}>
+        <TextWithBibleVerses text={question.questionText} verseRef={verseRef} />
+      </h3>
+      <div ref={verseRef}></div>
+      <textarea className={styles.textarea} />
+    </div>
+  );
+}
+
+function TextWithBibleVerses({
+  text,
+  verseRef,
+}: {
+  text: string;
+  verseRef: React.RefObject<HTMLElement>;
+}): JSX.Element {
   const [verses, setVerses] = useState<VerseScan[]>();
   useEffect(() => {
     scanForVerses(text).then(setVerses);
@@ -70,7 +95,15 @@ function TextWithBibleVerses({text}: {text: string}): JSX.Element {
     }
     const endIndex = verse.textIndex + verse.textLength;
     parts.push(
-      <abbr key={verse.textIndex} title={verse.passage}>
+      <abbr
+        key={verse.textIndex}
+        onClick={async () => {
+          const html = await fetchVerseHTML(verse.passage);
+          if (verseRef.current) {
+            verseRef.current.innerHTML = html;
+          }
+        }}
+        title={verse.passage}>
         {text.slice(verse.textIndex, endIndex)}
       </abbr>,
     );

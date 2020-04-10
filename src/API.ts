@@ -114,13 +114,13 @@ export type Lesson = {
   memoryVerse: string;
   days: LessonDay[];
 };
-type LessonDay = {
+export type LessonDay = {
   title: string;
   note: string;
   questions: Question[];
   readVerse?: Quote[];
 };
-type Question = {
+export type Question = {
   id: string;
   questionText: string;
   quotes: Quote;
@@ -159,7 +159,7 @@ export const fetchLesson = cacheInLocalStorage(
 );
 
 // default from biblia.com, only works on localhost
-const BIBLIA_API_KEY = 'fd37d8f28e95d3be8cb4fbc37e15e18e';
+const BIBLIA_API_KEY = '873b4ffb8d4aef522fdf4d2274392707';
 
 export type VerseScan = {
   passage: string;
@@ -185,6 +185,17 @@ export const scanForVerses = cacheInLocalStorage(
     }
   },
 );
+
+const ESV_API_KEY = 'af6bd99bf499439955bc65857f56eb432ab657ad';
+
+export async function fetchVerseHTML(verse: string): Promise<any> {
+  const result = await fetch(
+    `https://api.esv.org/v3/passage/html/?q=${verse}`,
+    {headers: {Authorization: `Token ${ESV_API_KEY}`}},
+  );
+  const json = await result.json();
+  return json.passages[0];
+}
 
 function cacheInLocalStorage<
   TReturn,
