@@ -1,3 +1,4 @@
+import {css} from 'emotion';
 import React, {useEffect, useState} from 'react';
 import {scanForVerses, VerseScan} from './API';
 
@@ -26,6 +27,7 @@ export default function TextWithBibleVerses({
     const endIndex = verse.textIndex + verse.textLength;
     parts.push(
       <abbr
+        className={styles.verse}
         key={verse.textIndex}
         onClick={() => {
           onVerseClicked(verse.passage);
@@ -42,3 +44,9 @@ export default function TextWithBibleVerses({
 
   return <>{parts}</>;
 }
+
+const styles = {
+  verse: css`
+    cursor: pointer;
+  `,
+};
