@@ -3,9 +3,14 @@ import React, {useContext} from 'react';
 import {Question} from './API';
 import {SelectedVerseContext} from './LessonEditor';
 import TextWithBibleVerses from './TextWithBibleVerses';
+import useLocalStorage from './useLocalStorage';
 
 export function LessonEditorQuestion({question}: {question: Question}) {
   const setSelectedVerse = useContext(SelectedVerseContext);
+  const [answer, setAnswer] = useLocalStorage<string>(
+    `answer-${question.id}`,
+    '',
+  );
   return (
     <div key={question.id}>
       <h3 className={styles.question}>
@@ -14,7 +19,11 @@ export function LessonEditorQuestion({question}: {question: Question}) {
           onVerseClicked={setSelectedVerse}
         />
       </h3>
-      <textarea className={styles.textarea} />
+      <textarea
+        className={styles.textarea}
+        value={answer}
+        onChange={e => setAnswer(e.currentTarget.value)}
+      />
     </div>
   );
 }
