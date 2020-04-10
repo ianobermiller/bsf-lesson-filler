@@ -45,6 +45,7 @@ const styles = {
     cursor: pointer;
     font-size: var(--font-size-xl);
     left: 0;
+    margin-top: 0;
     padding: var(--m) var(--l);
     position: sticky;
     top: 0;

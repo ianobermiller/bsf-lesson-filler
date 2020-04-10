@@ -91,10 +91,12 @@ const styles = {
       font-weight: normal;
     }
 
+    sup,
     .verse-num {
       font-size: var(--font-size-xs);
       position: relative;
       top: -6px;
+      vertical-align: baseline;
     }
 
     a {
