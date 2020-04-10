@@ -1,8 +1,14 @@
 import {css} from 'emotion';
 import React, {useEffect, useState} from 'react';
-import {fetchLesson, Lesson, scanForVerses, VerseScan} from './API';
+import {fetchLesson, Lesson, scanForVerses, Study, VerseScan} from './API';
 
-export function LessonEditor({lessonID}: {lessonID: string}): JSX.Element {
+export function LessonEditor({
+  lessonID,
+  studies,
+}: {
+  lessonID: string;
+  studies: Study[];
+}): JSX.Element {
   const [lesson, setLesson] = useState<Lesson | null>(null);
   useEffect(() => {
     const controller = new AbortController();
@@ -16,10 +22,13 @@ export function LessonEditor({lessonID}: {lessonID: string}): JSX.Element {
     return <div className={styles.lessonEditor} />;
   }
 
+  const verses = studies?.flatMap(s => s.lessons).find(l => l.id === lessonID)
+    ?.verses;
+
   return (
     <div className={styles.lessonEditor}>
       <h1 className={styles.title}>
-        {lesson.verses} - Lesson {lesson.number}
+        {verses} - Lesson {lesson.number}
       </h1>
       {lesson.days.map((day, index) => {
         return (

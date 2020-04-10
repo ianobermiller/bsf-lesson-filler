@@ -1,3 +1,5 @@
+import serialize from 'serialize-javascript';
+
 const HOST = 'https://bsf.turbozv.com';
 
 type APILessonEntry = {
@@ -25,11 +27,10 @@ export type Study = {
   title: string;
 };
 
-let cachedStudies: Study[] | null;
-export async function fetchStudies(): Promise<Study[]> {
+async function fetchStudiesUncached(): Promise<Study[]> {
   const result = await fetch(`${HOST}/lessons?lang=eng`);
   const json = await result.json();
-  const studies = json.booklist.map((study: APIStudy) => {
+  return json.booklist.map((study: APIStudy) => {
     let title = '';
     let startYear = 2000;
     let endYear = 2000;
@@ -72,9 +73,12 @@ export async function fetchStudies(): Promise<Study[]> {
       }),
     };
   });
-  cachedStudies = studies;
-  return studies;
 }
+
+export const fetchStudies = cacheInLocalStorage(
+  fetchStudiesUncached,
+  () => 'studies',
+);
 
 type APILesson = {
   id: string;
@@ -106,7 +110,6 @@ type APIQuote = {
 
 export type Lesson = {
   id: string;
-  verses: string;
   number: number;
   memoryVerse: string;
   days: LessonDay[];
@@ -127,7 +130,7 @@ type Quote = {
   verse: string;
 };
 
-export async function fetchLesson(
+async function fetchLessonUncached(
   lessonID: string,
   signal: AbortSignal,
 ): Promise<Lesson> {
@@ -137,9 +140,6 @@ export async function fetchLesson(
   const {dayQuestions, ...otherApiLesson}: APILesson = await result.json();
   return {
     ...otherApiLesson,
-    verses:
-      cachedStudies?.flatMap(s => s.lessons).find(l => l.id === lessonID)
-        ?.verses ?? '',
     number: Number(/(\d+$)/.exec(lessonID)?.[1]),
     days: Object.values(dayQuestions).map(apiDay => {
       const [title, note] = apiDay.title.split('\n');
@@ -153,6 +153,11 @@ export async function fetchLesson(
   };
 }
 
+export const fetchLesson = cacheInLocalStorage(
+  fetchLessonUncached,
+  lessonID => `lesson-${lessonID}`,
+);
+
 // default from biblia.com, only works on localhost
 const BIBLIA_API_KEY = 'fd37d8f28e95d3be8cb4fbc37e15e18e';
 
@@ -162,26 +167,52 @@ export type VerseScan = {
   textLength: number;
 };
 
-export async function scanForVerses(text: string): Promise<VerseScan[]> {
-  // Don't scan if the only number is at the front (like the question number)
-  if (text.match(/^(\d+\.)?\D+$/)) {
-    return [];
-  }
-
-  // Check local storage for cached results
-  const key = `scanForVerses-${text}`;
-  const cached = localStorage.getItem(key);
-  if (cached) {
-    return JSON.parse(cached);
-  }
-
+async function scanForVersesUncached(text: string): Promise<VerseScan[]> {
   const result = await fetch(
     `https://api.biblia.com/v1/bible/scan?text=${text}&key=${BIBLIA_API_KEY}`,
   );
   const json = await result.json();
-  const verses = json.results;
+  return json.results;
+}
 
-  localStorage.setItem(key, JSON.stringify(verses));
+export const scanForVerses = cacheInLocalStorage(
+  scanForVersesUncached,
+  (text: string) => `scanForVerses-${text}`,
+  (text: string) => {
+    // Don't scan if the only number is at the front (like the question number)
+    if (text.match(/^(\d+\.)?\D+$/)) {
+      return [];
+    }
+  },
+);
 
-  return verses;
+function cacheInLocalStorage<
+  TReturn,
+  T extends (...args: any[]) => Promise<TReturn>
+>(
+  fetchData: (...args: Parameters<T>) => Promise<TReturn>,
+  getKey: (...args: Parameters<T>) => string,
+  shortCircut?: (...args: Parameters<T>) => TReturn | void,
+): (...args: Parameters<T>) => Promise<TReturn> {
+  return async (...args: Parameters<T>): Promise<TReturn> => {
+    const shortCircuitResult = shortCircut?.(...args);
+    if (shortCircuitResult !== undefined) {
+      return shortCircuitResult;
+    }
+
+    // Check local storage for cached results
+    const key = getKey(...args);
+    const cached = localStorage.getItem(key);
+    if (cached) {
+      // Recommended way to deserialize from this library
+      // eslint-disable-next-line no-eval
+      return eval(`(${cached})`);
+    }
+
+    const result = await fetchData(...args);
+
+    localStorage.setItem(key, serialize(result));
+
+    return result;
+  };
 }

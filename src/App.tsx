@@ -30,7 +30,9 @@ function App() {
         selectedLessonID={selectedLessonID}
         studies={studies}
       />
-      {selectedLessonID && <LessonEditor lessonID={selectedLessonID} />}
+      {selectedLessonID && (
+        <LessonEditor lessonID={selectedLessonID} studies={studies} />
+      )}
     </div>
   );
 }
