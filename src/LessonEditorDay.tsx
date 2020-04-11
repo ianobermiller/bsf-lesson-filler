@@ -1,18 +1,18 @@
 import {css} from 'emotion';
 import React, {useContext} from 'react';
 import {LessonDay} from './API';
-import {SelectedVerseContext} from './LessonEditor';
+import {SelectedPassageContext} from './LessonEditor';
 import {LessonEditorQuestion} from './LessonEditorQuestion';
-import TextWithBibleVerses from './TextWithBibleVerses';
+import TextWithBibleReferences from './TextWithBibleReferences';
 
 export function LessonEditorDay({day}: {day: LessonDay}) {
-  const setSelectedVerse = useContext(SelectedVerseContext);
+  const setSelectedPassage = useContext(SelectedPassageContext);
   return (
     <div>
       <h2 className={styles.dayHeading}>
-        <TextWithBibleVerses
+        <TextWithBibleReferences
           text={day.title}
-          onVerseClicked={setSelectedVerse}
+          onPassageClicked={setSelectedPassage}
         />
       </h2>
       <i>{day.note}</i>

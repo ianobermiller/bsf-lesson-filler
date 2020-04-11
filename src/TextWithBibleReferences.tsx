@@ -2,12 +2,16 @@ import {css} from 'emotion';
 import React, {useEffect, useState} from 'react';
 import {scanForVerses, VerseScan} from './API';
 
-export default function TextWithBibleVerses({
+/**
+ * Highlights Bible references in the given text, returning chunks of text
+ * interspersed with inline tags, all with no wrapper.
+ **/
+export default function TextWithBibleReferences({
   text,
-  onVerseClicked,
+  onPassageClicked,
 }: {
   text: string;
-  onVerseClicked: (verse: string) => void;
+  onPassageClicked: (verse: string) => void;
 }): JSX.Element {
   const [verses, setVerses] = useState<VerseScan[]>();
   useEffect(() => {
@@ -30,7 +34,7 @@ export default function TextWithBibleVerses({
         className={styles.verse}
         key={verse.textIndex}
         onClick={() => {
-          onVerseClicked(verse.passage);
+          onPassageClicked(verse.passage);
         }}
         title={verse.passage}>
         {text.slice(verse.textIndex, endIndex)}

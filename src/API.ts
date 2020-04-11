@@ -188,7 +188,7 @@ export const scanForVerses = cacheInLocalStorage(
 
 const ESV_API_KEY = 'af6bd99bf499439955bc65857f56eb432ab657ad';
 
-async function fetchVerseHTMLUncached(
+async function fetchESVPassageHTMLUncached(
   verse: string,
   signal: AbortSignal,
 ): Promise<any> {
@@ -200,9 +200,9 @@ async function fetchVerseHTMLUncached(
   return json.passages[0];
 }
 
-export const fetchVerseHTML = cacheInLocalStorage(
-  fetchVerseHTMLUncached,
-  verse => `fetchVersionHTML-${verse}`,
+export const fetchESVPassageHTML = cacheInLocalStorage(
+  fetchESVPassageHTMLUncached,
+  verse => `fetchESVPassageHTML-${verse}`,
 );
 
 function cacheInLocalStorage<

@@ -1,11 +1,11 @@
 import {css} from 'emotion';
 import React, {useEffect, useState} from 'react';
-import {fetchLesson, fetchVerseHTML, Lesson, Study} from './API';
+import {fetchESVPassageHTML, fetchLesson, Lesson, Study} from './API';
 import {LessonEditorDay} from './LessonEditorDay';
 
-export const SelectedVerseContext = React.createContext<(html: string) => void>(
-  () => {},
-);
+export const SelectedPassageContext = React.createContext<
+  (html: string) => void
+>(() => {});
 
 export function LessonEditor({
   lessonID,
@@ -29,7 +29,7 @@ export function LessonEditor({
   useEffect(() => {
     if (selectedVerse) {
       const controller = new AbortController();
-      fetchVerseHTML(selectedVerse, controller.signal).then(setVerseHTML);
+      fetchESVPassageHTML(selectedVerse, controller.signal).then(setVerseHTML);
       return () => {
         controller.abort();
       };
@@ -44,7 +44,7 @@ export function LessonEditor({
     ?.verses;
 
   return (
-    <SelectedVerseContext.Provider value={setSelectedVerse}>
+    <SelectedPassageContext.Provider value={setSelectedVerse}>
       <div className={styles.lessonEditor}>
         <div className={styles.lesson}>
           <h1 className={styles.title}>
@@ -59,7 +59,7 @@ export function LessonEditor({
           dangerouslySetInnerHTML={{__html: verseHTML}}
         />
       </div>
-    </SelectedVerseContext.Provider>
+    </SelectedPassageContext.Provider>
   );
 }
 

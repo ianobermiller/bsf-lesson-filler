@@ -1,12 +1,12 @@
 import {css} from 'emotion';
 import React, {useContext} from 'react';
 import {Question} from './API';
-import {SelectedVerseContext} from './LessonEditor';
-import TextWithBibleVerses from './TextWithBibleVerses';
+import {SelectedPassageContext} from './LessonEditor';
+import TextWithBibleReferences from './TextWithBibleReferences';
 import useLocalStorage from './useLocalStorage';
 
 export function LessonEditorQuestion({question}: {question: Question}) {
-  const setSelectedVerse = useContext(SelectedVerseContext);
+  const setSelectedPassage = useContext(SelectedPassageContext);
   const [answer, setAnswer] = useLocalStorage<string>(
     `answer-${question.id}`,
     '',
@@ -14,9 +14,9 @@ export function LessonEditorQuestion({question}: {question: Question}) {
   return (
     <div key={question.id}>
       <h3 className={styles.question}>
-        <TextWithBibleVerses
+        <TextWithBibleReferences
           text={question.questionText}
-          onVerseClicked={setSelectedVerse}
+          onPassageClicked={setSelectedPassage}
         />
       </h3>
       <textarea
