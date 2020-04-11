@@ -1,6 +1,6 @@
 import {css} from 'emotion';
 import React, {useEffect, useState} from 'react';
-import {scanForVerses, VerseScan} from '../api/PassageAPI';
+import {ReferenceResult, scanForReferences} from '../api/ReferencesAPI';
 
 /**
  * Highlights Bible references in the given text, returning chunks of text
@@ -13,18 +13,18 @@ export default function TextWithBibleReferences({
   text: string;
   onPassageClicked: (verse: string) => void;
 }): JSX.Element {
-  const [verses, setVerses] = useState<VerseScan[]>();
+  const [references, setReferences] = useState<ReferenceResult[]>();
   useEffect(() => {
-    scanForVerses(text).then(setVerses);
+    scanForReferences(text).then(setReferences);
   }, [text]);
 
-  if (!verses?.length) {
+  if (!references?.length) {
     return <>{text}</>;
   }
 
   const parts: (JSX.Element | string)[] = [];
   let index = 0;
-  for (const verse of verses) {
+  for (const verse of references) {
     if (index < verse.textIndex) {
       parts.push(text.slice(index, verse.textIndex));
     }
