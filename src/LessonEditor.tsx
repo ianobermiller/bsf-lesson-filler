@@ -1,6 +1,7 @@
 import {css} from 'emotion';
 import React, {useCallback, useState} from 'react';
 import {fetchLesson, Study} from './API';
+import {FullSizeLoadingIndicator} from './FullSizeLoadingIndicator';
 import {LessonEditorDay} from './LessonEditorDay';
 import {PassageViewer} from './PassageViewer';
 import {useAbortableFetch} from './useAbortableFetch';
@@ -17,14 +18,18 @@ export function LessonEditor({
   studies: Study[];
 }): JSX.Element {
   const [selectedPassage, setSelectedPassage] = useState<string>('');
-  const lesson = useAbortableFetch({
+  const {isLoading, result: lesson} = useAbortableFetch({
     doFetch: useCallback(signal => fetchLesson(lessonID, signal), [lessonID]),
     defaultValue: null,
     shouldFetch: Boolean(lessonID),
   });
 
-  if (!lesson) {
-    return <div className={styles.lessonEditor} />;
+  if (isLoading || !lesson) {
+    return (
+      <div className={styles.lessonEditor}>
+        <FullSizeLoadingIndicator />
+      </div>
+    );
   }
 
   const verses = studies?.flatMap(s => s.lessons).find(l => l.id === lessonID)

@@ -1,6 +1,7 @@
 import {css} from 'emotion';
 import React, {useCallback} from 'react';
 import {fetchESVPassageHTML} from './API';
+import {FullSizeLoadingIndicator} from './FullSizeLoadingIndicator';
 import {useAbortableFetch} from './useAbortableFetch';
 
 export function PassageViewer({
@@ -8,7 +9,7 @@ export function PassageViewer({
 }: {
   selectedPassage: string;
 }): JSX.Element {
-  const passageHTML = useAbortableFetch({
+  const {isLoading, result: passageHTML} = useAbortableFetch({
     doFetch: useCallback(
       signal => fetchESVPassageHTML(selectedPassage, signal),
       [selectedPassage],
@@ -16,6 +17,14 @@ export function PassageViewer({
     defaultValue: '',
     shouldFetch: Boolean(selectedPassage),
   });
+
+  if (isLoading) {
+    return (
+      <div className={styles.passageViewer}>
+        <FullSizeLoadingIndicator />
+      </div>
+    );
+  }
 
   return (
     <div
@@ -30,6 +39,7 @@ const styles = {
     flex: 1 1 0;
     padding: 0 var(--l) var(--l) var(--l);
     overflow: auto;
+    position: relative;
 
     > h2 {
       font-size: var(--font-size-xl);
