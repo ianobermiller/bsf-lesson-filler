@@ -1,11 +1,25 @@
 import {css} from 'emotion';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {fetchESVPassageHTML} from './API';
 
 export function PassageViewer({
-  passageHTML,
+  selectedPassage,
 }: {
-  passageHTML: string;
+  selectedPassage: string;
 }): JSX.Element {
+  const [passageHTML, setVerseHTML] = useState<string>('');
+  useEffect(() => {
+    if (selectedPassage) {
+      const controller = new AbortController();
+      fetchESVPassageHTML(selectedPassage, controller.signal).then(
+        setVerseHTML,
+      );
+      return () => {
+        controller.abort();
+      };
+    }
+  }, [selectedPassage]);
+
   return (
     <div
       className={styles.passageViewer}

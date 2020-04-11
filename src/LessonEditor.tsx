@@ -1,6 +1,6 @@
 import {css} from 'emotion';
 import React, {useEffect, useState} from 'react';
-import {fetchESVPassageHTML, fetchLesson, Lesson, Study} from './API';
+import {fetchLesson, Lesson, Study} from './API';
 import {LessonEditorDay} from './LessonEditorDay';
 import {PassageViewer} from './PassageViewer';
 
@@ -16,8 +16,7 @@ export function LessonEditor({
   studies: Study[];
 }): JSX.Element {
   const [lesson, setLesson] = useState<Lesson | null>(null);
-  const [selectedVerse, setSelectedVerse] = useState<string>('');
-  const [passageHTML, setVerseHTML] = useState<string>('');
+  const [selectedPassage, setSelectedPassage] = useState<string>('');
 
   useEffect(() => {
     const controller = new AbortController();
@@ -27,16 +26,6 @@ export function LessonEditor({
     };
   }, [lessonID]);
 
-  useEffect(() => {
-    if (selectedVerse) {
-      const controller = new AbortController();
-      fetchESVPassageHTML(selectedVerse, controller.signal).then(setVerseHTML);
-      return () => {
-        controller.abort();
-      };
-    }
-  }, [selectedVerse]);
-
   if (!lesson) {
     return <div className={styles.lessonEditor} />;
   }
@@ -45,7 +34,7 @@ export function LessonEditor({
     ?.verses;
 
   return (
-    <SelectedPassageContext.Provider value={setSelectedVerse}>
+    <SelectedPassageContext.Provider value={setSelectedPassage}>
       <div className={styles.lessonEditor}>
         <div className={styles.lesson}>
           <h1 className={styles.title}>
@@ -55,7 +44,7 @@ export function LessonEditor({
             <LessonEditorDay day={day} key={index} />
           ))}
         </div>
-        <PassageViewer passageHTML={passageHTML} />
+        <PassageViewer selectedPassage={selectedPassage} />
       </div>
     </SelectedPassageContext.Provider>
   );
