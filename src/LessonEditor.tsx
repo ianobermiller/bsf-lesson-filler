@@ -2,6 +2,7 @@ import {css} from 'emotion';
 import React, {useEffect, useState} from 'react';
 import {fetchESVPassageHTML, fetchLesson, Lesson, Study} from './API';
 import {LessonEditorDay} from './LessonEditorDay';
+import {PassageViewer} from './PassageViewer';
 
 export const SelectedPassageContext = React.createContext<
   (html: string) => void
@@ -16,7 +17,7 @@ export function LessonEditor({
 }): JSX.Element {
   const [lesson, setLesson] = useState<Lesson | null>(null);
   const [selectedVerse, setSelectedVerse] = useState<string>('');
-  const [verseHTML, setVerseHTML] = useState<string>('');
+  const [passageHTML, setVerseHTML] = useState<string>('');
 
   useEffect(() => {
     const controller = new AbortController();
@@ -54,10 +55,7 @@ export function LessonEditor({
             <LessonEditorDay day={day} key={index} />
           ))}
         </div>
-        <div
-          className={styles.verse}
-          dangerouslySetInnerHTML={{__html: verseHTML}}
-        />
+        <PassageViewer passageHTML={passageHTML} />
       </div>
     </SelectedPassageContext.Provider>
   );
@@ -76,35 +74,5 @@ const styles = {
     flex: 1 1 0;
     overflow: auto;
     padding: 0 var(--l) var(--l) var(--l);
-  `,
-  verse: css`
-    flex: 1 1 0;
-    padding: 0 var(--l) var(--l) var(--l);
-    overflow: auto;
-
-    > h2 {
-      font-size: var(--font-size-xl);
-    }
-
-    small {
-      font-size: var(--font-size-s);
-      font-weight: normal;
-    }
-
-    sup,
-    .verse-num {
-      font-size: var(--font-size-xs);
-      position: relative;
-      top: -6px;
-      vertical-align: baseline;
-    }
-
-    a {
-      color: var(--content-interactive);
-    }
-
-    p {
-      line-height: 1.5;
-    }
   `,
 };
