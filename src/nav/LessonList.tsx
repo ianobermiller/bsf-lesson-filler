@@ -1,7 +1,7 @@
 import {css} from 'emotion';
 import React, {useState} from 'react';
+import {Study} from '../api/StudiesAPI';
 import {LessonListItem} from './LessonListItem';
-import {Study} from './StudiesAPI';
 
 export function LessonList({
   isExpandedInitially,

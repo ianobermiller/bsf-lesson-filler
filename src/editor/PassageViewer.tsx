@@ -1,8 +1,8 @@
 import {css} from 'emotion';
 import React, {useCallback} from 'react';
-import {FullSizeLoadingIndicator} from './FullSizeLoadingIndicator';
-import {fetchESVPassageHTML} from './PassageAPI';
-import {useAbortableFetch} from './useAbortableFetch';
+import {fetchESVPassageHTML} from '../api/PassageAPI';
+import {FullSizeLoadingIndicator} from '../components/FullSizeLoadingIndicator';
+import {useAbortableFetch} from '../hooks/useAbortableFetch';
 
 export function PassageViewer({
   selectedPassage,

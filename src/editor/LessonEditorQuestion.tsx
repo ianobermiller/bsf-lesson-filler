@@ -1,9 +1,9 @@
 import {css} from 'emotion';
 import React, {useContext} from 'react';
-import {Question} from './LessonAPI';
+import {Question} from '../api/LessonAPI';
+import TextWithBibleReferences from '../components/TextWithBibleReferences';
+import useLocalStorage from '../hooks/useLocalStorage';
 import {SelectedPassageContext} from './LessonEditor';
-import TextWithBibleReferences from './TextWithBibleReferences';
-import useLocalStorage from './useLocalStorage';
 
 export function LessonEditorQuestion({question}: {question: Question}) {
   const setSelectedPassage = useContext(SelectedPassageContext);

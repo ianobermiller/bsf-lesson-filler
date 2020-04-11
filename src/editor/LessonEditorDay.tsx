@@ -1,9 +1,9 @@
 import {css} from 'emotion';
 import React, {useContext} from 'react';
-import {LessonDay} from './LessonAPI';
+import {LessonDay} from '../api/LessonAPI';
+import TextWithBibleReferences from '../components/TextWithBibleReferences';
 import {SelectedPassageContext} from './LessonEditor';
 import {LessonEditorQuestion} from './LessonEditorQuestion';
-import TextWithBibleReferences from './TextWithBibleReferences';
 
 export function LessonEditorDay({day}: {day: LessonDay}) {
   const setSelectedPassage = useContext(SelectedPassageContext);

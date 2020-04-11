@@ -1,9 +1,9 @@
 import {css} from 'emotion';
 import React, {useEffect, useState} from 'react';
+import {fetchStudies, Study} from './api/StudiesAPI';
 import './Colors';
-import {LessonEditor} from './LessonEditor';
-import {fetchStudies, Study} from './StudiesAPI';
-import {StudyList} from './StudyList';
+import {LessonEditor} from './editor/LessonEditor';
+import {StudyList} from './nav/StudyList';
 
 function App() {
   const [studies, setStudies] = useState<Study[] | null>(null);

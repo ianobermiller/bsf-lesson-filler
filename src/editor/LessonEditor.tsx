@@ -1,11 +1,11 @@
 import {css} from 'emotion';
 import React, {useCallback, useState} from 'react';
-import {FullSizeLoadingIndicator} from './FullSizeLoadingIndicator';
-import {fetchLesson} from './LessonAPI';
+import {fetchLesson} from '../api/LessonAPI';
+import {Study} from '../api/StudiesAPI';
+import {FullSizeLoadingIndicator} from '../components/FullSizeLoadingIndicator';
+import {useAbortableFetch} from '../hooks/useAbortableFetch';
 import {LessonEditorDay} from './LessonEditorDay';
 import {PassageViewer} from './PassageViewer';
-import {Study} from './StudiesAPI';
-import {useAbortableFetch} from './useAbortableFetch';
 
 export const SelectedPassageContext = React.createContext<
   (html: string) => void

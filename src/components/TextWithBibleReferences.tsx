@@ -1,6 +1,6 @@
 import {css} from 'emotion';
 import React, {useEffect, useState} from 'react';
-import {scanForVerses, VerseScan} from './PassageAPI';
+import {scanForVerses, VerseScan} from '../api/PassageAPI';
 
 /**
  * Highlights Bible references in the given text, returning chunks of text

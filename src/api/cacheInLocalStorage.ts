@@ -1,4 +1,5 @@
 import serialize from 'serialize-javascript';
+
 export function cacheInLocalStorage<
   TReturn,
   T extends (...args: any[]) => Promise<TReturn>
