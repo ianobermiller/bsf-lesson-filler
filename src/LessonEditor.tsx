@@ -1,8 +1,9 @@
 import {css} from 'emotion';
-import React, {useEffect, useState} from 'react';
-import {fetchLesson, Lesson, Study} from './API';
+import React, {useCallback, useState} from 'react';
+import {fetchLesson, Study} from './API';
 import {LessonEditorDay} from './LessonEditorDay';
 import {PassageViewer} from './PassageViewer';
+import {useAbortableFetch} from './useAbortableFetch';
 
 export const SelectedPassageContext = React.createContext<
   (html: string) => void
@@ -15,16 +16,12 @@ export function LessonEditor({
   lessonID: string;
   studies: Study[];
 }): JSX.Element {
-  const [lesson, setLesson] = useState<Lesson | null>(null);
   const [selectedPassage, setSelectedPassage] = useState<string>('');
-
-  useEffect(() => {
-    const controller = new AbortController();
-    fetchLesson(lessonID, controller.signal).then(setLesson);
-    return () => {
-      controller.abort();
-    };
-  }, [lessonID]);
+  const lesson = useAbortableFetch({
+    doFetch: useCallback(signal => fetchLesson(lessonID, signal), [lessonID]),
+    defaultValue: null,
+    shouldFetch: Boolean(lessonID),
+  });
 
   if (!lesson) {
     return <div className={styles.lessonEditor} />;

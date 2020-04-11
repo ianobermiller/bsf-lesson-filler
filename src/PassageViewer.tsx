@@ -1,24 +1,21 @@
 import {css} from 'emotion';
-import React, {useEffect, useState} from 'react';
+import React, {useCallback} from 'react';
 import {fetchESVPassageHTML} from './API';
+import {useAbortableFetch} from './useAbortableFetch';
 
 export function PassageViewer({
   selectedPassage,
 }: {
   selectedPassage: string;
 }): JSX.Element {
-  const [passageHTML, setVerseHTML] = useState<string>('');
-  useEffect(() => {
-    if (selectedPassage) {
-      const controller = new AbortController();
-      fetchESVPassageHTML(selectedPassage, controller.signal).then(
-        setVerseHTML,
-      );
-      return () => {
-        controller.abort();
-      };
-    }
-  }, [selectedPassage]);
+  const passageHTML = useAbortableFetch({
+    doFetch: useCallback(
+      signal => fetchESVPassageHTML(selectedPassage, signal),
+      [selectedPassage],
+    ),
+    defaultValue: '',
+    shouldFetch: Boolean(selectedPassage),
+  });
 
   return (
     <div
