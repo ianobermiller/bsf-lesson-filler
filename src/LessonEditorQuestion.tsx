@@ -1,6 +1,6 @@
 import {css} from 'emotion';
 import React, {useContext} from 'react';
-import {Question} from './API';
+import {Question} from './LessonAPI';
 import {SelectedPassageContext} from './LessonEditor';
 import TextWithBibleReferences from './TextWithBibleReferences';
 import useLocalStorage from './useLocalStorage';

@@ -1,7 +1,7 @@
 import {css} from 'emotion';
 import React, {useCallback} from 'react';
-import {fetchESVPassageHTML} from './API';
 import {FullSizeLoadingIndicator} from './FullSizeLoadingIndicator';
+import {fetchESVPassageHTML} from './PassageAPI';
 import {useAbortableFetch} from './useAbortableFetch';
 
 export function PassageViewer({
@@ -29,7 +29,7 @@ export function PassageViewer({
   return (
     <div
       className={styles.passageViewer}
-      dangerouslySetInnerHTML={{__html: passageHTML}}
+      dangerouslySetInnerHTML={passageHTML ? {__html: passageHTML} : undefined}
     />
   );
 }

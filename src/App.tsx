@@ -1,8 +1,8 @@
 import {css} from 'emotion';
 import React, {useEffect, useState} from 'react';
-import {fetchStudies, Study} from './API';
 import './Colors';
 import {LessonEditor} from './LessonEditor';
+import {fetchStudies, Study} from './StudiesAPI';
 import {StudyList} from './StudyList';
 
 function App() {

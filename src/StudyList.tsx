@@ -1,7 +1,7 @@
 import {css} from 'emotion';
 import React from 'react';
-import {Study} from './API';
 import {LessonList} from './LessonList';
+import {Study} from './StudiesAPI';
 
 export function StudyList({
   onSelectLesson,

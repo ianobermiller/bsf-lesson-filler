@@ -1,6 +1,6 @@
 import {css, cx} from 'emotion';
 import React, {useEffect, useRef} from 'react';
-import {LessonEntry} from './API';
+import {LessonEntry} from './StudiesAPI';
 
 export function LessonListItem({
   isSelected,

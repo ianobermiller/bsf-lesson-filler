@@ -1,9 +1,10 @@
 import {css} from 'emotion';
 import React, {useCallback, useState} from 'react';
-import {fetchLesson, Study} from './API';
 import {FullSizeLoadingIndicator} from './FullSizeLoadingIndicator';
+import {fetchLesson} from './LessonAPI';
 import {LessonEditorDay} from './LessonEditorDay';
 import {PassageViewer} from './PassageViewer';
+import {Study} from './StudiesAPI';
 import {useAbortableFetch} from './useAbortableFetch';
 
 export const SelectedPassageContext = React.createContext<
