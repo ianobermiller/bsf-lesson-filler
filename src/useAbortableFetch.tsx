@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react';
+
 export function useAbortableFetch<TResult>({
   doFetch,
   defaultValue,
