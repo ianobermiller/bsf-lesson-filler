@@ -39,7 +39,7 @@ function App() {
 
 const styles = {
   app: css`
-    background: var(--background-empty);
+    background: var(--background-primary);
     color: var(--content-primary);
     font-family: system-ui;
     font-size: var(--font-size-m);

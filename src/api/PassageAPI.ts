@@ -18,3 +18,22 @@ export const fetchESVPassageHTML = cacheInLocalStorage(
   fetchESVPassageHTMLUncached,
   verse => `fetchESVPassageHTML-${verse}`,
 );
+
+const NLT_API_KEY = '3f0df355-5d09-40bd-a499-8b79e8a83952';
+
+async function fetchNLTPassageHTMLUncached(
+  verse: string,
+  signal: AbortSignal,
+): Promise<string> {
+  const result = await fetch(
+    `http://api.nlt.to/api/passages?ref=${verse}&key=${NLT_API_KEY}`,
+    {signal},
+  );
+  const html = await result.text();
+  return html.replace(/[\s\S]*<body>/, '').replace(/<\/body>[\s\S]*/, '');
+}
+
+export const fetchNLTPassageHTML = cacheInLocalStorage(
+  fetchNLTPassageHTMLUncached,
+  verse => `fetchNLTPassageHTML-${verse}`,
+);
