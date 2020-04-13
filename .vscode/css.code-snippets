@@ -1,0 +1,268 @@
+{
+  "--xs": {"prefix": "--xs", "body": "var(--xs)", "description": "XS Spacing"},
+  "--s": {"prefix": "--s", "body": "var(--s)", "description": "S Spacing"},
+  "--m": {"prefix": "--m", "body": "var(--m)", "description": "M Spacing"},
+  "--l": {"prefix": "--l", "body": "var(--l)", "description": "L Spacing"},
+  "--xl": {"prefix": "--xl", "body": "var(--xl)", "description": "XL Spacing"},
+  "--xxl": {
+    "prefix": "--xxl",
+    "body": "var(--xxl)",
+    "description": "XXL Spacing"
+  },
+  "--font-size-xs": {
+    "prefix": "--font-size-xs",
+    "body": "var(--font-size-xs)",
+    "description": "XS Font Size"
+  },
+  "--font-size-s": {
+    "prefix": "--font-size-s",
+    "body": "var(--font-size-s)",
+    "description": "S Font Size"
+  },
+  "--font-size-m": {
+    "prefix": "--font-size-m",
+    "body": "var(--font-size-m)",
+    "description": "M Font Size"
+  },
+  "--font-size-l": {
+    "prefix": "--font-size-l",
+    "body": "var(--font-size-l)",
+    "description": "L Font Size"
+  },
+  "--font-size-xl": {
+    "prefix": "--font-size-xl",
+    "body": "var(--font-size-xl)",
+    "description": "XL Font Size"
+  },
+  "--radius-s": {
+    "prefix": "--radius-s",
+    "body": "var(--radius-s)",
+    "description": "Radius S"
+  },
+  "--radius-m": {
+    "prefix": "--radius-m",
+    "body": "var(--radius-m)",
+    "description": "Radius M"
+  },
+  "--radius-l": {
+    "prefix": "--radius-l",
+    "body": "var(--radius-l)",
+    "description": "Radius L"
+  },
+  "--background-empty": {
+    "prefix": "--background-empty",
+    "body": "var(--background-empty)",
+    "description": "Background Empty"
+  },
+  "--background-primary": {
+    "prefix": "--background-primary",
+    "body": "var(--background-primary)",
+    "description": "Background Primary"
+  },
+  "--background-secondary": {
+    "prefix": "--background-secondary",
+    "body": "var(--background-secondary)",
+    "description": "Background Secondary"
+  },
+  "--background-tertiary": {
+    "prefix": "--background-tertiary",
+    "body": "var(--background-tertiary)",
+    "description": "Background Tertiary"
+  },
+  "--background-strong": {
+    "prefix": "--background-strong",
+    "body": "var(--background-strong)",
+    "description": "Background Strong"
+  },
+  "--background-inverted": {
+    "prefix": "--background-inverted",
+    "body": "var(--background-inverted)",
+    "description": "Background Inverted"
+  },
+  "--border-primary": {
+    "prefix": "--border-primary",
+    "body": "var(--border-primary)",
+    "description": "Border Primary"
+  },
+  "--border-secondary": {
+    "prefix": "--border-secondary",
+    "body": "var(--border-secondary)",
+    "description": "Border Secondary"
+  },
+  "--border-tertiary": {
+    "prefix": "--border-tertiary",
+    "body": "var(--border-tertiary)",
+    "description": "Border Tertiary"
+  },
+  "--border-disabled": {
+    "prefix": "--border-disabled",
+    "body": "var(--border-disabled)",
+    "description": "Border Disabled"
+  },
+  "--blue-light": {
+    "prefix": "--blue-light",
+    "body": "var(--blue-light)",
+    "description": "Blue Light"
+  },
+  "--blue-light-alpha": {
+    "prefix": "--blue-light-alpha",
+    "body": "var(--blue-light-alpha)",
+    "description": "Blue Light Alpha"
+  },
+  "--blue": {
+    "prefix": "--blue",
+    "body": "var(--blue)",
+    "description": "Blue"
+  },
+  "--blue-dark": {
+    "prefix": "--blue-dark",
+    "body": "var(--blue-dark)",
+    "description": "Blue Dark"
+  },
+  "--content-primary": {
+    "prefix": "--content-primary",
+    "body": "var(--content-primary)",
+    "description": "Content Primary"
+  },
+  "--content-secondary": {
+    "prefix": "--content-secondary",
+    "body": "var(--content-secondary)",
+    "description": "Content Secondary"
+  },
+  "--content-placeholder": {
+    "prefix": "--content-placeholder",
+    "body": "var(--content-placeholder)",
+    "description": "Content Placeholder"
+  },
+  "--content-disabled": {
+    "prefix": "--content-disabled",
+    "body": "var(--content-disabled)",
+    "description": "Content Disabled"
+  },
+  "--content-interactive": {
+    "prefix": "--content-interactive",
+    "body": "var(--content-interactive)",
+    "description": "Content Interactive"
+  },
+  "--content-negative": {
+    "prefix": "--content-negative",
+    "body": "var(--content-negative)",
+    "description": "Content Negative"
+  },
+  "--content-positive": {
+    "prefix": "--content-positive",
+    "body": "var(--content-positive)",
+    "description": "Content Positive"
+  },
+  "--content-inverted": {
+    "prefix": "--content-inverted",
+    "body": "var(--content-inverted)",
+    "description": "Content Inverted"
+  },
+  "--content-warning": {
+    "prefix": "--content-warning",
+    "body": "var(--content-warning)",
+    "description": "Content Warning"
+  },
+  "--control-background": {
+    "prefix": "--control-background",
+    "body": "var(--control-background)",
+    "description": "Control Background"
+  },
+  "--control-background-hover": {
+    "prefix": "--control-background-hover",
+    "body": "var(--control-background-hover)",
+    "description": "Control Background Hover"
+  },
+  "--control-background-active": {
+    "prefix": "--control-background-active",
+    "body": "var(--control-background-active)",
+    "description": "Control Background Active"
+  },
+  "--control-background-disabled": {
+    "prefix": "--control-background-disabled",
+    "body": "var(--control-background-disabled)",
+    "description": "Control Background Disabled"
+  },
+  "--control-background-selected": {
+    "prefix": "--control-background-selected",
+    "body": "var(--control-background-selected)",
+    "description": "Control Background Selected"
+  },
+  "--green-light": {
+    "prefix": "--green-light",
+    "body": "var(--green-light)",
+    "description": "Green Light"
+  },
+  "--green-light-alpha": {
+    "prefix": "--green-light-alpha",
+    "body": "var(--green-light-alpha)",
+    "description": "Green Light Alpha"
+  },
+  "--green": {
+    "prefix": "--green",
+    "body": "var(--green)",
+    "description": "Green"
+  },
+  "--green-dark": {
+    "prefix": "--green-dark",
+    "body": "var(--green-dark)",
+    "description": "Green Dark"
+  },
+  "--purple-light": {
+    "prefix": "--purple-light",
+    "body": "var(--purple-light)",
+    "description": "Purple Light"
+  },
+  "--purple-light-alpha": {
+    "prefix": "--purple-light-alpha",
+    "body": "var(--purple-light-alpha)",
+    "description": "Purple Light Alpha"
+  },
+  "--purple": {
+    "prefix": "--purple",
+    "body": "var(--purple)",
+    "description": "Purple"
+  },
+  "--purple-dark": {
+    "prefix": "--purple-dark",
+    "body": "var(--purple-dark)",
+    "description": "Purple Dark"
+  },
+  "--red-light": {
+    "prefix": "--red-light",
+    "body": "var(--red-light)",
+    "description": "Red Light"
+  },
+  "--red-light-alpha": {
+    "prefix": "--red-light-alpha",
+    "body": "var(--red-light-alpha)",
+    "description": "Red Light Alpha"
+  },
+  "--red": {"prefix": "--red", "body": "var(--red)", "description": "Red"},
+  "--red-dark": {
+    "prefix": "--red-dark",
+    "body": "var(--red-dark)",
+    "description": "Red Dark"
+  },
+  "--yellow-light-alpha": {
+    "prefix": "--yellow-light-alpha",
+    "body": "var(--yellow-light-alpha)",
+    "description": "Yellow Light Alpha"
+  },
+  "--yellow-light": {
+    "prefix": "--yellow-light",
+    "body": "var(--yellow-light)",
+    "description": "Yellow Light"
+  },
+  "--yellow": {
+    "prefix": "--yellow",
+    "body": "var(--yellow)",
+    "description": "Yellow"
+  },
+  "--yellow-dark": {
+    "prefix": "--yellow-dark",
+    "body": "var(--yellow-dark)",
+    "description": "Yellow Dark"
+  }
+}
