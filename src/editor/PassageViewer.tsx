@@ -1,6 +1,6 @@
-import {css, cx} from 'emotion';
-import React, {useCallback} from 'react';
-import {fetchNLTPassageHTML} from '../api/PassageAPI';
+import {css} from 'emotion';
+import React, {useCallback, useState} from 'react';
+import {fetchESVPassageHTML, fetchNLTPassageHTML} from '../api/PassageAPI';
 import {FullSizeLoadingIndicator} from '../components/FullSizeLoadingIndicator';
 import {useAbortableFetch} from '../hooks/useAbortableFetch';
 
@@ -9,28 +9,45 @@ export function PassageViewer({
 }: {
   selectedPassage: string;
 }): JSX.Element {
+  const [bible, setBible] = useState<'esv' | 'nlt'>('esv');
+
   const {isLoading, result: passageHTML} = useAbortableFetch({
     doFetch: useCallback(
-      signal => fetchNLTPassageHTML(selectedPassage, signal),
-      [selectedPassage],
+      signal =>
+        bible === 'esv'
+          ? fetchESVPassageHTML(selectedPassage, signal)
+          : fetchNLTPassageHTML(selectedPassage, signal),
+      [bible, selectedPassage],
     ),
     defaultValue: '',
     shouldFetch: Boolean(selectedPassage),
   });
 
+  let content;
   if (isLoading) {
-    return (
-      <div className={styles.passageViewer}>
-        <FullSizeLoadingIndicator />
-      </div>
+    content = <FullSizeLoadingIndicator />;
+  } else if (passageHTML) {
+    content = (
+      <div
+        dangerouslySetInnerHTML={
+          passageHTML ? {__html: passageHTML} : undefined
+        }
+        className={bible === 'esv' ? styles.esv : styles.nlt}
+      />
     );
   }
 
   return (
-    <div
-      className={cx(styles.passageViewer, styles.nlt)}
-      dangerouslySetInnerHTML={passageHTML ? {__html: passageHTML} : undefined}
-    />
+    <div className={styles.passageViewer}>
+      <button
+        className={styles.switchBibles}
+        onClick={() => {
+          setBible(prevBible => (prevBible === 'esv' ? 'nlt' : 'esv'));
+        }}>
+        Switch to {bible === 'esv' ? 'NLT' : 'ESV'}
+      </button>
+      {content}
+    </div>
   );
 }
 
@@ -40,6 +57,11 @@ const styles = {
     padding: 0 var(--l) var(--l) var(--l);
     overflow: auto;
     position: relative;
+  `,
+  switchBibles: css`
+    position: absolute;
+    right: var(--s);
+    top: var(--s);
   `,
   esv: css`
     > h2 {
@@ -54,18 +76,13 @@ const styles = {
     sup,
     .verse-num {
       font-size: var(--font-size-xs);
-      margin-right: var(--xs);
-      position: relative;
-      top: -6px;
-      vertical-align: baseline;
+      font-weight: bold;
+      padding-right: var(--xs);
+      vertical-align: text-top;
     }
 
     a {
       color: var(--content-interactive);
-    }
-
-    p {
-      line-height: 1.5;
     }
   `,
   nlt: css`
@@ -102,10 +119,10 @@ const styles = {
     }
 
     .vn {
-      vertical-align: text-top;
-      font-size: 75%;
+      font-size: var(--font-size-xs);
       font-weight: bold;
-      padding-right: 0.2em;
+      padding-right: var(--xs);
+      vertical-align: text-top;
     }
 
     .tn {
