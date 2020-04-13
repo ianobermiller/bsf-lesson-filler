@@ -59,6 +59,11 @@ const styles = {
     position: relative;
   `,
   switchBibles: css`
+    background: var(--control-background);
+    border: none;
+    color: var(--content-primary);
+    cursor: pointer;
+    padding: var(--s) var(--m);
     position: absolute;
     right: var(--s);
     top: var(--s);
