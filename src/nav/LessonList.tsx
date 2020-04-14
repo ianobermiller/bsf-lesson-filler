@@ -41,7 +41,7 @@ export function LessonList({
 
 const styles = {
   studyName: css`
-    background: var(--background-empty);
+    background: var(--background-primary);
     cursor: pointer;
     font-size: var(--font-size-xl);
     left: 0;
