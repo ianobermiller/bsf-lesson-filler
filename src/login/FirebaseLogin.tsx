@@ -1,5 +1,5 @@
 import {css} from 'emotion';
-import firebase from 'firebase';
+import firebase from 'firebase/app';
 import * as firebaseui from 'firebaseui';
 import React, {useEffect, useState} from 'react';
 
@@ -22,7 +22,7 @@ export function FirebaseLogin(): JSX.Element {
       autoUpgradeAnonymousUsers: true,
     };
 
-    if (!firebase.auth().currentUser || ui.isPendingRedirect()) {
+    if (ui.isPendingRedirect()) {
       ui.start('#firebaseui-auth-container', uiConfig);
       setIsVisible(true);
     }
@@ -31,6 +31,7 @@ export function FirebaseLogin(): JSX.Element {
       if (user) {
         setIsVisible(false);
       } else {
+        ui.start('#firebaseui-auth-container', uiConfig);
         setIsVisible(true);
       }
     });
