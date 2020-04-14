@@ -3,6 +3,7 @@ import React, {useEffect, useState} from 'react';
 import {fetchStudies, Study} from './api/StudiesAPI';
 import './Colors';
 import {LessonEditor} from './editor/LessonEditor';
+import {FirebaseLogin} from './login/FirebaseLogin';
 import {StudyList} from './nav/StudyList';
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
       {selectedLessonID && (
         <LessonEditor lessonID={selectedLessonID} studies={studies} />
       )}
+      <FirebaseLogin />
     </div>
   );
 }
