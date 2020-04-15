@@ -2,11 +2,12 @@ import {css} from 'emotion';
 import firebase from 'firebase/app';
 import * as firebaseui from 'firebaseui';
 import React, {useEffect, useState} from 'react';
+import {auth} from '../Firebase';
 
 export function FirebaseLogin(): JSX.Element {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   useEffect(() => {
-    const ui = new firebaseui.auth.AuthUI(firebase.auth());
+    const ui = new firebaseui.auth.AuthUI(auth);
     const uiConfig = {
       signInOptions: [
         {
@@ -27,7 +28,7 @@ export function FirebaseLogin(): JSX.Element {
       setIsVisible(true);
     }
 
-    return firebase.auth().onAuthStateChanged(user => {
+    return auth.onAuthStateChanged(user => {
       if (user) {
         setIsVisible(false);
       } else {
