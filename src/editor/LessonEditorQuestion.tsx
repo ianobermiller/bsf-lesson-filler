@@ -1,16 +1,65 @@
+import debounce from 'debounce';
 import {css} from 'emotion';
-import React, {useContext} from 'react';
+import firebase, {User} from 'firebase';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {Question} from '../api/LessonAPI';
 import TextWithBibleReferences from '../components/TextWithBibleReferences';
-import useLocalStorage from '../hooks/useLocalStorage';
+import {app, auth} from '../Firebase';
 import {SelectedPassageContext} from './LessonEditor';
+
+const SAVE_DEBOUNCE_MS = 2000;
+
+const db = firebase.firestore(app);
 
 export function LessonEditorQuestion({question}: {question: Question}) {
   const setSelectedPassage = useContext(SelectedPassageContext);
-  const [answer, setAnswer] = useLocalStorage<string>(
-    `answer-${question.id}`,
-    '',
-  );
+  const currentUser = useCurrentUser();
+  const [answer, setAnswer] = useState<string>('');
+  const lastSavedAnswerRef = useRef<string>(answer);
+
+  // Load data from Firebase
+  useEffect(() => {
+    if (currentUser) {
+      debugger;
+      db.collection('users')
+        .doc(currentUser.uid)
+        .collection('answers')
+        .doc(question.id)
+        .get()
+        .then(result => {
+          if (result.exists) {
+            const answerText = String(result.data()?.answerText);
+            lastSavedAnswerRef.current = answerText;
+            setAnswer(answerText);
+          }
+        });
+    }
+  }, [currentUser, question.id]);
+
+  // Save data to Firebase
+  useEffect(() => {
+    if (currentUser && answer && answer !== lastSavedAnswerRef.current) {
+      lastSavedAnswerRef.current = answer;
+      debounce(() => {
+        db.collection('users')
+          .doc(currentUser.uid)
+          .collection('answers')
+          .doc(question.id)
+          .set(
+            {
+              answerText: answer,
+              uid: currentUser.uid,
+            },
+            {merge: true},
+          );
+      }, SAVE_DEBOUNCE_MS);
+    }
+  }, [answer, currentUser, question.id]);
+
+  function onChange(e: React.FormEvent<HTMLTextAreaElement>) {
+    setAnswer(e.currentTarget.value);
+  }
+
   return (
     <div key={question.id}>
       <h3 className={styles.question}>
@@ -22,10 +71,18 @@ export function LessonEditorQuestion({question}: {question: Question}) {
       <textarea
         className={styles.textarea}
         value={answer}
-        onChange={e => setAnswer(e.currentTarget.value)}
+        onChange={onChange}
       />
     </div>
   );
+}
+
+function useCurrentUser(): User | null {
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  useEffect(() => {
+    return auth.onAuthStateChanged(setCurrentUser);
+  }, []);
+  return currentUser;
 }
 
 const styles = {
