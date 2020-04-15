@@ -3,6 +3,8 @@ import React, {useEffect, useState} from 'react';
 import {fetchStudies, Study} from './api/StudiesAPI';
 import './Colors';
 import {LessonEditor} from './editor/LessonEditor';
+import {db} from './Firebase';
+import {useCurrentUser} from './hooks/useCurrentUser';
 import {FirebaseLogin} from './login/FirebaseLogin';
 import {StudyList} from './nav/StudyList';
 
@@ -20,6 +22,32 @@ function App() {
     });
   }, []);
 
+  // Load data from Firebase
+  const currentUser = useCurrentUser();
+  const [answersByQuestionID, setAnswersByQuestionID] = useState<
+    Map<string, string>
+  >(new Map());
+  useEffect(() => {
+    if (currentUser) {
+      db.collection('users')
+        .doc(currentUser.uid)
+        .collection('answers')
+        .get()
+        .then(querySnapshot => {
+          if (!querySnapshot.empty) {
+            setAnswersByQuestionID(
+              new Map(
+                querySnapshot.docs.map(doc => {
+                  const data = doc.data();
+                  return [doc.id, data.answerText];
+                }),
+              ),
+            );
+          }
+        });
+    }
+  }, [currentUser]);
+
   if (!studies) {
     return null;
   }
@@ -32,7 +60,11 @@ function App() {
         studies={studies}
       />
       {selectedLessonID && (
-        <LessonEditor lessonID={selectedLessonID} studies={studies} />
+        <LessonEditor
+          answersByQuestionID={answersByQuestionID}
+          lessonID={selectedLessonID}
+          studies={studies}
+        />
       )}
       <FirebaseLogin />
     </div>

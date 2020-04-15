@@ -5,7 +5,12 @@ import TextWithBibleReferences from '../components/TextWithBibleReferences';
 import {SelectedPassageContext} from './LessonEditor';
 import {LessonEditorQuestion} from './LessonEditorQuestion';
 
-export function LessonEditorDay({day}: {day: LessonDay}) {
+type Props = {
+  answersByQuestionID: Map<string, string>;
+  day: LessonDay;
+};
+
+export function LessonEditorDay({answersByQuestionID, day}: Props) {
   const setSelectedPassage = useContext(SelectedPassageContext);
   return (
     <div>
@@ -17,7 +22,11 @@ export function LessonEditorDay({day}: {day: LessonDay}) {
       </h2>
       <i>{day.note}</i>
       {day.questions.map(question => (
-        <LessonEditorQuestion key={question.id} question={question} />
+        <LessonEditorQuestion
+          savedAnswer={answersByQuestionID.get(question.id) ?? ''}
+          key={question.id}
+          question={question}
+        />
       ))}
     </div>
   );

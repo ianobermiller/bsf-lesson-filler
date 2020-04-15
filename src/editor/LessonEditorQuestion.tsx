@@ -1,60 +1,33 @@
-import debounce from 'debounce';
 import {css} from 'emotion';
-import firebase, {User} from 'firebase';
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Question} from '../api/LessonAPI';
 import TextWithBibleReferences from '../components/TextWithBibleReferences';
-import {app, auth} from '../Firebase';
+import {db} from '../Firebase';
+import {useCurrentUser} from '../hooks/useCurrentUser';
+import useDebounced from '../hooks/useDebounced';
 import {SelectedPassageContext} from './LessonEditor';
 
 const SAVE_DEBOUNCE_MS = 2000;
 
-const db = firebase.firestore(app);
+type Props = {
+  question: Question;
+  savedAnswer: string;
+};
 
-export function LessonEditorQuestion({question}: {question: Question}) {
+export function LessonEditorQuestion({question, savedAnswer}: Props) {
   const setSelectedPassage = useContext(SelectedPassageContext);
-  const currentUser = useCurrentUser();
-  const [answer, setAnswer] = useState<string>('');
-  const lastSavedAnswerRef = useRef<string>(answer);
+  const [answer, setAnswer] = useState<string>(savedAnswer);
+  const [previousSavedAnswer, setPreviousSavedAnswer] = useState<string>(
+    savedAnswer,
+  );
 
-  // Load data from Firebase
-  useEffect(() => {
-    if (currentUser) {
-      debugger;
-      db.collection('users')
-        .doc(currentUser.uid)
-        .collection('answers')
-        .doc(question.id)
-        .get()
-        .then(result => {
-          if (result.exists) {
-            const answerText = String(result.data()?.answerText);
-            lastSavedAnswerRef.current = answerText;
-            setAnswer(answerText);
-          }
-        });
-    }
-  }, [currentUser, question.id]);
+  if (savedAnswer !== previousSavedAnswer) {
+    setAnswer(savedAnswer);
+    setPreviousSavedAnswer(savedAnswer);
+  }
 
   // Save data to Firebase
-  useEffect(() => {
-    if (currentUser && answer && answer !== lastSavedAnswerRef.current) {
-      lastSavedAnswerRef.current = answer;
-      debounce(() => {
-        db.collection('users')
-          .doc(currentUser.uid)
-          .collection('answers')
-          .doc(question.id)
-          .set(
-            {
-              answerText: answer,
-              uid: currentUser.uid,
-            },
-            {merge: true},
-          );
-      }, SAVE_DEBOUNCE_MS);
-    }
-  }, [answer, currentUser, question.id]);
+  useSaveAnswer({answer, questionID: question.id, savedAnswer});
 
   function onChange(e: React.FormEvent<HTMLTextAreaElement>) {
     setAnswer(e.currentTarget.value);
@@ -77,12 +50,39 @@ export function LessonEditorQuestion({question}: {question: Question}) {
   );
 }
 
-function useCurrentUser(): User | null {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+function useSaveAnswer({
+  answer,
+  questionID,
+  savedAnswer,
+}: {
+  answer: string;
+  questionID: string;
+  savedAnswer: string;
+}) {
+  const currentUser = useCurrentUser();
+  const saveAnswerDebounced = useDebounced(
+    saveAnswerToFirebase,
+    SAVE_DEBOUNCE_MS,
+  );
+
   useEffect(() => {
-    return auth.onAuthStateChanged(setCurrentUser);
-  }, []);
-  return currentUser;
+    if (currentUser && answer && answer !== savedAnswer) {
+      saveAnswerDebounced(currentUser.uid, questionID, answer);
+    }
+  }, [answer, currentUser, questionID, saveAnswerDebounced, savedAnswer]);
+}
+
+function saveAnswerToFirebase(
+  userID: string,
+  questionID: string,
+  answerText: string,
+) {
+  db.collection('users').doc(userID).collection('answers').doc(questionID).set(
+    {
+      answerText,
+    },
+    {merge: true},
+  );
 }
 
 const styles = {

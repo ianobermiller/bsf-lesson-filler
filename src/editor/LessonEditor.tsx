@@ -11,13 +11,17 @@ export const SelectedPassageContext = React.createContext<
   (html: string) => void
 >(() => {});
 
-export function LessonEditor({
-  lessonID,
-  studies,
-}: {
+type Props = {
+  answersByQuestionID: Map<string, string>;
   lessonID: string;
   studies: Study[];
-}): JSX.Element {
+};
+
+export function LessonEditor({
+  answersByQuestionID,
+  lessonID,
+  studies,
+}: Props): JSX.Element {
   const [selectedPassage, setSelectedPassage] = useState<string>('');
   const {isLoading, result: lesson} = useAbortableFetch({
     doFetch: useCallback(signal => fetchLesson(lessonID, signal), [lessonID]),
@@ -44,7 +48,11 @@ export function LessonEditor({
             {verses} - Lesson {lesson.number}
           </h1>
           {lesson.days.map((day, index) => (
-            <LessonEditorDay day={day} key={index} />
+            <LessonEditorDay
+              answersByQuestionID={answersByQuestionID}
+              day={day}
+              key={index}
+            />
           ))}
         </div>
         <PassageViewer selectedPassage={selectedPassage} />
