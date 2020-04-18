@@ -7,8 +7,9 @@ import {LessonEditor} from './editor/LessonEditor';
 import {useCurrentUser} from './hooks/useCurrentUser';
 import {FirebaseLogin} from './login/FirebaseLogin';
 import {StudyList} from './nav/StudyList';
+import TopBar from './TopBar';
 
-function App() {
+export default function App() {
   const [studies, setStudies] = useState<Study[] | null>(null);
   const [selectedLessonID, setSelectedLessonID] = useState<string | null>(null);
   useEffect(() => {
@@ -30,19 +31,22 @@ function App() {
 
   return (
     <div className={styles.app}>
-      <StudyList
-        onSelectLesson={setSelectedLessonID}
-        selectedLessonID={selectedLessonID}
-        studies={studies}
-      />
-      {selectedLessonID && (
-        <LessonEditor
-          answersByQuestionID={answersByQuestionID}
-          lessonID={selectedLessonID}
+      <TopBar />
+      <div className={styles.underTop}>
+        <StudyList
+          onSelectLesson={setSelectedLessonID}
+          selectedLessonID={selectedLessonID}
           studies={studies}
         />
-      )}
-      <FirebaseLogin />
+        {selectedLessonID && (
+          <LessonEditor
+            answersByQuestionID={answersByQuestionID}
+            lessonID={selectedLessonID}
+            studies={studies}
+          />
+        )}
+        <FirebaseLogin />
+      </div>
     </div>
   );
 }
@@ -64,12 +68,19 @@ const styles = {
   app: css`
     background: var(--background-primary);
     color: var(--content-primary);
+    display: flex;
+    flex-direction: column;
     font-family: system-ui;
     font-size: var(--font-size-m);
+    height: 100vh;
+    overflow: hidden;
+  `,
+  top: css`
+    display: flex;
+    flex-shrink: 0;
+  `,
+  underTop: css`
     display: flex;
     overflow: hidden;
-    height: 100vh;
   `,
 };
-
-export default App;
