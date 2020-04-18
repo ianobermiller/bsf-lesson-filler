@@ -10,11 +10,10 @@ export function FirebaseLogin(): JSX.Element {
     const anonymousUser = firebase.auth().currentUser;
     const uiConfig: firebaseui.auth.Config = {
       callbacks: {
-        // signInSuccessWithAuthResult(authResult, redirectUrl) {
-        //   // Process result. This will not trigger on merge conflicts.
-        //   // On success redirect to signInSuccessUrl.
-        //   return true;
-        // },
+        signInSuccessWithAuthResult(authResult, redirectUrl) {
+          // Return false to not redirect
+          return false;
+        },
         // // signInFailure callback must be provided to handle merge conflicts which
         // // occur when an existing credential is linked to an anonymous user.
         // async signInFailure(error) {
@@ -46,27 +45,7 @@ export function FirebaseLogin(): JSX.Element {
       // autoUpgradeAnonymousUsers: false,
     };
 
-    // if (ui.isPendingRedirect()) {
-    //   ui.start('#firebaseui-auth-container', uiConfig);
-    //   setIsVisible(true);
-    // }
-
-    // Confirm the link is a sign-in with email link.
-    if (firebase.auth().isSignInWithEmailLink(window.location.href)) {
-      // The client SDK will parse the code from the link for you.
-      firebase
-        .auth()
-        .signInWithEmailLink('ian@obermillers.com', window.location.href)
-        .then(function (result) {
-          console.log('success', result);
-        })
-        .catch(function (error) {
-          console.log('error', error);
-        });
-    }
-
     return firebase.auth().onAuthStateChanged(user => {
-      console.log({user});
       if (user) {
         setIsVisible(false);
       } else {
@@ -79,9 +58,9 @@ export function FirebaseLogin(): JSX.Element {
   return (
     <div
       className={styles.root}
-      id="firebaseui-auth-container"
-      style={{display: isVisible ? undefined : 'none'}}
-    />
+      style={{display: isVisible ? undefined : 'none'}}>
+      <div id="firebaseui-auth-container" />
+    </div>
   );
 }
 
