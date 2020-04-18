@@ -1,6 +1,7 @@
 import {css} from 'emotion';
 import React, {useCallback, useState} from 'react';
 import {fetchESVPassageHTML, fetchNLTPassageHTML} from '../api/PassageAPI';
+import Button from '../components/Button';
 import {FullSizeLoadingIndicator} from '../components/FullSizeLoadingIndicator';
 import {useAbortableFetch} from '../hooks/useAbortableFetch';
 
@@ -39,13 +40,13 @@ export function PassageViewer({
 
   return (
     <div className={styles.passageViewer}>
-      <button
+      <Button
         className={styles.switchBibles}
         onClick={() => {
           setBible(prevBible => (prevBible === 'esv' ? 'nlt' : 'esv'));
         }}>
         Switch to {bible === 'esv' ? 'NLT' : 'ESV'}
-      </button>
+      </Button>
       {content}
     </div>
   );
@@ -59,11 +60,6 @@ const styles = {
     position: relative;
   `,
   switchBibles: css`
-    background: var(--control-background);
-    border: none;
-    color: var(--content-primary);
-    cursor: pointer;
-    padding: var(--s) var(--m);
     position: absolute;
     right: var(--s);
     top: var(--s);
