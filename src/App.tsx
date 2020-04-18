@@ -7,7 +7,7 @@ import {LessonEditor} from './editor/LessonEditor';
 import {useCurrentUser} from './hooks/useCurrentUser';
 import {FirebaseLogin} from './login/FirebaseLogin';
 import {StudyList} from './nav/StudyList';
-import TopBar from './TopBar';
+import TopBar from './topBar/TopBar';
 
 export default function App() {
   const [studies, setStudies] = useState<Study[] | null>(null);
