@@ -1,8 +1,8 @@
 import {css} from 'emotion';
 import React, {useContext, useEffect, useState} from 'react';
+import {saveAnswer} from '../api/AnswersAPI';
 import {Question} from '../api/LessonAPI';
 import TextWithBibleReferences from '../components/TextWithBibleReferences';
-import {db} from '../Firebase';
 import {useCurrentUser} from '../hooks/useCurrentUser';
 import useDebounced from '../hooks/useDebounced';
 import {SelectedPassageContext} from './LessonEditor';
@@ -60,29 +60,13 @@ function useSaveAnswer({
   savedAnswer: string;
 }) {
   const currentUser = useCurrentUser();
-  const saveAnswerDebounced = useDebounced(
-    saveAnswerToFirebase,
-    SAVE_DEBOUNCE_MS,
-  );
+  const saveAnswerDebounced = useDebounced(saveAnswer, SAVE_DEBOUNCE_MS);
 
   useEffect(() => {
     if (currentUser && answer && answer !== savedAnswer) {
       saveAnswerDebounced(currentUser.uid, questionID, answer);
     }
   }, [answer, currentUser, questionID, saveAnswerDebounced, savedAnswer]);
-}
-
-function saveAnswerToFirebase(
-  userID: string,
-  questionID: string,
-  answerText: string,
-) {
-  db.collection('users').doc(userID).collection('answers').doc(questionID).set(
-    {
-      answerText,
-    },
-    {merge: true},
-  );
 }
 
 const styles = {

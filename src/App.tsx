@@ -1,9 +1,9 @@
 import {css} from 'emotion';
 import React, {useEffect, useState} from 'react';
+import {fetchAnswersByQuestionID} from './api/AnswersAPI';
 import {fetchStudies, Study} from './api/StudiesAPI';
 import './Colors';
 import {LessonEditor} from './editor/LessonEditor';
-import {db} from './Firebase';
 import {useCurrentUser} from './hooks/useCurrentUser';
 import {FirebaseLogin} from './login/FirebaseLogin';
 import {StudyList} from './nav/StudyList';
@@ -22,31 +22,7 @@ function App() {
     });
   }, []);
 
-  // Load data from Firebase
-  const currentUser = useCurrentUser();
-  const [answersByQuestionID, setAnswersByQuestionID] = useState<
-    Map<string, string>
-  >(new Map());
-  useEffect(() => {
-    if (currentUser) {
-      db.collection('users')
-        .doc(currentUser.uid)
-        .collection('answers')
-        .get()
-        .then(querySnapshot => {
-          if (!querySnapshot.empty) {
-            setAnswersByQuestionID(
-              new Map(
-                querySnapshot.docs.map(doc => {
-                  const data = doc.data();
-                  return [doc.id, data.answerText];
-                }),
-              ),
-            );
-          }
-        });
-    }
-  }, [currentUser]);
+  const answersByQuestionID = useFetchAnswersByQuestionID();
 
   if (!studies) {
     return null;
@@ -69,6 +45,19 @@ function App() {
       <FirebaseLogin />
     </div>
   );
+}
+
+function useFetchAnswersByQuestionID(): Map<string, string> {
+  const currentUser = useCurrentUser();
+  const [answersByQuestionID, setAnswersByQuestionID] = useState<
+    Map<string, string>
+  >(new Map());
+  useEffect(() => {
+    if (currentUser) {
+      fetchAnswersByQuestionID(currentUser.uid).then(setAnswersByQuestionID);
+    }
+  }, [currentUser]);
+  return answersByQuestionID;
 }
 
 const styles = {
