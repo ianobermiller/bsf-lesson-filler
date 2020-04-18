@@ -7,34 +7,33 @@ export function FirebaseLogin(): JSX.Element {
   const [isVisible, setIsVisible] = useState<boolean>(false);
   useEffect(() => {
     const ui = new firebaseui.auth.AuthUI(firebase.auth());
-    const anonymousUser = firebase.auth().currentUser;
     const uiConfig: firebaseui.auth.Config = {
       callbacks: {
         signInSuccessWithAuthResult(authResult, redirectUrl) {
           // Return false to not redirect
           return false;
         },
-        // // signInFailure callback must be provided to handle merge conflicts which
-        // // occur when an existing credential is linked to an anonymous user.
-        // async signInFailure(error) {
-        //   // For merge conflicts, the error.code will be
-        //   // 'firebaseui/anonymous-upgrade-merge-conflict'.
-        //   if (
-        //     error.code !== 'firebaseui/anonymous-upgrade-merge-conflict' ||
-        //     !anonymousUser
-        //   ) {
-        //     return Promise.resolve();
-        //   }
-        //   // The credential the user tried to sign in with.
-        //   const cred = error.credential;
-        //   await firebase.auth().signInWithCredential(cred);
-        //   await anonymousUser.delete();
-        // },
+        // signInFailure callback must be provided to handle merge conflicts which
+        // occur when an existing credential is linked to an anonymous user.
+        async signInFailure(error) {
+          const anonymousUser = firebase.auth().currentUser;
+          if (
+            error.code !== 'firebaseui/anonymous-upgrade-merge-conflict' ||
+            !anonymousUser
+          ) {
+            return Promise.resolve();
+          }
+
+          // The credential the user tried to sign in with.
+          const cred = error.credential;
+          await firebase.auth().signInWithCredential(cred);
+          await anonymousUser.delete();
+        },
       },
       signInOptions: [
-        // {
-        //   provider: firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID,
-        // },
+        {
+          provider: firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID,
+        },
         {
           provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
           requireDisplayName: false,
@@ -42,7 +41,7 @@ export function FirebaseLogin(): JSX.Element {
             firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD,
         },
       ],
-      // autoUpgradeAnonymousUsers: false,
+      autoUpgradeAnonymousUsers: true,
     };
 
     return firebase.auth().onAuthStateChanged(user => {
