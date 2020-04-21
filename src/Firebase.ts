@@ -2,7 +2,7 @@ import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
 
-// Initialize Cloud Firestore through Firebase
+// Initialize Cloud Firestore through Firebase, these values are safe to be public
 const firebaseConfig = {
   apiKey: 'AIzaSyDIB_TDku-kof_ni16-YWl9Jb6CZoTzwNA',
   authDomain: 'bsf-lesson-filler.firebaseapp.com',
