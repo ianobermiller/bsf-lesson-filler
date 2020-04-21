@@ -1,6 +1,6 @@
 import {css} from 'emotion';
 import React, {useEffect, useState} from 'react';
-import {fetchAnswersByQuestionID} from './api/AnswersAPI';
+import {subscribeToAnswersByQuestionID} from './api/AnswersAPI';
 import {fetchStudies, Study} from './api/StudiesAPI';
 import './Colors';
 import {LessonEditor} from './editor/LessonEditor';
@@ -21,7 +21,7 @@ export default function App() {
     });
   }, []);
 
-  const answersByQuestionID = useFetchAnswersByQuestionID();
+  const answersByQuestionID = useSubscribeToAnswersByQuestionID();
 
   if (!studies) {
     return null;
@@ -47,14 +47,17 @@ export default function App() {
   );
 }
 
-function useFetchAnswersByQuestionID(): Map<string, string> {
+function useSubscribeToAnswersByQuestionID(): Map<string, string> {
   const currentUser = useCurrentUser();
   const [answersByQuestionID, setAnswersByQuestionID] = useState<
     Map<string, string>
   >(new Map());
   useEffect(() => {
     if (currentUser) {
-      fetchAnswersByQuestionID(currentUser.uid).then(setAnswersByQuestionID);
+      return subscribeToAnswersByQuestionID(
+        currentUser.uid,
+        setAnswersByQuestionID,
+      );
     }
   }, [currentUser]);
   return answersByQuestionID;

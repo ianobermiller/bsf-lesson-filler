@@ -22,6 +22,28 @@ export async function fetchAnswersByQuestionID(
   );
 }
 
+export function subscribeToAnswersByQuestionID(
+  userID: string,
+  onSnapshot: (answers: Map<string, string>) => void,
+): () => void {
+  return db
+    .collection('users')
+    .doc(userID)
+    .collection('answers')
+    .onSnapshot({
+      next(querySnapshot) {
+        onSnapshot(
+          new Map(
+            querySnapshot.docs.map(doc => {
+              const data = doc.data() as Answer;
+              return [doc.id, data.answerText];
+            }),
+          ),
+        );
+      },
+    });
+}
+
 export async function saveAnswer(
   userID: string,
   questionID: string,
