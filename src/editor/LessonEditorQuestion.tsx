@@ -83,7 +83,7 @@ function useSaveAnswer({
   const saveAnswerDebounced = useDebounced(saveAnswer, SAVE_DEBOUNCE_MS);
 
   useEffect(() => {
-    if (currentUser && answer && answer !== savedAnswer) {
+    if (currentUser && answer !== savedAnswer) {
       saveAnswerDebounced(currentUser.uid, questionID, answer);
     }
   }, [answer, currentUser, questionID, saveAnswerDebounced, savedAnswer]);
