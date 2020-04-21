@@ -6,7 +6,6 @@ import './Colors';
 import {LessonEditor} from './editor/LessonEditor';
 import {useCurrentUser} from './hooks/useCurrentUser';
 import {FirebaseLogin} from './login/FirebaseLogin';
-import {StudyList} from './nav/StudyList';
 import TopBar from './topBar/TopBar';
 
 export default function App() {
@@ -31,13 +30,12 @@ export default function App() {
 
   return (
     <div className={styles.app}>
-      <TopBar />
+      <TopBar
+        onSelectLesson={setSelectedLessonID}
+        selectedLessonID={selectedLessonID}
+        studies={studies}
+      />
       <div className={styles.underTop}>
-        <StudyList
-          onSelectLesson={setSelectedLessonID}
-          selectedLessonID={selectedLessonID}
-          studies={studies}
-        />
         {selectedLessonID && (
           <LessonEditor
             answersByQuestionID={answersByQuestionID}

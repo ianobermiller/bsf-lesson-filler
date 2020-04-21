@@ -14,9 +14,12 @@ export default function Button({
 const styles = {
   root: css`
     background: var(--control-background);
+    border-radius: var(--radius-s);
     border: none;
     color: var(--content-primary);
     cursor: pointer;
+    font-family: system-ui;
+    font-size: var(--font-size-m);
     padding: var(--s) var(--m);
   `,
 };
