@@ -22,7 +22,7 @@ export function LessonEditor({
   lessonID,
   studies,
 }: Props): JSX.Element {
-  const [selectedPassage, setSelectedPassage] = useState<string>('');
+  const [selectedPassage, setSelectedPassage] = useState<string | null>(null);
   const {isLoading, result: lesson} = useAbortableFetch({
     doFetch: useCallback(signal => fetchLesson(lessonID, signal), [lessonID]),
     defaultValue: null,
@@ -55,7 +55,7 @@ export function LessonEditor({
             />
           ))}
         </div>
-        <PassageViewer selectedPassage={selectedPassage} />
+        <PassageViewer selectedPassage={selectedPassage ?? verses ?? ''} />
       </div>
     </SelectedPassageContext.Provider>
   );
