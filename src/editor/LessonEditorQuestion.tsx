@@ -1,5 +1,5 @@
 import {css} from 'emotion';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {saveAnswer} from '../api/AnswersAPI';
 import {Question} from '../api/LessonAPI';
 import TextWithBibleReferences from '../components/TextWithBibleReferences';
@@ -17,10 +17,11 @@ type Props = {
 export function LessonEditorQuestion({question, savedAnswer}: Props) {
   const setSelectedPassage = useContext(SelectedPassageContext);
   const [answer, setAnswer] = useState<string>(savedAnswer);
+
+  // Update local answer when a new one is loaded
   const [previousSavedAnswer, setPreviousSavedAnswer] = useState<string>(
     savedAnswer,
   );
-
   if (savedAnswer !== previousSavedAnswer) {
     setAnswer(savedAnswer);
     setPreviousSavedAnswer(savedAnswer);
@@ -28,10 +29,12 @@ export function LessonEditorQuestion({question, savedAnswer}: Props) {
 
   // Save data to Firebase
   useSaveAnswer({answer, questionID: question.id, savedAnswer});
-
   function onChange(e: React.FormEvent<HTMLTextAreaElement>) {
     setAnswer(e.currentTarget.value);
   }
+
+  // Auto resize when answer changes
+  const textAreaRef = useAutoResize(answer);
 
   return (
     <div key={question.id}>
@@ -43,11 +46,28 @@ export function LessonEditorQuestion({question, savedAnswer}: Props) {
       </h3>
       <textarea
         className={styles.textarea}
-        value={answer}
         onChange={onChange}
+        ref={textAreaRef}
+        rows={2}
+        value={answer}
       />
     </div>
   );
+}
+
+function useAutoResize(content: string) {
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+  useEffect(() => {
+    const textArea = textAreaRef.current;
+    if (!textArea) {
+      return;
+    }
+    // Revert to default height
+    textArea.style.height = '';
+    // Set height to scroll height
+    textArea.style.height = textArea.scrollHeight + 'px';
+  }, [content]);
+  return textAreaRef;
 }
 
 function useSaveAnswer({
@@ -82,7 +102,6 @@ const styles = {
     color: var(--content-primary);
     font-family: system-ui;
     font-size: var(--font-size-m);
-    height: 100px;
     padding: var(--s);
     width: 100%;
   `,
