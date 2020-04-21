@@ -5,7 +5,6 @@ import {fetchStudies, Study} from './api/StudiesAPI';
 import './Colors';
 import {LessonEditor} from './editor/LessonEditor';
 import {useCurrentUser} from './hooks/useCurrentUser';
-import {FirebaseLogin} from './login/FirebaseLogin';
 import TopBar from './topBar/TopBar';
 
 export default function App() {
@@ -43,7 +42,6 @@ export default function App() {
             studies={studies}
           />
         )}
-        <FirebaseLogin />
       </div>
     </div>
   );

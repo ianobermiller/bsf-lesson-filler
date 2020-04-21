@@ -1,3 +1,4 @@
+import firebase from 'firebase';
 import {db} from '../Firebase';
 
 type Answer = {
@@ -37,4 +38,32 @@ export async function saveAnswer(
       } as Answer,
       {merge: true},
     );
+}
+
+export async function migrateUser(
+  anonymousUser: firebase.User,
+  newCreds: firebase.auth.AuthCredential,
+): Promise<void> {
+  const anonymousAnswers = await fetchAnswersByQuestionID(anonymousUser.uid);
+  const newUser = await firebase.auth().signInWithCredential(newCreds);
+  if (newUser.user) {
+    const realAnswers = await fetchAnswersByQuestionID(newUser.user.uid);
+    console.log(anonymousAnswers, realAnswers);
+    const batch = db.batch();
+    for (const [questionID, answer] of anonymousAnswers) {
+      const realAnswer = realAnswers.get(questionID);
+      const mergedAnswer = realAnswer ? realAnswer + '\n\n' + answer : answer;
+      batch.set(
+        db
+          .collection('users')
+          .doc(newUser.user.uid)
+          .collection('answers')
+          .doc(questionID),
+        {answerText: mergedAnswer} as Answer,
+        {merge: true},
+      );
+    }
+    await batch.commit();
+  }
+  await anonymousUser.delete();
 }

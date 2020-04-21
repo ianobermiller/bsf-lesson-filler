@@ -1,15 +1,36 @@
 import {css} from 'emotion';
 import firebase from 'firebase/app';
 import * as firebaseui from 'firebaseui';
-import React, {useEffect, useState} from 'react';
+import React, {
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useState,
+} from 'react';
+import {migrateUser} from '../api/AnswersAPI';
+import {auth} from '../Firebase';
 
-export function FirebaseLogin(): JSX.Element {
+export type LoginRef = {
+  hide: () => void;
+  show: () => void;
+};
+
+const ui = new firebaseui.auth.AuthUI(firebase.auth());
+
+type Props = {};
+
+const FirebaseLogin: React.RefForwardingComponent<LoginRef, Props> = (
+  _,
+  ref,
+) => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
-  useEffect(() => {
-    const ui = new firebaseui.auth.AuthUI(firebase.auth());
-    const uiConfig: firebaseui.auth.Config = {
+
+  const uiConfig = useMemo<firebaseui.auth.Config>(() => {
+    return {
       callbacks: {
         signInSuccessWithAuthResult(authResult, redirectUrl) {
+          setIsVisible(false);
           // Return false to not redirect
           return false;
         },
@@ -24,16 +45,11 @@ export function FirebaseLogin(): JSX.Element {
             return Promise.resolve();
           }
 
-          // The credential the user tried to sign in with.
-          const cred = error.credential;
-          await firebase.auth().signInWithCredential(cred);
-          await anonymousUser.delete();
+          migrateUser(anonymousUser, error.credential);
+          setIsVisible(false);
         },
       },
       signInOptions: [
-        {
-          provider: firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID,
-        },
         {
           provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
           requireDisplayName: false,
@@ -43,16 +59,33 @@ export function FirebaseLogin(): JSX.Element {
       ],
       autoUpgradeAnonymousUsers: true,
     };
+  }, []);
+
+  const show = useCallback(() => {
+    ui.start('#firebaseui-auth-container', uiConfig);
+    setIsVisible(true);
+  }, [uiConfig]);
+
+  const hide = useCallback(() => {
+    ui.reset();
+    setIsVisible(false);
+  }, []);
+
+  useEffect(() => {
+    if (ui.isPendingRedirect()) {
+      console.log('showing for pending redirect');
+      show();
+    }
 
     return firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        setIsVisible(false);
-      } else {
-        ui.start('#firebaseui-auth-container', uiConfig);
-        setIsVisible(true);
+      if (!user) {
+        console.log('signing in anonymously');
+        auth.signInAnonymously();
       }
     });
-  }, []);
+  }, [show]);
+
+  useImperativeHandle(ref, () => ({hide, show}));
 
   return (
     <div
@@ -61,7 +94,7 @@ export function FirebaseLogin(): JSX.Element {
       <div id="firebaseui-auth-container" />
     </div>
   );
-}
+};
 
 const styles = {
   root: css`
@@ -71,6 +104,7 @@ const styles = {
     position: fixed;
     right: 0;
     top: 0;
+    z-index: 1;
 
     .firebaseui-id-page-blank,
     .firebaseui-page-provider-sign-in {
@@ -78,3 +112,5 @@ const styles = {
     }
   `,
 };
+
+export default React.forwardRef(FirebaseLogin);
