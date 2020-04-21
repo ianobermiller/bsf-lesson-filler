@@ -1,5 +1,7 @@
 # BSF Lesson Filler
 
+Try it now at https://bsf-lesson-filler.web.app.
+
 Fill out your Bible Study Fellowship Lessons online, with one-click access to
 reference verses. Access your answers wherever you go by logging in with an
 email address.
