@@ -14,6 +14,7 @@ email address.
 - [Biblia.com API](https://bibliaapi.com/docs/) for highlighting verse
   references in text
 - [ESV API](https://api.esv.org) and [NLT API](http://api.nlt.to) for Bible text
+- Dark mode using CSS variables
 
 ## Development
 
