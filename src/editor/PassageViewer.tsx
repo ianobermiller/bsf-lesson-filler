@@ -65,6 +65,8 @@ const styles = {
     top: var(--s);
   `,
   esv: css`
+    line-height: 1.2;
+
     > h2 {
       font-size: var(--font-size-xl);
     }
@@ -78,8 +80,9 @@ const styles = {
     .verse-num {
       font-size: var(--font-size-xs);
       font-weight: bold;
-      padding-right: var(--xs);
-      vertical-align: text-top;
+      vertical-align: baseline;
+      position: relative;
+      top: -4px;
     }
 
     a {

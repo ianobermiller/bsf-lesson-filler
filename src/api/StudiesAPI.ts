@@ -70,6 +70,7 @@ async function fetchStudiesUncached(): Promise<Study[]> {
     };
   });
 }
+
 export const fetchStudies = cacheInLocalStorage(
   fetchStudiesUncached,
   () => 'studies',
