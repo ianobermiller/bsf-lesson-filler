@@ -73,13 +73,11 @@ const FirebaseLogin: React.RefForwardingComponent<LoginRef, Props> = (
 
   useEffect(() => {
     if (ui.isPendingRedirect()) {
-      console.log('showing for pending redirect');
       show();
     }
 
     return firebase.auth().onAuthStateChanged(user => {
       if (!user) {
-        console.log('signing in anonymously');
         auth.signInAnonymously();
       }
     });

@@ -5,14 +5,22 @@ type Answer = {
   answerText: string;
 };
 
+function userDoc(userID: string) {
+  return db.collection('users').doc(userID);
+}
+
+function answersCollection(userID: string) {
+  return userDoc(userID).collection('answers');
+}
+
+function answerDoc(userID: string, questionID: string) {
+  return answersCollection(userID).doc(questionID);
+}
+
 export async function fetchAnswersByQuestionID(
   userID: string,
 ): Promise<Map<string, string>> {
-  const querySnapshot = await db
-    .collection('users')
-    .doc(userID)
-    .collection('answers')
-    .get();
+  const querySnapshot = await answersCollection(userID).get();
 
   return new Map(
     querySnapshot.docs.map(doc => {
@@ -26,22 +34,18 @@ export function subscribeToAnswersByQuestionID(
   userID: string,
   onSnapshot: (answers: Map<string, string>) => void,
 ): () => void {
-  return db
-    .collection('users')
-    .doc(userID)
-    .collection('answers')
-    .onSnapshot({
-      next(querySnapshot) {
-        onSnapshot(
-          new Map(
-            querySnapshot.docs.map(doc => {
-              const data = doc.data() as Answer;
-              return [doc.id, data.answerText];
-            }),
-          ),
-        );
-      },
-    });
+  return answersCollection(userID).onSnapshot({
+    next(querySnapshot) {
+      onSnapshot(
+        new Map(
+          querySnapshot.docs.map(doc => {
+            const data = doc.data() as Answer;
+            return [doc.id, data.answerText];
+          }),
+        ),
+      );
+    },
+  });
 }
 
 export async function saveAnswer(
@@ -49,17 +53,12 @@ export async function saveAnswer(
   questionID: string,
   answerText: string,
 ): Promise<void> {
-  return db
-    .collection('users')
-    .doc(userID)
-    .collection('answers')
-    .doc(questionID)
-    .set(
-      {
-        answerText,
-      } as Answer,
-      {merge: true},
-    );
+  return answerDoc(userID, questionID).set(
+    {
+      answerText,
+    } as Answer,
+    {merge: true},
+  );
 }
 
 export async function migrateUser(
@@ -67,25 +66,32 @@ export async function migrateUser(
   newCreds: firebase.auth.AuthCredential,
 ): Promise<void> {
   const anonymousAnswers = await fetchAnswersByQuestionID(anonymousUser.uid);
-  const newUser = await firebase.auth().signInWithCredential(newCreds);
-  if (newUser.user) {
-    const realAnswers = await fetchAnswersByQuestionID(newUser.user.uid);
-    console.log(anonymousAnswers, realAnswers);
-    const batch = db.batch();
-    for (const [questionID, answer] of anonymousAnswers) {
-      const realAnswer = realAnswers.get(questionID);
-      const mergedAnswer = realAnswer ? realAnswer + '\n\n' + answer : answer;
-      batch.set(
-        db
-          .collection('users')
-          .doc(newUser.user.uid)
-          .collection('answers')
-          .doc(questionID),
-        {answerText: mergedAnswer} as Answer,
-        {merge: true},
-      );
-    }
-    await batch.commit();
+
+  // Delete the anonymous user's data
+  let batch = db.batch();
+  for (const questionID of anonymousAnswers.keys()) {
+    batch.delete(answerDoc(anonymousUser.uid, questionID));
   }
+  batch.delete(userDoc(anonymousUser.uid));
+  await batch.commit();
+
+  // Migrate the anonymous user's data to the real user
+  const newUser = await firebase.auth().signInWithCredential(newCreds);
+  const newUserID = newUser.user!.uid;
+  const realAnswers = await fetchAnswersByQuestionID(newUserID);
+  batch = db.batch();
+  for (const [questionID, anonymousAnswer] of anonymousAnswers) {
+    const realAnswer = realAnswers.get(questionID);
+    const mergedAnswer = realAnswer
+      ? realAnswer + '\n\n' + anonymousAnswer
+      : anonymousAnswer;
+    batch.set(
+      answerDoc(newUserID, questionID),
+      {answerText: mergedAnswer} as Answer,
+      {merge: true},
+    );
+  }
+  await batch.commit();
+
   await anonymousUser.delete();
 }
