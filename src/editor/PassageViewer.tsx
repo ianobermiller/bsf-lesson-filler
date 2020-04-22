@@ -1,5 +1,5 @@
 import {css} from 'emotion';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback} from 'react';
 import {
   fetchESVPassageHTML,
   fetchNIVPassageHTML,
@@ -8,13 +8,17 @@ import {
 import Button from '../components/Button';
 import {FullSizeLoadingIndicator} from '../components/FullSizeLoadingIndicator';
 import {useAbortableFetch} from '../hooks/useAbortableFetch';
+import useLocalStorage from '../hooks/useLocalStorage';
 
 export function PassageViewer({
   selectedPassage,
 }: {
   selectedPassage: string;
 }): JSX.Element {
-  const [bible, setBible] = useState<keyof typeof BIBLES>('niv');
+  const [bible, setBible] = useLocalStorage<keyof typeof BIBLES>(
+    'selectedBible',
+    'niv',
+  );
 
   const {isLoading, result: passageHTML} = useAbortableFetch({
     doFetch: useCallback(
