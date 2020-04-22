@@ -43,7 +43,10 @@ export function PassageViewer({
     <div className={styles.passageViewer}>
       <div className={styles.switchBibles}>
         {(Object.keys(BIBLES) as [keyof typeof BIBLES]).map(key => (
-          <Button isSelected={bible === key} onClick={() => setBible(key)}>
+          <Button
+            key={key}
+            isSelected={bible === key}
+            onClick={() => setBible(key)}>
             <span style={bible === key ? {fontWeight: 'bold'} : undefined}>
               {key.toUpperCase()}
             </span>
