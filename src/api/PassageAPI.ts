@@ -72,7 +72,14 @@ async function fetchNIVPassageHTMLUncached(
   );
   const json = await result.json();
 
-  return json.passage?.data?.content;
+  const data = json.passage?.data;
+  const content = data?.content;
+
+  if (content) {
+    return `<h2>${data?.reference}</h2>${content}`;
+  }
+
+  return '';
 }
 
 export const fetchNIVPassageHTML = cacheInLocalStorage(

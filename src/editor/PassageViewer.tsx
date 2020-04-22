@@ -89,7 +89,7 @@ const BIBLES = {
       line-height: 1.2;
 
       > h2 {
-        font-size: var(--font-size-l);
+        font-size: var(--font-size-xl);
       }
 
       > h3 {
