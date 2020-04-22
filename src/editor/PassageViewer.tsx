@@ -47,9 +47,7 @@ export function PassageViewer({
             key={key}
             isSelected={bible === key}
             onClick={() => setBible(key)}>
-            <span style={bible === key ? {fontWeight: 'bold'} : undefined}>
-              {key.toUpperCase()}
-            </span>
+            {key.toUpperCase()}
           </Button>
         ))}
       </div>
