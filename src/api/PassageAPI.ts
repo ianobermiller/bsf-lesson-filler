@@ -7,7 +7,7 @@ async function fetchESVPassageHTMLUncached(
   signal: AbortSignal,
 ): Promise<string> {
   const result = await fetch(
-    `https://api.esv.org/v3/passage/html/?q=${verse}`,
+    `https://api.esv.org/v3/passage/html/?q=${encodeVerse(verse)}`,
     {headers: {Authorization: `Token ${ESV_API_KEY}`}, signal},
   );
   const json = await result.json();
@@ -26,7 +26,9 @@ async function fetchNLTPassageHTMLUncached(
   signal: AbortSignal,
 ): Promise<string> {
   const result = await fetch(
-    `http://api.nlt.to/api/passages?ref=${verse}&key=${NLT_API_KEY}`,
+    `http://api.nlt.to/api/passages?ref=${encodeVerse(
+      verse,
+    )}&key=${NLT_API_KEY}`,
     {signal},
   );
   const html = await result.text();
@@ -37,3 +39,47 @@ export const fetchNLTPassageHTML = cacheInLocalStorage(
   fetchNLTPassageHTMLUncached,
   verse => `fetchNLTPassageHTML-${verse}`,
 );
+
+const BIBLE_ID = {
+  ASV: '06125adad2d5898a-01',
+  NIV: '78a9f6124f344018-01',
+};
+const API_DOT_BIBLE_KEY = '54ad7ea9f47a0604c78a7feb795af838';
+
+// https://api.scripture.api.bible/v1/bibles/06125adad2d5898a-01/search?query=James%201-2&sort=canonical
+
+async function fetchNIVPassageHTMLUncached(
+  verse: string,
+  signal: AbortSignal,
+): Promise<string> {
+  const idResult = await fetch(
+    `https://api.scripture.api.bible/v1/bibles/${
+      BIBLE_ID.ASV
+    }/search?sort=canonical&query=${encodeVerse(verse)}`,
+    {
+      headers: {
+        'api-key': API_DOT_BIBLE_KEY,
+      },
+      signal,
+    },
+  );
+  const idJson = await idResult.json();
+  const passageID = idJson.data?.passages?.[0]?.id;
+
+  const result = await fetch(
+    `https://bibles.org/site-assets/passages/${passageID}?bibleId=${BIBLE_ID.NIV}`,
+    {signal},
+  );
+  const json = await result.json();
+
+  return json.passage?.data?.content;
+}
+
+export const fetchNIVPassageHTML = cacheInLocalStorage(
+  fetchNIVPassageHTMLUncached,
+  verse => `fetchNIVPassageHTML-${verse}`,
+);
+
+function encodeVerse(verse: string): string {
+  return encodeURIComponent(verse).replace('%E2%80%93', '-');
+}
