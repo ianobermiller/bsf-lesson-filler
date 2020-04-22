@@ -8,7 +8,16 @@ export default function Button({
   React.ButtonHTMLAttributes<HTMLButtonElement>,
   HTMLButtonElement
 >): JSX.Element {
-  return <button {...otherProps} className={cx(styles.root, className)} />;
+  return (
+    <button
+      {...otherProps}
+      className={cx(
+        styles.root,
+        otherProps.disabled && styles.disabled,
+        className,
+      )}
+    />
+  );
 }
 
 const styles = {
@@ -21,5 +30,10 @@ const styles = {
     font-family: system-ui;
     font-size: var(--font-size-m);
     padding: var(--s) var(--m);
+  `,
+  disabled: css`
+    background: var(--control-background-disabled);
+    color: var(--content-disabled);
+    cursor: auto;
   `,
 };

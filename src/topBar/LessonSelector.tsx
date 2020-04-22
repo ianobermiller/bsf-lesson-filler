@@ -1,6 +1,7 @@
 import {css} from 'emotion';
 import React from 'react';
 import {Study} from '../api/StudiesAPI';
+import Button from '../components/Button';
 
 type Props = {
   onSelectLesson: (lessonID: string) => void;
@@ -13,23 +14,43 @@ export default function LessonSelector({
   selectedLessonID,
   studies,
 }: Props) {
+  const lessons = studies.flatMap(s => s.lessons);
+  const currentIndex = lessons.findIndex(l => l.id === selectedLessonID);
+  const previousLessonID = lessons[currentIndex - 1]?.id;
+  const nextLessonID = lessons[currentIndex + 1]?.id;
+
   return (
-    <select
-      className={styles.root}
-      onChange={e => {
-        onSelectLesson(e.currentTarget.value);
-      }}
-      value={selectedLessonID ?? undefined}>
-      {studies.map(study => (
-        <optgroup key={study.title} label={study.title}>
-          {study.lessons.map(lesson => (
-            <option key={lesson.id} value={lesson.id}>
-              {lesson.verses} - Lesson {lesson.number}
-            </option>
-          ))}
-        </optgroup>
-      ))}
-    </select>
+    <div className={styles.root}>
+      <select
+        className={styles.selector}
+        onChange={e => {
+          onSelectLesson(e.currentTarget.value);
+        }}
+        value={selectedLessonID ?? undefined}>
+        {studies.map(study => (
+          <optgroup
+            key={study.title}
+            label={`${study.title} ${study.startYear}-${study.endYear}`}>
+            {study.lessons.map(lesson => (
+              <option key={lesson.id} value={lesson.id}>
+                {lesson.verses} - Lesson {lesson.number} -{' '}
+                {lesson.date.toLocaleDateString()}
+              </option>
+            ))}
+          </optgroup>
+        ))}
+      </select>
+      <Button
+        disabled={!previousLessonID}
+        onClick={() => onSelectLesson(previousLessonID)}>
+        Prev
+      </Button>
+      <Button
+        disabled={!nextLessonID}
+        onClick={() => onSelectLesson(nextLessonID)}>
+        Next
+      </Button>
+    </div>
   );
 }
 
@@ -55,6 +76,11 @@ const SVG_ARROW =
 
 const styles = {
   root: css`
+    > :not(first-child) {
+      margin-left: var(--s);
+    }
+  `,
+  selector: css`
     appearance: none;
     background-color: var(--control-background);
     background-image: url(${SVG_ARROW});
