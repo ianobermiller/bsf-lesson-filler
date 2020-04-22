@@ -1,6 +1,7 @@
 import {css} from 'emotion';
-import React, {useEffect, useState} from 'react';
-import {ReferenceResult, scanForReferences} from '../api/ReferencesAPI';
+import React, {useCallback} from 'react';
+import {scanForReferences} from '../api/ReferencesAPI';
+import {useAbortableFetch} from '../hooks/useAbortableFetch';
 
 /**
  * Highlights Bible references in the given text, returning chunks of text
@@ -13,10 +14,10 @@ export default function TextWithBibleReferences({
   text: string;
   onPassageClicked: (verse: string) => void;
 }): JSX.Element {
-  const [references, setReferences] = useState<ReferenceResult[]>();
-  useEffect(() => {
-    scanForReferences(text).then(setReferences);
-  }, [text]);
+  const {result: references} = useAbortableFetch({
+    doFetch: useCallback(signal => scanForReferences(text, signal), [text]),
+    defaultValue: [],
+  });
 
   if (!references?.length) {
     return <>{text}</>;

@@ -25,9 +25,9 @@ export function useAbortableFetch<TResult>({
       const controller = new AbortController();
       setIsLoading(true);
       doFetch(controller.signal)
-        .then(setResult)
-        .catch(setError)
-        .finally(() => setIsLoading(false));
+        .then(r => !controller.signal.aborted && setResult(r))
+        .catch(err => !controller.signal.aborted && setError(err))
+        .finally(() => !controller.signal.aborted && setIsLoading(false));
 
       return () => {
         controller.abort();

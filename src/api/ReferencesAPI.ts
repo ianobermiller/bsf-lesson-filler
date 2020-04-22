@@ -10,9 +10,11 @@ export type ReferenceResult = {
 
 async function scanForReferencesUncached(
   text: string,
+  signal: AbortSignal,
 ): Promise<ReferenceResult[]> {
   const result = await fetch(
     `https://api.biblia.com/v1/bible/scan?text=${text}&key=${BIBLIA_API_KEY}`,
+    {signal},
   );
   const json = await result.json();
   return json.results;
