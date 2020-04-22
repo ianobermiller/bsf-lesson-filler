@@ -3,17 +3,19 @@ import React from 'react';
 
 export default function Button({
   className,
+  isSelected,
   ...otherProps
 }: React.DetailedHTMLProps<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
   HTMLButtonElement
->): JSX.Element {
+> & {isSelected?: boolean}): JSX.Element {
   return (
     <button
       {...otherProps}
       className={cx(
         styles.root,
         otherProps.disabled && styles.disabled,
+        isSelected && styles.selected,
         className,
       )}
     />
@@ -35,5 +37,8 @@ const styles = {
     background: var(--control-background-disabled);
     color: var(--content-disabled);
     cursor: auto;
+  `,
+  selected: css`
+    background: var(--control-background-selected);
   `,
 };

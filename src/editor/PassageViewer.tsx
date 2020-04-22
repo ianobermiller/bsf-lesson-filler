@@ -43,7 +43,7 @@ export function PassageViewer({
     <div className={styles.passageViewer}>
       <div className={styles.switchBibles}>
         {(Object.keys(BIBLES) as [keyof typeof BIBLES]).map(key => (
-          <Button onClick={() => setBible(key)}>
+          <Button isSelected={bible === key} onClick={() => setBible(key)}>
             <span style={bible === key ? {fontWeight: 'bold'} : undefined}>
               {key.toUpperCase()}
             </span>
@@ -183,5 +183,16 @@ const styles = {
     float: right;
     margin: var(--s) 0 var(--l) var(--l);
     position: relative;
+
+    > :not(:first-child) {
+      border-bottom-left-radius: 0;
+      border-top-left-radius: 0;
+      margin-left: 1px;
+    }
+
+    > :not(:last-child) {
+      border-bottom-right-radius: 0;
+      border-top-right-radius: 0;
+    }
   `,
 };
