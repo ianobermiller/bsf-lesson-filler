@@ -1,5 +1,5 @@
-import firebase from 'firebase';
-import {db} from '../Firebase';
+import firebase from 'firebase/app';
+import {auth, db} from '../Firebase';
 
 type Answer = {
   answerText: string;
@@ -76,7 +76,7 @@ export async function migrateUser(
   await batch.commit();
 
   // Migrate the anonymous user's data to the real user
-  const newUser = await firebase.auth().signInWithCredential(newCreds);
+  const newUser = await auth.signInWithCredential(newCreds);
   const newUserID = newUser.user!.uid;
   const realAnswers = await fetchAnswersByQuestionID(newUserID);
   batch = db.batch();
