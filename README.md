@@ -15,6 +15,7 @@ email address.
   references in text
 - [ESV API](https://api.esv.org) and [NLT API](http://api.nlt.to) for Bible text
 - Dark mode using CSS variables
+- [CatchJS](https://catchjs.com/) for super-lightweight error reporting
 
 ## Development
 
