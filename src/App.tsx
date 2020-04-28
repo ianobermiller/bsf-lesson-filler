@@ -1,4 +1,4 @@
-import {css} from 'emotion';
+import {css, cx} from 'emotion';
 import React, {useEffect, useState} from 'react';
 import {subscribeToAnswersByQuestionID} from './api/AnswersAPI';
 import {fetchStudies, Study} from './api/StudiesAPI';
@@ -28,7 +28,11 @@ export default function App() {
   }
 
   return (
-    <div className={styles.app}>
+    <div
+      className={cx(
+        styles.app,
+        navigator.userAgent.includes('Chrome/81') && styles.chrome81FontFix,
+      )}>
       <TopBar
         onSelectLesson={setSelectedLessonID}
         selectedLessonID={selectedLessonID}
@@ -73,6 +77,9 @@ const styles = {
     font-size: var(--font-size-m);
     height: 100vh;
     overflow: hidden;
+  `,
+  chrome81FontFix: css`
+    font-family: -apple-system, Helvetica;
   `,
   top: css`
     display: flex;
