@@ -2,6 +2,8 @@ import {css} from 'emotion';
 import React from 'react';
 import {Study} from '../api/StudiesAPI';
 import Button from '../components/Button';
+import useMediaQuery from '../hooks/useMediaQuery';
+import {TABLET} from '../styles/MediaQueries';
 
 type Props = {
   onSelectLesson: (lessonID: string) => void;
@@ -14,6 +16,7 @@ export default function LessonSelector({
   selectedLessonID,
   studies,
 }: Props) {
+  const isTablet = useMediaQuery(TABLET);
   const lessons = studies.flatMap(s => s.lessons);
   const currentIndex = lessons.findIndex(l => l.id === selectedLessonID);
   const previousLessonID = lessons[currentIndex - 1]?.id;
@@ -21,25 +24,27 @@ export default function LessonSelector({
 
   return (
     <div className={styles.root}>
-      <select
-        className={styles.selector}
-        onChange={e => {
-          onSelectLesson(e.currentTarget.value);
-        }}
-        value={selectedLessonID ?? undefined}>
-        {studies.map(study => (
-          <optgroup
-            key={study.title}
-            label={`${study.title} ${study.startYear}-${study.endYear}`}>
-            {study.lessons.map(lesson => (
-              <option key={lesson.id} value={lesson.id}>
-                {lesson.verses} - Lesson {lesson.number} -{' '}
-                {lesson.date.toLocaleDateString()}
-              </option>
-            ))}
-          </optgroup>
-        ))}
-      </select>
+      {isTablet && (
+        <select
+          className={styles.selector}
+          onChange={e => {
+            onSelectLesson(e.currentTarget.value);
+          }}
+          value={selectedLessonID ?? undefined}>
+          {studies.map(study => (
+            <optgroup
+              key={study.title}
+              label={`${study.title} ${study.startYear}-${study.endYear}`}>
+              {study.lessons.map(lesson => (
+                <option key={lesson.id} value={lesson.id}>
+                  {lesson.verses} - Lesson {lesson.number} -{' '}
+                  {lesson.date.toLocaleDateString()}
+                </option>
+              ))}
+            </optgroup>
+          ))}
+        </select>
+      )}
       <Button
         disabled={!previousLessonID}
         onClick={() => onSelectLesson(previousLessonID)}>
