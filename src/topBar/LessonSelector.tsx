@@ -96,6 +96,7 @@ const styles = {
     font-family: system-ui;
     font-size: var(--font-size-m);
     margin-left: var(--m);
-    padding: var(--s) var(--m);
+    padding: var(--s) var(--xl) var(--s) var(--m);
+    width: 20em;
   `,
 };
