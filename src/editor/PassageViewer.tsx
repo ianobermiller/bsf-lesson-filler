@@ -186,7 +186,7 @@ const styles = {
   `,
   switchBibles: css`
     float: right;
-    margin: var(--s) 0 var(--l) var(--l);
+    margin: var(--s) calc(var(--m) * -1) var(--l) var(--l);
     position: relative;
 
     > :not(:first-child) {
