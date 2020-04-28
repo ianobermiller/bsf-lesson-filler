@@ -2,9 +2,9 @@ import {css, cx} from 'emotion';
 import React, {useEffect, useState} from 'react';
 import {subscribeToAnswersByQuestionID} from './api/AnswersAPI';
 import {fetchStudies, Study} from './api/StudiesAPI';
-import './Colors';
 import {LessonEditor} from './editor/LessonEditor';
 import {useCurrentUser} from './hooks/useCurrentUser';
+import './styles/Colors';
 import TopBar from './topBar/TopBar';
 
 export default function App() {
