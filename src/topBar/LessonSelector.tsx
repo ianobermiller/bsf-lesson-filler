@@ -48,12 +48,12 @@ export default function LessonSelector({
       <Button
         disabled={!previousLessonID}
         onClick={() => onSelectLesson(previousLessonID)}>
-        Prev
+        {'\u25c0'}
       </Button>
       <Button
         disabled={!nextLessonID}
         onClick={() => onSelectLesson(nextLessonID)}>
-        Next
+        {'\u25b6'}
       </Button>
     </div>
   );

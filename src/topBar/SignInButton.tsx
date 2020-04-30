@@ -3,9 +3,12 @@ import React, {useRef} from 'react';
 import Button from '../components/Button';
 import {auth} from '../Firebase';
 import {useCurrentUser} from '../hooks/useCurrentUser';
+import useMediaQuery from '../hooks/useMediaQuery';
 import FirebaseLogin, {LoginRef} from '../login/FirebaseLogin';
+import {TABLET} from '../styles/MediaQueries';
 
 export default function SignInButton(): JSX.Element | null {
+  const isTablet = useMediaQuery(TABLET);
   const loginRef = useRef<LoginRef | null>(null);
   const currentUser = useCurrentUser();
 
@@ -21,7 +24,7 @@ export default function SignInButton(): JSX.Element | null {
   return (
     <>
       <div className={styles.root}>
-        <div className={styles.email}>{currentUser?.email}</div>
+        {isTablet && <div className={styles.email}>{currentUser?.email}</div>}
         <Button
           onClick={() => {
             if (!currentUser) {
