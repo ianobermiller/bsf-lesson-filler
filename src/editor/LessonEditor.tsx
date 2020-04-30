@@ -4,6 +4,8 @@ import {fetchLesson} from '../api/LessonAPI';
 import {Study} from '../api/StudiesAPI';
 import {FullSizeLoadingIndicator} from '../components/FullSizeLoadingIndicator';
 import {useAbortableFetch} from '../hooks/useAbortableFetch';
+import useMediaQuery from '../hooks/useMediaQuery';
+import {TABLET} from '../styles/MediaQueries';
 import {LessonEditorDay} from './LessonEditorDay';
 import {PassageViewer} from './PassageViewer';
 
@@ -22,6 +24,7 @@ export function LessonEditor({
   lessonID,
   studies,
 }: Props): JSX.Element {
+  const isTablet = useMediaQuery(TABLET);
   const [selectedPassage, setSelectedPassage] = useState<string | null>(null);
   const {isLoading, result: lesson} = useAbortableFetch({
     doFetch: useCallback(signal => fetchLesson(lessonID, signal), [lessonID]),
@@ -55,7 +58,9 @@ export function LessonEditor({
             />
           ))}
         </div>
-        <PassageViewer selectedPassage={selectedPassage ?? verses ?? ''} />
+        {isTablet && (
+          <PassageViewer selectedPassage={selectedPassage ?? verses ?? ''} />
+        )}
       </div>
     </SelectedPassageContext.Provider>
   );
