@@ -1,4 +1,4 @@
-import {css} from 'emotion';
+import {css, cx} from 'emotion';
 import React, {useCallback} from 'react';
 import {
   fetchESVPassageHTML,
@@ -9,6 +9,7 @@ import Button from '../components/Button';
 import {FullSizeLoadingIndicator} from '../components/FullSizeLoadingIndicator';
 import {useAbortableFetch} from '../hooks/useAbortableFetch';
 import useLocalStorage from '../hooks/useLocalStorage';
+import {NOT_TABLET, TABLET} from '../styles/MediaQueries';
 
 export function PassageViewer({
   selectedPassage,
@@ -38,7 +39,7 @@ export function PassageViewer({
         dangerouslySetInnerHTML={
           passageHTML ? {__html: passageHTML} : undefined
         }
-        className={BIBLES[bible].className}
+        className={cx(styles.content, BIBLES[bible].className)}
       />
     );
   }
@@ -180,24 +181,39 @@ const BIBLES = {
 const styles = {
   passageViewer: css`
     flex: 1 1 0;
-    padding: 0 var(--l) var(--l) var(--l);
     overflow: auto;
     position: relative;
   `,
+  content: css`
+    padding: 0 var(--l) var(--l) var(--l);
+  `,
   switchBibles: css`
-    float: right;
-    margin: var(--s) calc(var(--m) * -1) var(--l) var(--l);
-    position: relative;
+    @media ${NOT_TABLET} {
+      display: flex;
 
-    > :not(:first-child) {
-      border-bottom-left-radius: 0;
-      border-top-left-radius: 0;
-      margin-left: 1px;
+      > button {
+        border-radius: 0;
+        flex: 1 1 auto;
+        padding-left: 0;
+        padding-right: 0;
+      }
     }
 
-    > :not(:last-child) {
-      border-bottom-right-radius: 0;
-      border-top-right-radius: 0;
+    @media ${TABLET} {
+      float: right;
+      margin: var(--s) var(--s) var(--l) var(--l);
+      position: relative;
+
+      > :not(:first-child) {
+        border-bottom-left-radius: 0;
+        border-top-left-radius: 0;
+        margin-left: 1px;
+      }
+
+      > :not(:last-child) {
+        border-bottom-right-radius: 0;
+        border-top-right-radius: 0;
+      }
     }
   `,
 };
