@@ -89,5 +89,6 @@ const styles = {
   underTop: css`
     display: flex;
     overflow: hidden;
+    flex: 1 1 auto;
   `,
 };
