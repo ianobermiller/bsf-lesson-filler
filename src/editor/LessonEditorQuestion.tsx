@@ -79,7 +79,7 @@ function useSaveAnswer({
   questionID: string;
   savedAnswer: string;
 }) {
-  const currentUser = useCurrentUser();
+  const {currentUser} = useCurrentUser();
   const saveAnswerDebounced = useDebounced(saveAnswer, SAVE_DEBOUNCE_MS);
 
   useEffect(() => {

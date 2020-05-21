@@ -1,29 +1,15 @@
 import {css} from 'emotion';
 import firebase from 'firebase/app';
 import * as firebaseui from 'firebaseui';
-import React, {
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useState,
-} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {migrateUser} from '../api/AnswersAPI';
 import {auth} from '../Firebase';
 
-export type LoginRef = {
-  hide: () => void;
-  show: () => void;
-};
-
 const ui = new firebaseui.auth.AuthUI(auth);
 
-type Props = {};
+console.log('firebase login loaded');
 
-const FirebaseLogin: React.RefForwardingComponent<LoginRef, Props> = (
-  _,
-  ref,
-) => {
+const FirebaseLogin = () => {
   const [isVisible, setIsVisible] = useState<boolean>(false);
 
   const uiConfig = useMemo<firebaseui.auth.Config>(() => {
@@ -66,11 +52,6 @@ const FirebaseLogin: React.RefForwardingComponent<LoginRef, Props> = (
     setIsVisible(true);
   }, [uiConfig]);
 
-  const hide = useCallback(() => {
-    ui.reset();
-    setIsVisible(false);
-  }, []);
-
   useEffect(() => {
     if (ui.isPendingRedirect()) {
       show();
@@ -82,8 +63,6 @@ const FirebaseLogin: React.RefForwardingComponent<LoginRef, Props> = (
       }
     });
   }, [show]);
-
-  useImperativeHandle(ref, () => ({hide, show}));
 
   return (
     <div
@@ -111,4 +90,4 @@ const styles = {
   `,
 };
 
-export default React.forwardRef(FirebaseLogin);
+export default FirebaseLogin;

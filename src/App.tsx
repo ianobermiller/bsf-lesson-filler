@@ -53,7 +53,7 @@ export default function App() {
 }
 
 function useSubscribeToAnswersByQuestionID(): Map<string, string> {
-  const currentUser = useCurrentUser();
+  const {currentUser} = useCurrentUser();
   const [answersByQuestionID, setAnswersByQuestionID] = useState<
     Map<string, string>
   >(new Map());
