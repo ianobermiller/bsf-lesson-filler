@@ -1,4 +1,5 @@
-import firebase from 'firebase/app';
+import type firebase from 'firebase';
+import type {User} from 'firebase';
 import {auth, db} from '../Firebase';
 
 type Answer = {
@@ -62,7 +63,7 @@ export async function saveAnswer(
 }
 
 export async function migrateUser(
-  anonymousUser: firebase.User,
+  anonymousUser: User,
   newCreds: firebase.auth.AuthCredential,
 ): Promise<void> {
   const anonymousAnswers = await fetchAnswersByQuestionID(anonymousUser.uid);

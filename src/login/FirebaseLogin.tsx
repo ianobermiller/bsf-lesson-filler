@@ -16,7 +16,7 @@ export type LoginRef = {
   show: () => void;
 };
 
-const ui = new firebaseui.auth.AuthUI(firebase.auth());
+const ui = new firebaseui.auth.AuthUI(auth);
 
 type Props = {};
 
@@ -37,7 +37,7 @@ const FirebaseLogin: React.RefForwardingComponent<LoginRef, Props> = (
         // signInFailure callback must be provided to handle merge conflicts which
         // occur when an existing credential is linked to an anonymous user.
         async signInFailure(error) {
-          const anonymousUser = firebase.auth().currentUser;
+          const anonymousUser = auth.currentUser;
           if (
             error.code !== 'firebaseui/anonymous-upgrade-merge-conflict' ||
             !anonymousUser
@@ -76,7 +76,7 @@ const FirebaseLogin: React.RefForwardingComponent<LoginRef, Props> = (
       show();
     }
 
-    return firebase.auth().onAuthStateChanged(user => {
+    return auth.onAuthStateChanged(user => {
       if (!user) {
         auth.signInAnonymously();
       }
