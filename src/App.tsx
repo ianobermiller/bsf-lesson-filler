@@ -13,11 +13,12 @@ export default function App() {
   useEffect(() => {
     fetchStudies().then(studies => {
       setStudies(studies);
-      setSelectedLessonID(
-        studies
-          .flatMap(s => s.lessons)
-          .find(lesson => lesson.date.getTime() > Date.now())?.id ?? null,
+      const allLessons = studies.flatMap(s => s.lessons);
+      const nextLesson = allLessons.find(
+        lesson => lesson.date.getTime() > Date.now(),
       );
+      const selectedLesson = nextLesson ?? studies?.[0].lessons.slice(-1)[0];
+      setSelectedLessonID(selectedLesson?.id ?? null);
     });
   }, []);
 

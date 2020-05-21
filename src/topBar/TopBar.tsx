@@ -1,6 +1,8 @@
 import {css} from 'emotion';
 import React from 'react';
 import {Study} from '../api/StudiesAPI';
+import useMediaQuery from '../hooks/useMediaQuery';
+import {TABLET} from '../styles/MediaQueries';
 import LessonSelector from './LessonSelector';
 import SignInButton from './SignInButton';
 
@@ -11,10 +13,11 @@ type Props = {
 };
 
 export default function TopBar(props: Props) {
+  const isTablet = useMediaQuery(TABLET);
   return (
     <div className={styles.root}>
       <div className={styles.left}>
-        <div className={styles.title}>BSF Lessons</div>
+        <div className={styles.title}>{isTablet ? 'BSF Lessons' : 'BSF'}</div>
         <LessonSelector {...props} />
       </div>
       <SignInButton />
