@@ -19,10 +19,10 @@ injectGlobal`
     --xl: 32px;
     --xxl: 40px;
 
-    --font-size-xs: 10px;
-    --font-size-s: 12px;
-    --font-size-m: 14px;
-    --font-size-l: 16px;
+    --font-size-xs: 12px;
+    --font-size-s: 14px;
+    --font-size-m: 16px;
+    --font-size-l: 18px;
     --font-size-xl: 20px;
 
     --radius-s: 4px;
