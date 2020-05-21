@@ -2,6 +2,7 @@ import {css} from 'emotion';
 import firebase from 'firebase/app';
 import * as firebaseui from 'firebaseui';
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
+import 'firebaseui/dist/firebaseui.css';
 import {migrateUser} from '../api/AnswersAPI';
 import {auth} from '../Firebase';
 
