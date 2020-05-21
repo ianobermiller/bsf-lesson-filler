@@ -11,12 +11,12 @@ export default function useMediaQuery(query: string): boolean {
     }
 
     const matcher = window.matchMedia(query);
-    matcher.addEventListener('change', onMatch);
+    matcher.addListener(onMatch);
 
     onMatch(matcher);
 
     return () => {
-      matcher.removeEventListener('change', onMatch);
+      matcher.removeListener(onMatch);
     };
   }, [query, setIsMatch]);
 
