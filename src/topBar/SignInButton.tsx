@@ -1,17 +1,19 @@
 import {css} from 'emotion';
-import React, {Suspense, useState} from 'react';
+import React, {Suspense, useRef, useState} from 'react';
 import Button from '../components/Button';
 import {auth} from '../Firebase';
 import {useCurrentUser} from '../hooks/useCurrentUser';
 import useMediaQuery from '../hooks/useMediaQuery';
+import {LoginRef} from '../login/FirebaseLogin';
 import {TABLET} from '../styles/MediaQueries';
 
 const FirebaseLogin = React.lazy(() => import('../login/FirebaseLogin'));
 
 export default function SignInButton(): JSX.Element | null {
   const isTablet = useMediaQuery(TABLET);
+  const loginRef = useRef<LoginRef | null>(null);
   const [isRenderingFirebaseLogin, setIsRenderingFirebaseLogin] = useState(
-    false,
+    auth.isSignInWithEmailLink(window.location.href),
   );
   const {currentUser} = useCurrentUser();
 
@@ -33,7 +35,11 @@ export default function SignInButton(): JSX.Element | null {
         <Button
           onClick={() => {
             if (canLogin) {
-              setIsRenderingFirebaseLogin(true);
+              if (!isRenderingFirebaseLogin) {
+                setIsRenderingFirebaseLogin(true);
+              } else {
+                loginRef.current?.show();
+              }
             } else {
               auth.signOut();
             }
@@ -43,7 +49,7 @@ export default function SignInButton(): JSX.Element | null {
       </div>
 
       <Suspense fallback={null}>
-        {isRenderingFirebaseLogin ? <FirebaseLogin /> : null}
+        {isRenderingFirebaseLogin ? <FirebaseLogin ref={loginRef} /> : null}
       </Suspense>
     </>
   );
