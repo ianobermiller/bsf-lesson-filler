@@ -1,5 +1,5 @@
 import {css, cx} from 'emotion';
-import React, {useCallback} from 'react';
+import React, {useCallback, useContext} from 'react';
 import {
   fetchESVPassageHTML,
   fetchNIVPassageHTML,
@@ -9,13 +9,17 @@ import Button from '../components/Button';
 import {FullSizeLoadingIndicator} from '../components/FullSizeLoadingIndicator';
 import {useAbortableFetch} from '../hooks/useAbortableFetch';
 import useLocalStorage from '../hooks/useLocalStorage';
+import useMediaQuery from '../hooks/useMediaQuery';
 import {NOT_TABLET, TABLET} from '../styles/MediaQueries';
+import {SelectedPassageContext} from './LessonEditor';
 
 export function PassageViewer({
   selectedPassage,
 }: {
-  selectedPassage: string;
+  selectedPassage: string | null;
 }): JSX.Element {
+  const isTabletOrLarger = useMediaQuery(TABLET);
+  const setSelectedPassage = useContext(SelectedPassageContext);
   const [bible, setBible] = useLocalStorage<keyof typeof BIBLES>(
     'selectedBible',
     'niv',
@@ -45,21 +49,105 @@ export function PassageViewer({
   }
 
   return (
-    <div className={styles.passageViewer}>
-      <div className={styles.switchBibles}>
-        {(Object.keys(BIBLES) as [keyof typeof BIBLES]).map(key => (
+    <div
+      className={cx(
+        styles.passageViewer,
+        !selectedPassage && styles.passageViewerHidden,
+      )}>
+      <div className={styles.buttons}>
+        {!isTabletOrLarger && (
           <Button
-            key={key}
-            isSelected={bible === key}
-            onClick={() => setBible(key)}>
-            {key.toUpperCase()}
+            className={styles.backButton}
+            onClick={() => setSelectedPassage(null)}>
+            {'\u25c0'}
           </Button>
-        ))}
+        )}
+        <div className={styles.switchBibles}>
+          {(Object.keys(BIBLES) as [keyof typeof BIBLES]).map(key => (
+            <Button
+              key={key}
+              isSelected={bible === key}
+              onClick={() => setBible(key)}>
+              {key.toUpperCase()}
+            </Button>
+          ))}
+        </div>
       </div>
       {content}
     </div>
   );
 }
+
+const styles = {
+  passageViewer: css`
+    @media ${NOT_TABLET} {
+      background: var(--background-primary);
+      bottom: 0;
+      display: flex;
+      flex-direction: column;
+      left: 0;
+      position: absolute;
+      right: 0;
+      top: 0;
+      transition: transform ease-in-out 100ms;
+    }
+
+    @media ${TABLET} {
+      flex: 1 1 0;
+      overflow: auto;
+      position: relative;
+    }
+  `,
+  passageViewerHidden: css`
+    transform: translateX(100%);
+  `,
+  content: css`
+    padding: 0 var(--l) var(--l) var(--l);
+    @media ${NOT_TABLET} {
+      flex: 1 1 auto;
+      overflow: auto;
+    }
+  `,
+  backButton: css`
+    border-radius: 0;
+    margin-right: var(--m);
+  `,
+  buttons: css`
+    display: flex;
+    flex-shrink: 0;
+
+    @media ${TABLET} {
+      float: right;
+      margin: var(--s) var(--s) var(--l) var(--l);
+    }
+  `,
+  switchBibles: css`
+    @media ${NOT_TABLET} {
+      display: flex;
+      flex: 1 1 auto;
+
+      > button {
+        border-radius: 0;
+        flex: 1 1 auto;
+        padding-left: 0;
+        padding-right: 0;
+      }
+    }
+
+    @media ${TABLET} {
+      > :not(:first-child) {
+        border-bottom-left-radius: 0;
+        border-top-left-radius: 0;
+        margin-left: 1px;
+      }
+
+      > :not(:last-child) {
+        border-bottom-right-radius: 0;
+        border-top-right-radius: 0;
+      }
+    }
+  `,
+};
 
 const BIBLES = {
   niv: {
@@ -176,44 +264,4 @@ const BIBLES = {
       }
     `,
   },
-};
-
-const styles = {
-  passageViewer: css`
-    flex: 1 1 0;
-    overflow: auto;
-    position: relative;
-  `,
-  content: css`
-    padding: 0 var(--l) var(--l) var(--l);
-  `,
-  switchBibles: css`
-    @media ${NOT_TABLET} {
-      display: flex;
-
-      > button {
-        border-radius: 0;
-        flex: 1 1 auto;
-        padding-left: 0;
-        padding-right: 0;
-      }
-    }
-
-    @media ${TABLET} {
-      float: right;
-      margin: var(--s) var(--s) var(--l) var(--l);
-      position: relative;
-
-      > :not(:first-child) {
-        border-bottom-left-radius: 0;
-        border-top-left-radius: 0;
-        margin-left: 1px;
-      }
-
-      > :not(:last-child) {
-        border-bottom-right-radius: 0;
-        border-top-right-radius: 0;
-      }
-    }
-  `,
 };

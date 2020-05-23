@@ -10,7 +10,7 @@ import {LessonEditorDay} from './LessonEditorDay';
 import {PassageViewer} from './PassageViewer';
 
 export const SelectedPassageContext = React.createContext<
-  (html: string) => void
+  (html: string | null) => void
 >(() => {});
 
 type Props = {
@@ -24,7 +24,7 @@ export function LessonEditor({
   lessonID,
   studies,
 }: Props): JSX.Element {
-  const isTablet = useMediaQuery(TABLET);
+  const isTabletOrLarger = useMediaQuery(TABLET);
   const [selectedPassage, setSelectedPassage] = useState<string | null>(null);
   const {isLoading, result: lesson} = useAbortableFetch({
     doFetch: useCallback(signal => fetchLesson(lessonID, signal), [lessonID]),
@@ -42,6 +42,9 @@ export function LessonEditor({
 
   const verses = studies?.flatMap(s => s.lessons).find(l => l.id === lessonID)
     ?.verses;
+  const viewingPassage = isTabletOrLarger
+    ? selectedPassage ?? verses
+    : selectedPassage;
 
   return (
     <SelectedPassageContext.Provider value={setSelectedPassage}>
@@ -58,9 +61,7 @@ export function LessonEditor({
             />
           ))}
         </div>
-        {isTablet && (
-          <PassageViewer selectedPassage={selectedPassage ?? verses ?? ''} />
-        )}
+        <PassageViewer selectedPassage={viewingPassage ?? null} />
       </div>
     </SelectedPassageContext.Provider>
   );
