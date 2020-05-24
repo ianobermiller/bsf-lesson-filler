@@ -10,12 +10,15 @@ import {FullSizeLoadingIndicator} from '../components/FullSizeLoadingIndicator';
 import {useAbortableFetch} from '../hooks/useAbortableFetch';
 import useLocalStorage from '../hooks/useLocalStorage';
 import useMediaQuery from '../hooks/useMediaQuery';
+import useSwipeToDismiss from '../hooks/useSwipeToDismiss';
 import {NOT_TABLET, TABLET} from '../styles/MediaQueries';
 import {SelectedPassageContext} from './LessonEditor';
 
 export function PassageViewer({
+  onSwipeClose,
   selectedPassage,
 }: {
+  onSwipeClose: () => void;
   selectedPassage: string | null;
 }): JSX.Element {
   const isTabletOrLarger = useMediaQuery(TABLET);
@@ -48,12 +51,15 @@ export function PassageViewer({
     );
   }
 
+  const props = useSwipeToDismiss(onSwipeClose);
+
   return (
     <div
       className={cx(
         styles.passageViewer,
         !selectedPassage && styles.passageViewerHidden,
-      )}>
+      )}
+      {...props}>
       <div className={styles.buttons}>
         {!isTabletOrLarger && (
           <Button
@@ -86,7 +92,7 @@ const styles = {
       display: flex;
       flex-direction: column;
       left: 0;
-      position: absolute;
+      position: fixed;
       right: 0;
       top: 0;
       transition: transform ease-in-out 100ms;

@@ -61,7 +61,10 @@ export function LessonEditor({
             />
           ))}
         </div>
-        <PassageViewer selectedPassage={viewingPassage ?? null} />
+        <PassageViewer
+          onSwipeClose={() => setSelectedPassage(null)}
+          selectedPassage={viewingPassage ?? null}
+        />
       </div>
     </SelectedPassageContext.Provider>
   );
