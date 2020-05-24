@@ -53,5 +53,6 @@ export default function TextWithBibleReferences({
 const styles = {
   verse: css`
     cursor: pointer;
+    text-decoration: underline;
   `,
 };
