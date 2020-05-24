@@ -17,3 +17,6 @@ const firebaseConfig = {
 export const app = firebase.initializeApp(firebaseConfig);
 export const auth = firebase.auth();
 export const db = firebase.firestore(app);
+
+// Note that this could throw with an error code, though it is unlikely
+db.enablePersistence({synchronizeTabs: true});
