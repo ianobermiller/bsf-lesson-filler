@@ -2,8 +2,7 @@ import {css} from 'emotion';
 import React from 'react';
 import {Study} from '../api/StudiesAPI';
 import Button from '../components/Button';
-import useMediaQuery from '../hooks/useMediaQuery';
-import {TABLET} from '../styles/MediaQueries';
+import useIsBigScreen from '../hooks/useIsBigScreen';
 
 type Props = {
   onSelectLesson: (lessonID: string) => void;
@@ -16,7 +15,7 @@ export default function LessonSelector({
   selectedLessonID,
   studies,
 }: Props) {
-  const isTablet = useMediaQuery(TABLET);
+  const isBig = useIsBigScreen();
   const lessons = studies.flatMap(s => s.lessons);
   const currentIndex = lessons.findIndex(l => l.id === selectedLessonID);
   const previousLessonID = lessons[currentIndex - 1]?.id;
@@ -24,7 +23,7 @@ export default function LessonSelector({
 
   return (
     <div className={styles.root}>
-      {isTablet && (
+      {isBig && (
         <select
           className={styles.selector}
           onChange={e => {

@@ -8,10 +8,10 @@ import {
 import Button from '../components/Button';
 import {FullSizeLoadingIndicator} from '../components/FullSizeLoadingIndicator';
 import {useAbortableFetch} from '../hooks/useAbortableFetch';
+import useIsBigScreen from '../hooks/useIsBigScreen';
 import useLocalStorage from '../hooks/useLocalStorage';
-import useMediaQuery from '../hooks/useMediaQuery';
 import useSwipeToDismiss from '../hooks/useSwipeToDismiss';
-import {NOT_TABLET, TABLET} from '../styles/MediaQueries';
+import {BIG, NOT_BIG} from '../styles/MediaQueries';
 import {SelectedPassageContext} from './LessonEditor';
 
 export function PassageViewer({
@@ -21,7 +21,7 @@ export function PassageViewer({
   onSwipeClose: () => void;
   selectedPassage: string | null;
 }): JSX.Element {
-  const isTabletOrLarger = useMediaQuery(TABLET);
+  const isBig = useIsBigScreen();
   const setSelectedPassage = useContext(SelectedPassageContext);
   const [bible, setBible] = useLocalStorage<keyof typeof BIBLES>(
     'selectedBible',
@@ -61,7 +61,7 @@ export function PassageViewer({
       )}
       {...props}>
       <div className={styles.buttons}>
-        {!isTabletOrLarger && (
+        {!isBig && (
           <Button
             className={styles.backButton}
             onClick={() => setSelectedPassage(null)}>
@@ -86,7 +86,7 @@ export function PassageViewer({
 
 const styles = {
   passageViewer: css`
-    @media ${NOT_TABLET} {
+    @media ${NOT_BIG} {
       background: var(--background-primary);
       bottom: 0;
       display: flex;
@@ -98,7 +98,7 @@ const styles = {
       transition: transform ease-in-out 100ms;
     }
 
-    @media ${TABLET} {
+    @media ${BIG} {
       flex: 1 1 0;
       overflow: auto;
       position: relative;
@@ -109,7 +109,7 @@ const styles = {
   `,
   content: css`
     padding: 0 var(--l) var(--l) var(--l);
-    @media ${NOT_TABLET} {
+    @media ${NOT_BIG} {
       flex: 1 1 auto;
       overflow: auto;
     }
@@ -122,13 +122,13 @@ const styles = {
     display: flex;
     flex-shrink: 0;
 
-    @media ${TABLET} {
+    @media ${BIG} {
       float: right;
       margin: var(--s) var(--s) var(--l) var(--l);
     }
   `,
   switchBibles: css`
-    @media ${NOT_TABLET} {
+    @media ${NOT_BIG} {
       display: flex;
       flex: 1 1 auto;
 
@@ -140,7 +140,7 @@ const styles = {
       }
     }
 
-    @media ${TABLET} {
+    @media ${BIG} {
       > :not(:first-child) {
         border-bottom-left-radius: 0;
         border-top-left-radius: 0;

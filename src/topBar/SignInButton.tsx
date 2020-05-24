@@ -3,14 +3,13 @@ import React, {Suspense, useRef, useState} from 'react';
 import Button from '../components/Button';
 import {auth} from '../Firebase';
 import {useCurrentUser} from '../hooks/useCurrentUser';
-import useMediaQuery from '../hooks/useMediaQuery';
+import useIsBigScreen from '../hooks/useIsBigScreen';
 import {LoginRef} from '../login/FirebaseLogin';
-import {TABLET} from '../styles/MediaQueries';
 
 const FirebaseLogin = React.lazy(() => import('../login/FirebaseLogin'));
 
 export default function SignInButton(): JSX.Element | null {
-  const isTablet = useMediaQuery(TABLET);
+  const isBig = useIsBigScreen();
   const loginRef = useRef<LoginRef | null>(null);
   const [isRenderingFirebaseLogin, setIsRenderingFirebaseLogin] = useState(
     auth.isSignInWithEmailLink(window.location.href),
@@ -31,7 +30,7 @@ export default function SignInButton(): JSX.Element | null {
   return (
     <>
       <div className={styles.root}>
-        {isTablet && <div className={styles.email}>{currentUser?.email}</div>}
+        {isBig && <div className={styles.email}>{currentUser?.email}</div>}
         <Button
           onClick={() => {
             if (canLogin) {
