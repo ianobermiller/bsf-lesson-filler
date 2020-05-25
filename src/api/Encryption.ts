@@ -7,7 +7,7 @@ export async function encrypt(
   const encoder = new TextEncoder();
   const encoded = encoder.encode(text);
   const iv = window.crypto.getRandomValues(new Uint8Array(IV_SIZE_IN_BYTES));
-  const key = await getCryptoKey(userID);
+  const key = await getCryptoKey(userID, iv);
   const encrypted = await window.crypto.subtle.encrypt(
     {
       name: 'AES-GCM',
@@ -27,7 +27,7 @@ export async function decrypt(
   encrypted: ArrayBuffer,
 ): Promise<string> {
   const iv = encrypted.slice(0, IV_SIZE_IN_BYTES);
-  const key = await getCryptoKey(userID);
+  const key = await getCryptoKey(userID, iv);
   const encoded = await window.crypto.subtle.decrypt(
     {
       name: 'AES-GCM',
@@ -41,13 +41,25 @@ export async function decrypt(
   return decoder.decode(encoded);
 }
 
-async function getCryptoKey(userID: string) {
-  let enc = new TextEncoder();
-  return window.crypto.subtle.importKey(
+async function getCryptoKey(userID: string, salt: ArrayBuffer) {
+  let encoder = new TextEncoder();
+  const keyMaterial = await window.crypto.subtle.importKey(
     'raw',
-    enc.encode(userID),
+    encoder.encode(userID),
     {name: 'PBKDF2'},
     false,
     ['deriveBits', 'deriveKey'],
+  );
+  return await window.crypto.subtle.deriveKey(
+    {
+      name: 'PBKDF2',
+      salt,
+      iterations: 100000,
+      hash: 'SHA-256',
+    },
+    keyMaterial,
+    {name: 'AES-GCM', length: 256},
+    true,
+    ['encrypt', 'decrypt'],
   );
 }

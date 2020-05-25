@@ -1,6 +1,7 @@
 import {css, cx} from 'emotion';
 import React, {useEffect, useState} from 'react';
 import {subscribeToAnswersByQuestionID} from './api/AnswersAPI';
+import {decrypt, encrypt} from './api/Encryption';
 import {fetchStudies, Study} from './api/StudiesAPI';
 import {LessonEditor} from './editor/LessonEditor';
 import {useCurrentUser} from './hooks/useCurrentUser';
@@ -27,6 +28,8 @@ export default function App() {
   if (!studies) {
     return null;
   }
+
+  (window as any).Encryption = {encrypt, decrypt};
 
   return (
     <div
