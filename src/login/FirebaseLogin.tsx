@@ -54,7 +54,7 @@ const FirebaseLogin: React.RefForwardingComponent<LoginRef, Props> = (
           provider: firebase.auth.EmailAuthProvider.PROVIDER_ID,
           requireDisplayName: false,
           signInMethod:
-            firebase.auth.EmailAuthProvider.EMAIL_LINK_SIGN_IN_METHOD,
+            firebase.auth.EmailAuthProvider.EMAIL_PASSWORD_SIGN_IN_METHOD,
         },
       ],
       autoUpgradeAnonymousUsers: true,
