@@ -57,9 +57,17 @@
     "singleQuote": true,
     "trailingComma": "all"
   },
+  "jest": {
+    "setupFiles": [
+      "<rootDir>/jest.setup.js"
+    ]
+  },
   "devDependencies": {
+    "@peculiar/webcrypto": "^1.1.1",
+    "@trust/webcrypto": "^0.9.2",
     "customize-cra": "^0.9.1",
     "customize-cra-react-refresh": "^1.0.1",
-    "react-app-rewired": "^2.1.6"
+    "react-app-rewired": "^2.1.6",
+    "webcrypto-shim": "^0.1.5"
   }
 }
