@@ -1,9 +1,9 @@
-import type firebase from 'firebase';
 import type {User} from 'firebase';
 import {auth, db} from '../Firebase';
 
 type Answer = {
   answerText: string;
+  encoding?: 'base64';
 };
 
 function userDoc(userID: string) {
@@ -26,9 +26,17 @@ export async function fetchAnswersByQuestionID(
   return new Map(
     querySnapshot.docs.map(doc => {
       const data = doc.data() as Answer;
-      return [doc.id, data.answerText];
+      return [doc.id, decodeAnswer(data)];
     }),
   );
+}
+
+function decodeAnswer(answer: Answer): string {
+  switch (answer.encoding) {
+    case 'base64':
+      return atob(answer.answerText);
+  }
+  return answer.answerText;
 }
 
 export function subscribeToAnswersByQuestionID(
@@ -41,7 +49,7 @@ export function subscribeToAnswersByQuestionID(
         new Map(
           querySnapshot.docs.map(doc => {
             const data = doc.data() as Answer;
-            return [doc.id, data.answerText];
+            return [doc.id, decodeAnswer(data)];
           }),
         ),
       );
@@ -56,7 +64,11 @@ export async function saveAnswer(
 ): Promise<void> {
   return answerDoc(userID, questionID).set(
     {
-      answerText,
+      // Simple obfuscation so the text isn't trivially readable. Not intended
+      // to be secure, just so that you don't accidentally read a user's private
+      // thoughts while viewing the database.
+      answerText: btoa(answerText),
+      encoding: 'base64',
     } as Answer,
     {merge: true},
   );
