@@ -30,11 +30,13 @@ async function fetchStudiesUncached(): Promise<Study[]> {
     let title = '';
     let startYear = 2000;
     let endYear = 2000;
-    const result = /(.*)(\d{4})-(\d{2})/.exec(study.title);
+    const result = /(.*)(\d{4})(-(\d{2}))?/.exec(study.title);
     if (result) {
       title = result[1];
       startYear = Number(result[2]);
-      endYear = Number(result[2].slice(0, 2) + result[3]);
+      endYear = result[4]
+        ? Number(result[2].slice(0, 2) + result[4])
+        : startYear;
     }
     return {
       title,
