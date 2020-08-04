@@ -12,12 +12,7 @@ export default function Button({
   return (
     <button
       {...otherProps}
-      className={cx(
-        styles.root,
-        otherProps.disabled && styles.disabled,
-        isSelected && styles.selected,
-        className,
-      )}
+      className={cx(styles.root, isSelected && styles.selected, className)}
     />
   );
 }
@@ -32,11 +27,20 @@ const styles = {
     font-family: system-ui;
     font-size: var(--font-size-m);
     padding: var(--s) var(--m);
-  `,
-  disabled: css`
-    background: var(--control-background-disabled);
-    color: var(--content-disabled);
-    cursor: auto;
+
+    :hover {
+      background: var(--control-background-hover);
+    }
+
+    :active {
+      background: var(--control-background-active);
+    }
+
+    :disabled {
+      background: var(--control-background-disabled);
+      color: var(--content-disabled);
+      cursor: auto;
+    }
   `,
   selected: css`
     background: var(--control-background-selected);

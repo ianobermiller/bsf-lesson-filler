@@ -3,13 +3,11 @@ import React, {Suspense, useRef, useState} from 'react';
 import Button from '../components/Button';
 import {auth} from '../Firebase';
 import {useCurrentUser} from '../hooks/useCurrentUser';
-import useIsBigScreen from '../hooks/useIsBigScreen';
 import {LoginRef} from '../login/FirebaseLogin';
 
 const FirebaseLogin = React.lazy(() => import('../login/FirebaseLogin'));
 
 export default function SignInButton(): JSX.Element | null {
-  const isBig = useIsBigScreen();
   const loginRef = useRef<LoginRef | null>(null);
   const [isRenderingFirebaseLogin, setIsRenderingFirebaseLogin] = useState(
     auth.isSignInWithEmailLink(window.location.href),
@@ -29,23 +27,23 @@ export default function SignInButton(): JSX.Element | null {
 
   return (
     <>
-      <div className={styles.root}>
-        {isBig && <div className={styles.email}>{currentUser?.email}</div>}
-        <Button
-          onClick={() => {
-            if (canLogin) {
-              if (!isRenderingFirebaseLogin) {
-                setIsRenderingFirebaseLogin(true);
-              } else {
-                loginRef.current?.show();
-              }
+      {currentUser?.email && (
+        <div className={styles.email}>{currentUser?.email}</div>
+      )}
+      <Button
+        onClick={() => {
+          if (canLogin) {
+            if (!isRenderingFirebaseLogin) {
+              setIsRenderingFirebaseLogin(true);
             } else {
-              auth.signOut();
+              loginRef.current?.show();
             }
-          }}>
-          {text}
-        </Button>
-      </div>
+          } else {
+            auth.signOut();
+          }
+        }}>
+        {text}
+      </Button>
 
       <Suspense fallback={null}>
         {isRenderingFirebaseLogin ? <FirebaseLogin ref={loginRef} /> : null}
@@ -55,11 +53,7 @@ export default function SignInButton(): JSX.Element | null {
 }
 
 const styles = {
-  root: css`
-    align-items: center;
-    display: flex;
-  `,
   email: css`
-    margin-right: var(--m);
+    padding: var(--s) var(--m);
   `,
 };

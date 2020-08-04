@@ -3,7 +3,7 @@ import React from 'react';
 import {Study} from '../api/StudiesAPI';
 import useIsBigScreen from '../hooks/useIsBigScreen';
 import LessonSelector from './LessonSelector';
-import SignInButton from './SignInButton';
+import Menu from './Menu';
 
 type Props = {
   onSelectLesson: (lessonID: string) => void;
@@ -19,7 +19,7 @@ export default function TopBar(props: Props) {
         <div className={styles.title}>{isBig ? 'BSF Lessons' : 'BSF'}</div>
         <LessonSelector {...props} />
       </div>
-      <SignInButton />
+      <Menu />
     </div>
   );
 }
