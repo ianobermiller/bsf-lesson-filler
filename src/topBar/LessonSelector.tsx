@@ -1,5 +1,6 @@
 import {css} from 'emotion';
 import React from 'react';
+import {TiChevronLeft, TiChevronRight} from 'react-icons/ti';
 import {Study} from '../api/StudiesAPI';
 import Button from '../components/Button';
 import useIsBigScreen from '../hooks/useIsBigScreen';
@@ -49,12 +50,12 @@ export default function LessonSelector({
       <Button
         disabled={!previousLessonID}
         onClick={() => onSelectLesson(previousLessonID)}>
-        {'\u25c0'}
+        <TiChevronLeft />
       </Button>
       <Button
         disabled={!nextLessonID}
         onClick={() => onSelectLesson(nextLessonID)}>
-        {'\u25b6'}
+        <TiChevronRight />
       </Button>
     </div>
   );
