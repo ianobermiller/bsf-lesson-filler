@@ -45,8 +45,10 @@ async function fetchStudiesUncached(): Promise<Study[]> {
       lessons: study.lessons.map((lesson: APILessonEntry) => {
         let number = 0;
         let verses = '';
-        let date = new Date();
-        const result = /Lesson(\d+) ([^ ]+) \((\d+)\/(\d+)\)/.exec(lesson.name);
+        let date = new Date(0);
+        const result = /Lesson(\d+) ([^ ]+) (\((\d+)\/(\d+)\))?/.exec(
+          lesson.name,
+        );
         if (result) {
           number = Number(result[1]);
           verses = result[2]
@@ -54,12 +56,14 @@ async function fetchStudiesUncached(): Promise<Study[]> {
             .replace(/(\d)([a-z])/gi, '$1 $2')
             // Add spaces between <letter><number>
             .replace(/([a-z])(\d)/gi, '$1 $2');
-          const month = Number(result[3]);
-          date = new Date(
-            month >= 9 ? startYear : endYear,
-            month - 1,
-            Number(result[4]),
-          );
+          if (result[3]) {
+            const month = Number(result[4]);
+            date = new Date(
+              month >= 9 ? startYear : endYear,
+              month - 1,
+              Number(result[5]),
+            );
+          }
         }
         return {
           id: lesson.id,

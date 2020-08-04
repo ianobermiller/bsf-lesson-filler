@@ -36,8 +36,10 @@ export default function LessonSelector({
               label={`${study.title} ${study.startYear}-${study.endYear}`}>
               {study.lessons.map(lesson => (
                 <option key={lesson.id} value={lesson.id}>
-                  {lesson.verses} - Lesson {lesson.number} -{' '}
-                  {lesson.date.toLocaleDateString()}
+                  {lesson.verses} - Lesson {lesson.number}
+                  {lesson.date.getTime() !== 0
+                    ? ' - ' + lesson.date.toLocaleDateString()
+                    : ''}
                 </option>
               ))}
             </optgroup>

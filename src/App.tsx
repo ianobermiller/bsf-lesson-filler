@@ -13,9 +13,10 @@ export default function App() {
   useEffect(() => {
     fetchStudies().then(studies => {
       setStudies(studies);
-      const allLessons = studies.flatMap(s => s.lessons);
-      const nextLesson = allLessons.find(
-        lesson => lesson.date.getTime() > Date.now(),
+
+      const nextLesson = studies[0].lessons.find(
+        lesson =>
+          lesson.date.getTime() === 0 || lesson.date.getTime() > Date.now(),
       );
       const selectedLesson = nextLesson ?? studies?.[0].lessons.slice(-1)[0];
       setSelectedLessonID(selectedLesson?.id ?? null);
