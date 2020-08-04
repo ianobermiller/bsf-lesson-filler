@@ -16,16 +16,27 @@ export function cacheInLocalStorage<
     if (shortCircuitResult !== undefined) {
       return shortCircuitResult;
     }
+
+    async function fetchAndCache() {
+      const result = await fetchData(...args);
+      localStorage.setItem(key, serialize(result));
+      return result;
+    }
+
     // Check local storage for cached results
     const key = getKey(...args);
     const cached = localStorage.getItem(key);
     if (cached) {
+      // Fetch and cache so the data will be there on the next reload
+      if (options?.alwaysFetch) {
+        fetchAndCache();
+      }
+
       // Recommended way to deserialize from this library
       // eslint-disable-next-line no-eval
       return eval(`(${cached})`);
     }
-    const result = await fetchData(...args);
-    localStorage.setItem(key, serialize(result));
-    return result;
+
+    return fetchAndCache();
   };
 }
