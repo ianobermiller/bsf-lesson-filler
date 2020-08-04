@@ -22,10 +22,12 @@ async function scanForReferencesUncached(
 export const scanForReferences = cacheInLocalStorage(
   scanForReferencesUncached,
   (text: string) => `scanForVerses-${text}`,
-  (text: string) => {
-    // Don't scan if the only number is at the front (like the question number)
-    if (text.match(/^(\d+\.)?\D+$/)) {
-      return [];
-    }
+  {
+    shortCircut: (text: string) => {
+      // Don't scan if the only number is at the front (like the question number)
+      if (text.match(/^(\d+\.)?\D+$/)) {
+        return [];
+      }
+    },
   },
 );

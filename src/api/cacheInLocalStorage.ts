@@ -6,10 +6,13 @@ export function cacheInLocalStorage<
 >(
   fetchData: (...args: Parameters<T>) => Promise<TReturn>,
   getKey: (...args: Parameters<T>) => string,
-  shortCircut?: (...args: Parameters<T>) => TReturn | void,
+  options?: {
+    alwaysFetch?: boolean;
+    shortCircut?: (...args: Parameters<T>) => TReturn | void;
+  },
 ): (...args: Parameters<T>) => Promise<TReturn> {
   return async (...args: Parameters<T>): Promise<TReturn> => {
-    const shortCircuitResult = shortCircut?.(...args);
+    const shortCircuitResult = options?.shortCircut?.(...args);
     if (shortCircuitResult !== undefined) {
       return shortCircuitResult;
     }
