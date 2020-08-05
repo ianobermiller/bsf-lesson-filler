@@ -7,7 +7,11 @@ import {LoginRef} from '../login/FirebaseLogin';
 
 const FirebaseLogin = React.lazy(() => import('../login/FirebaseLogin'));
 
-export default function SignInButton(): JSX.Element | null {
+type Props = {
+  className: string;
+};
+
+export default function SignInButton(props: Props): JSX.Element | null {
   const loginRef = useRef<LoginRef | null>(null);
   const [isRenderingFirebaseLogin, setIsRenderingFirebaseLogin] = useState(
     auth.isSignInWithEmailLink(window.location.href),
@@ -31,6 +35,7 @@ export default function SignInButton(): JSX.Element | null {
         <div className={styles.email}>{currentUser?.email}</div>
       )}
       <Button
+        className={props.className}
         onClick={() => {
           if (canLogin) {
             if (!isRenderingFirebaseLogin) {

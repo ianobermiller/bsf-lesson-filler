@@ -16,13 +16,13 @@ export default function Menu(): JSX.Element {
       </Button>
       <ul className={cx(styles.menu, isMenuVisible && styles.menuVisible)}>
         <li>
-          <SignInButton />
+          <SignInButton className={styles.button} />
         </li>
         <li>
-          <Button>Export Data</Button>
+          <Button className={styles.button}>Export Data</Button>
         </li>
         <li>
-          <Button>Import Data</Button>
+          <Button className={styles.button}>Import Data</Button>
         </li>
       </ul>
     </div>
@@ -48,12 +48,12 @@ const styles = {
 
     > li {
       list-style-type: none;
-
-      > button {
-        text-align: left;
-        width: 100%;
-      }
     }
+  `,
+  button: css`
+    border-radius: 0;
+    text-align: left;
+    width: 100%;
   `,
   menuVisible: css`
     display: block;

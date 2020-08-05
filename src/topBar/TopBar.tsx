@@ -31,7 +31,7 @@ const styles = {
     display: flex;
     flex-shrink: 0;
     justify-content: space-between;
-    padding: 0 var(--s) 0 var(--l);
+    padding: 0 var(--m) 0 var(--l);
   `,
   left: css`
     align-items: center;

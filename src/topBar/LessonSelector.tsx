@@ -83,6 +83,9 @@ const SVG_ARROW =
 
 const styles = {
   root: css`
+    display: flex;
+    justify-content: flex-start;
+
     > :not(first-child) {
       margin-left: var(--s);
     }
@@ -102,6 +105,7 @@ const styles = {
     display: inline-block;
     font-family: system-ui;
     font-size: var(--font-size-m);
+    height: 32px;
     margin-left: var(--m);
     padding: var(--s) var(--xl) var(--s) var(--m);
     width: 20em;
