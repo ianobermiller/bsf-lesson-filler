@@ -100,7 +100,7 @@ const styles = {
 
     @media ${BIG} {
       flex: 1 1 0;
-      overflow: auto;
+      overflow: scroll;
       position: relative;
     }
   `,
@@ -111,7 +111,7 @@ const styles = {
     padding: 0 var(--l) var(--l) var(--l);
     @media ${NOT_BIG} {
       flex: 1 1 auto;
-      overflow: auto;
+      overflow: scroll;
     }
   `,
   backButton: css`
