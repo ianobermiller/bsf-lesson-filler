@@ -24,6 +24,7 @@ const styles = {
     border: none;
     color: var(--content-primary);
     cursor: pointer;
+    display: inline-flex;
     font-family: system-ui;
     font-size: var(--font-size-m);
     padding: var(--s) var(--m);
