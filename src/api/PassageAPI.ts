@@ -25,10 +25,11 @@ async function fetchNLTPassageHTMLUncached(
   verse: string,
   signal: AbortSignal,
 ): Promise<string> {
+  // http://api.nlt.to/Documentation
   const result = await fetch(
     `http://api.nlt.to/api/passages?ref=${encodeVerse(
       verse,
-    )}&key=${NLT_API_KEY}`,
+    )}&version=NLT&key=${NLT_API_KEY}`,
     {signal},
   );
   const html = await result.text();
@@ -52,6 +53,7 @@ async function fetchNIVPassageHTMLUncached(
   verse: string,
   signal: AbortSignal,
 ): Promise<string> {
+  // Use the ASV for searching as it is freely available
   const idResult = await fetch(
     `https://api.scripture.api.bible/v1/bibles/${
       BIBLE_ID.ASV
