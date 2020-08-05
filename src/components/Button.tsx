@@ -27,6 +27,7 @@ const styles = {
     display: inline-flex;
     font-family: system-ui;
     font-size: var(--font-size-m);
+    justify-content: center;
     padding: var(--s) var(--m);
 
     :hover {
@@ -44,6 +45,10 @@ const styles = {
     }
   `,
   selected: css`
-    background: var(--control-background-selected);
+    &,
+    &:hover,
+    &:active {
+      background: var(--control-background-selected);
+    }
   `,
 };
