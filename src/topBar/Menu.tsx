@@ -5,7 +5,12 @@ import Button from '../components/Button';
 import {useOnClickOutside} from '../hooks/useOnClickOutside';
 import SignInButton from './SignInButton';
 
-export default function Menu(): JSX.Element {
+type Props = {
+  exportAnswers: () => void;
+  importAnswers: () => void;
+};
+
+export default function Menu(props: Props): JSX.Element {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
   useOnClickOutside(rootRef, () => setIsMenuVisible(false));
@@ -19,10 +24,17 @@ export default function Menu(): JSX.Element {
           <SignInButton className={styles.button} />
         </li>
         <li>
-          <Button className={styles.button}>Export Data</Button>
+          <Button className={styles.button} onClick={props.exportAnswers}>
+            Export Data
+          </Button>
         </li>
         <li>
-          <Button className={styles.button}>Import Data</Button>
+          <Button
+            className={styles.button}
+            disabled={true}
+            onClick={props.importAnswers}>
+            Import Data
+          </Button>
         </li>
       </ul>
     </div>
@@ -39,7 +51,7 @@ const styles = {
     display: none;
     margin: 0;
     max-width: 100vw;
-    padding: 0;
+    padding: var(--s) 0;
     position: absolute;
     right: 0;
     top: 100%;

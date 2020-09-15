@@ -6,6 +6,8 @@ import LessonSelector from './LessonSelector';
 import Menu from './Menu';
 
 type Props = {
+  exportAnswers: () => void;
+  importAnswers: () => void;
   onSelectLesson: (lessonID: string) => void;
   selectedLessonID: string | null;
   studies: Study[];
@@ -17,9 +19,16 @@ export default function TopBar(props: Props) {
     <div className={styles.root}>
       <div className={styles.left}>
         <div className={styles.title}>{isBig ? 'BSF Lessons' : 'BSF'}</div>
-        <LessonSelector {...props} />
+        <LessonSelector
+          onSelectLesson={props.onSelectLesson}
+          selectedLessonID={props.selectedLessonID}
+          studies={props.studies}
+        />
       </div>
-      <Menu />
+      <Menu
+        exportAnswers={props.exportAnswers}
+        importAnswers={props.importAnswers}
+      />
     </div>
   );
 }

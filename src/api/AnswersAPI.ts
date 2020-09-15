@@ -74,6 +74,25 @@ export async function saveAnswer(
   );
 }
 
+export async function saveAllAnswers(
+  userID: string,
+  answerByQuestionID: Map<string, string>,
+): Promise<void> {
+  // Delete the anonymous user's data
+  let batch = db.batch();
+  for (const [questionID, answer] of answerByQuestionID) {
+    batch.set(answerDoc(userID, questionID), {
+      // Simple obfuscation so the text isn't trivially readable. Not intended
+      // to be secure, just so that you don't accidentally read a user's private
+      // thoughts while viewing the database.
+      answerText: btoa(answer),
+      encoding: 'base64',
+    } as Answer);
+  }
+  batch.delete(userDoc(userID));
+  return batch.commit();
+}
+
 export async function migrateUser(
   anonymousUser: User,
   newCreds: firebase.auth.AuthCredential,

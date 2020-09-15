@@ -1,6 +1,7 @@
 import {css, cx} from 'emotion';
 import React, {useEffect, useState} from 'react';
-import {subscribeToAnswersByQuestionID} from './api/AnswersAPI';
+import {saveAllAnswers, subscribeToAnswersByQuestionID} from './api/AnswersAPI';
+import {exportAnswers, importAnswers} from './api/ImportExport';
 import {fetchStudies, Study} from './api/StudiesAPI';
 import {LessonEditor} from './editor/LessonEditor';
 import {useCurrentUser} from './hooks/useCurrentUser';
@@ -36,6 +37,8 @@ export default function App() {
         navigator.userAgent.includes('Chrome/81') && styles.chrome81FontFix,
       )}>
       <TopBar
+        exportAnswers={() => exportAnswers(answersByQuestionID)}
+        importAnswers={() => importAnswers(saveAllAnswers)}
         onSelectLesson={setSelectedLessonID}
         selectedLessonID={selectedLessonID}
         studies={studies}
