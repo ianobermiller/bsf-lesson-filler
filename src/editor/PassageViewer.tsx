@@ -159,8 +159,6 @@ const BIBLES = {
   niv: {
     fetchHTML: fetchNIVPassageHTML,
     className: css`
-      line-height: 1.2;
-
       .s1 {
         font-size: var(--font-size-m);
         font-weight: bold;
@@ -185,8 +183,6 @@ const BIBLES = {
   esv: {
     fetchHTML: fetchESVPassageHTML,
     className: css`
-      line-height: 1.2;
-
       > h2 {
         font-size: var(--font-size-xl);
       }
@@ -221,8 +217,6 @@ const BIBLES = {
   nlt: {
     fetchHTML: fetchNLTPassageHTML,
     className: css`
-      line-height: 1.2;
-
       h2 {
         font-size: var(--font-size-xl);
       }

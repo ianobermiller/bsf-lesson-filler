@@ -20,7 +20,7 @@ const ui = new firebaseui.auth.AuthUI(auth);
 
 type Props = {};
 
-const FirebaseLogin: React.RefForwardingComponent<LoginRef, Props> = (
+const FirebaseLogin: React.ForwardRefRenderFunction<LoginRef, Props> = (
   _,
   ref,
 ) => {

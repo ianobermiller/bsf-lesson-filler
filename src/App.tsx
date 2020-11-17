@@ -81,6 +81,7 @@ const styles = {
     font-family: system-ui;
     font-size: var(--font-size-m);
     height: 100vh;
+    line-height: 1.4;
     overflow: hidden;
   `,
   chrome81FontFix: css`
