@@ -5,6 +5,7 @@ import {Question} from '../api/LessonAPI';
 import TextWithBibleReferences from '../components/TextWithBibleReferences';
 import {useCurrentUser} from '../hooks/useCurrentUser';
 import useDebounced from '../hooks/useDebounced';
+import useLocalStorage from '../hooks/useLocalStorage';
 import {SelectedPassageContext} from './LessonEditor';
 
 const SAVE_DEBOUNCE_MS = 2000;
@@ -16,7 +17,10 @@ type Props = {
 
 export function LessonEditorQuestion({question, savedAnswer}: Props) {
   const setSelectedPassage = useContext(SelectedPassageContext);
-  const [answer, setAnswer] = useState<string>(savedAnswer);
+  const [answer, setAnswer] = useLocalStorage<string>(
+    `answer-backup-${question.id}`,
+    savedAnswer,
+  );
 
   // Update local answer when a new one is loaded
   const [previousSavedAnswer, setPreviousSavedAnswer] = useState<string>(
