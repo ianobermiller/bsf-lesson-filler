@@ -34,9 +34,21 @@ export async function fetchAnswersByQuestionID(
 function decodeAnswer(answer: Answer): string {
   switch (answer.encoding) {
     case 'base64':
-      return atob(answer.answerText);
+      try {
+        return atob(answer.answerText);
+      } catch {
+        console.log('Could not decode answer: ', answer);
+        return '';
+      }
   }
   return answer.answerText;
+}
+
+function encodeAnswer(text: string): Answer {
+  // Simple obfuscation so the text isn't trivially readable. Not intended
+  // to be secure, just so that you don't accidentally read a user's private
+  // thoughts while viewing the database.
+  return {answerText: btoa(text), encoding: 'base64'};
 }
 
 export function subscribeToAnswersByQuestionID(
@@ -62,16 +74,9 @@ export async function saveAnswer(
   questionID: string,
   answerText: string,
 ): Promise<void> {
-  return answerDoc(userID, questionID).set(
-    {
-      // Simple obfuscation so the text isn't trivially readable. Not intended
-      // to be secure, just so that you don't accidentally read a user's private
-      // thoughts while viewing the database.
-      answerText: btoa(answerText),
-      encoding: 'base64',
-    } as Answer,
-    {merge: true},
-  );
+  return answerDoc(userID, questionID).set(encodeAnswer(answerText), {
+    merge: true,
+  });
 }
 
 export async function saveAllAnswers(
@@ -81,13 +86,7 @@ export async function saveAllAnswers(
   // Delete the anonymous user's data
   let batch = db.batch();
   for (const [questionID, answer] of answerByQuestionID) {
-    batch.set(answerDoc(userID, questionID), {
-      // Simple obfuscation so the text isn't trivially readable. Not intended
-      // to be secure, just so that you don't accidentally read a user's private
-      // thoughts while viewing the database.
-      answerText: btoa(answer),
-      encoding: 'base64',
-    } as Answer);
+    batch.set(answerDoc(userID, questionID), encodeAnswer(answer));
   }
   batch.delete(userDoc(userID));
   return batch.commit();
@@ -117,11 +116,9 @@ export async function migrateUser(
     const mergedAnswer = realAnswer
       ? realAnswer + '\n\n' + anonymousAnswer
       : anonymousAnswer;
-    batch.set(
-      answerDoc(newUserID, questionID),
-      {answerText: mergedAnswer} as Answer,
-      {merge: true},
-    );
+    batch.set(answerDoc(newUserID, questionID), encodeAnswer(mergedAnswer), {
+      merge: true,
+    });
   }
   await batch.commit();
 
