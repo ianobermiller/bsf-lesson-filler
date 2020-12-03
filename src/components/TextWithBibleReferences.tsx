@@ -14,10 +14,20 @@ export default function TextWithBibleReferences({
   text: string;
   onPassageClicked: (verse: string) => void;
 }): JSX.Element {
-  const {result: references} = useAbortableFetch({
+  let {result: references} = useAbortableFetch({
     doFetch: useCallback(signal => scanForReferences(text, signal), [text]),
     defaultValue: [],
   });
+
+  const indexOfTheNotes = text.indexOf('the notes');
+  if (indexOfTheNotes > -1) {
+    const ref = {
+      passage: 'notes',
+      textIndex: indexOfTheNotes,
+      textLength: 'the notes'.length,
+    };
+    references = references ? [ref, ...references] : [ref];
+  }
 
   if (!references?.length) {
     return <>{text}</>;

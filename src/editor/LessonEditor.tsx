@@ -1,5 +1,6 @@
 import {css} from 'emotion';
-import React, {useCallback, useState} from 'react';
+import React, {Suspense, useCallback, useState} from 'react';
+// import {PassageViewer} from './PassageViewer';
 import {fetchLesson} from '../api/LessonAPI';
 import {Study} from '../api/StudiesAPI';
 import {FullSizeLoadingIndicator} from '../components/FullSizeLoadingIndicator';
@@ -7,6 +8,8 @@ import {useAbortableFetch} from '../hooks/useAbortableFetch';
 import useIsBigScreen from '../hooks/useIsBigScreen';
 import {LessonEditorDay} from './LessonEditorDay';
 import {PassageViewer} from './PassageViewer';
+
+const NotesReader = React.lazy(() => import('./NotesReader'));
 
 export const SelectedPassageContext = React.createContext<
   (html: string | null) => void
@@ -48,7 +51,13 @@ export function LessonEditor({
       <div className={styles.lessonEditor}>
         <div className={styles.lesson}>
           <h1 className={styles.title}>
-            {verses} - Lesson {lesson.number}
+            {verses && (
+              <span onClick={() => verses && setSelectedPassage(verses)}>
+                {verses}
+                {' - '}
+              </span>
+            )}
+            Lesson {lesson.number}
           </h1>
           {lesson.days.map((day, index) => (
             <LessonEditorDay
@@ -58,10 +67,16 @@ export function LessonEditor({
             />
           ))}
         </div>
-        <PassageViewer
-          onSwipeClose={() => setSelectedPassage(null)}
-          selectedPassage={viewingPassage ?? null}
-        />
+        {selectedPassage === 'notes' ? (
+          <Suspense fallback={null}>
+            <NotesReader lessonID={lessonID} />
+          </Suspense>
+        ) : (
+          <PassageViewer
+            onSwipeClose={() => setSelectedPassage(null)}
+            selectedPassage={viewingPassage ?? null}
+          />
+        )}
       </div>
     </SelectedPassageContext.Provider>
   );
