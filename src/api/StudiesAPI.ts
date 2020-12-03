@@ -23,6 +23,40 @@ export type Study = {
   title: string;
 };
 
+const GENESIS_LESSON_DATES = [
+  '2020-9-21',
+  '2020-9-28',
+  '2020-10-5',
+  '2020-10-12',
+  '2020-10-19',
+  '2020-10-26',
+  '2020-11-2',
+  '2020-11-9',
+  '2020-11-16',
+  '2020-11-23',
+  '2020-11-30',
+  '2020-12-7',
+  '2020-1-4',
+  '2020-1-11',
+  '2020-1-18',
+  '2020-1-25',
+  '2020-2-1',
+  '2020-2-8',
+  '2020-2-15',
+  '2020-2-22',
+  '2020-3-1',
+  '2020-3-8',
+  '2020-3-15',
+  '2020-3-22',
+  '2020-3-29',
+  '2020-4-5',
+  '2020-4-12',
+  '2020-4-19',
+  '2020-4-26',
+  '2020-5-3',
+  '2020-5-10',
+];
+
 async function fetchStudiesUncached(): Promise<Study[]> {
   const result = await fetch(`${HOST}/lessons?lang=eng`);
   const json = await result.json();
@@ -42,7 +76,7 @@ async function fetchStudiesUncached(): Promise<Study[]> {
       title,
       startYear,
       endYear,
-      lessons: study.lessons.map((lesson: APILessonEntry) => {
+      lessons: study.lessons.map((lesson: APILessonEntry, index) => {
         let number = 0;
         let verses = '';
         let date = new Date(0);
@@ -63,8 +97,11 @@ async function fetchStudiesUncached(): Promise<Study[]> {
               month - 1,
               Number(result[5]),
             );
+          } else if (title === 'Genesis' && startYear === 2020) {
+            date = new Date(GENESIS_LESSON_DATES[index]);
           }
         }
+
         return {
           id: lesson.id,
           rawName: lesson.name,
