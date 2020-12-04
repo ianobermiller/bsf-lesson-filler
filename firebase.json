@@ -41,6 +41,15 @@
         ]
       },
       {
+        "source": "**/*.@(epub)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "max-age=604800"
+          }
+        ]
+      },
+      {
         "source": "404.html",
         "headers": [
           {
