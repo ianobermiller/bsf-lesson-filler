@@ -1,29 +1,38 @@
-type Answer = {
+import {FirebaseConfig} from '../Firebase';
+
+interface Answer {
   answerText: string;
   encoding?: 'base64';
-};
-
-function userDoc(userID: string) {
-  return db.collection('users').doc(userID);
 }
 
-function answersCollection(userID: string) {
-  return userDoc(userID).collection('answers');
-}
-
-function answerDoc(userID: string, questionID: string) {
-  return answersCollection(userID).doc(questionID);
+interface AnswerDoc {
+  name: string;
+  fields: {
+    encoding?: {stringValue: 'base64'};
+    answerText: {stringValue: string};
+  };
 }
 
 export async function fetchAnswersByQuestionID(
   userID: string,
+  idToken: string,
 ): Promise<Map<string, string>> {
-  const querySnapshot = await answersCollection(userID).get();
-
+  const url = `https://firestore.googleapis.com/v1beta1/projects/${FirebaseConfig.projectId}/databases/(default)/documents/users/${userID}/answers`;
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${idToken}`,
+    },
+  });
+  const json = await response.json();
   return new Map(
-    querySnapshot.docs.map(doc => {
-      const data = doc.data() as Answer;
-      return [doc.id, decodeAnswer(data)];
+    json.documents.map((doc: AnswerDoc) => {
+      const split = doc.name.split('/');
+      const questionID = split[split.length - 1];
+      const answer = {
+        encoding: doc.fields.encoding?.stringValue,
+        answerText: doc.fields.answerText.stringValue,
+      };
+      return [questionID, decodeAnswer(answer)];
     }),
   );
 }
@@ -48,42 +57,13 @@ function encodeAnswer(text: string): Answer {
   return {answerText: btoa(text), encoding: 'base64'};
 }
 
-export function subscribeToAnswersByQuestionID(
-  userID: string,
-  onSnapshot: (answers: Map<string, string>) => void,
-): () => void {
-  return answersCollection(userID).onSnapshot({
-    next(querySnapshot) {
-      onSnapshot(
-        new Map(
-          querySnapshot.docs.map(doc => {
-            const data = doc.data() as Answer;
-            return [doc.id, decodeAnswer(data)];
-          }),
-        ),
-      );
-    },
-  });
-}
-
 export async function saveAnswer(
   userID: string,
   questionID: string,
   answerText: string,
-): Promise<void> {
-  return answerDoc(userID, questionID).set(encodeAnswer(answerText), {
-    merge: true,
-  });
-}
+): Promise<void> {}
 
 export async function saveAllAnswers(
   userID: string,
   answerByQuestionID: Map<string, string>,
-): Promise<void> {
-  // Delete the anonymous user's data
-  let batch = db.batch();
-  for (const [questionID, answer] of answerByQuestionID) {
-    batch.set(answerDoc(userID, questionID), encodeAnswer(answer));
-  }
-  return batch.commit();
-}
+): Promise<void> {}
