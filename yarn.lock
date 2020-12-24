@@ -4628,11 +4628,6 @@ diagnostics@^1.1.1:
     enabled "1.0.x"
     kuler "1.0.x"
 
-dialog-polyfill@^0.4.7:
-  version "0.4.10"
-  resolved "https://registry.yarnpkg.com/dialog-polyfill/-/dialog-polyfill-0.4.10.tgz#c4ea68a0deed4abb59a6a2a025c548b278cd532e"
-  integrity sha512-j5yGMkP8T00UFgyO+78OxiN5vC5dzRQF3BEio+LhNvDbyfxWBsi3sfPArDm54VloaJwy2hm3erEiDWqHRC8rzw==
-
 diff-sequences@^24.9.0:
   version "24.9.0"
   resolved "https://registry.yarnpkg.com/diff-sequences/-/diff-sequences-24.9.0.tgz#5715d6244e2aa65f48bba0bc972db0b0b11e95b5"
@@ -5786,7 +5781,7 @@ firebase-tools@^8.3.0:
     winston "^3.0.0"
     ws "^7.2.3"
 
-firebase@*, firebase@^7.14.4:
+firebase@*:
   version "7.14.4"
   resolved "https://registry.yarnpkg.com/firebase/-/firebase-7.14.4.tgz#c9256bc32e51ebcb93ef7542ef4ed6cc153c6f50"
   integrity sha512-BeI+Jfyg1QyNPY8tD+P0LeVbSqivQm3fEVPCoqVC/oYVusNplZD1LmMI5Swk3Wvh0G0BrSM1nhtv0/nF98fSUg==
@@ -5805,14 +5800,6 @@ firebase@*, firebase@^7.14.4:
     "@firebase/remote-config" "0.1.20"
     "@firebase/storage" "0.3.33"
     "@firebase/util" "0.2.46"
-
-firebaseui@^4.5.0:
-  version "4.5.0"
-  resolved "https://registry.yarnpkg.com/firebaseui/-/firebaseui-4.5.0.tgz#5688c0e14ff87d45a187a61b30fd2315fef7c5dc"
-  integrity sha512-aliOXphs4e2DunKEhTqHV4rSMBninYVo0sqFaNTWw+KXRVp6381tluAhf5v8p208MZS0E8PdLKzMlgf11Fheow==
-  dependencies:
-    dialog-polyfill "^0.4.7"
-    material-design-lite "^1.2.0"
 
 flat-arguments@^1.0.0:
   version "1.0.2"
@@ -8613,11 +8600,6 @@ marks-pane@^1.0.9:
   resolved "https://registry.yarnpkg.com/marks-pane/-/marks-pane-1.0.9.tgz#c0b5ab813384d8cd81faaeb3bbf3397dc809c1b3"
   integrity sha512-Ahs4oeG90tbdPWwAJkAAoHg2lRR8lAs9mZXETNPO9hYg3AkjUJBKi1NQ4aaIQZVGrig7c/3NUV1jANl8rFTeMg==
 
-material-design-lite@^1.2.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/material-design-lite/-/material-design-lite-1.3.0.tgz#d004ce3fee99a1eeb74a78b8a325134a5f1171d3"
-  integrity sha1-0ATOP+6Zoe63Sni4oyUTSl8RcdM=
-
 md5.js@^1.3.4:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/md5.js/-/md5.js-1.3.5.tgz#b5d07b8e3216e3e27cd728d72f70d1e6a342005f"
@@ -8869,6 +8851,11 @@ mississippi@^3.0.0:
     pumpify "^1.3.3"
     stream-each "^1.1.0"
     through2 "^2.0.0"
+
+mitt@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/mitt/-/mitt-2.1.0.tgz#f740577c23176c6205b121b2973514eade1b2230"
+  integrity sha512-ILj2TpLiysu2wkBbWjAmww7TkZb65aiQO+DkVdUTBpBXq+MHYiETENkKFMtsJZX1Lf4pe4QOrTSjIfUwN5lRdg==
 
 mixin-deep@^1.2.0:
   version "1.3.2"

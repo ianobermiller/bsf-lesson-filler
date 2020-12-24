@@ -1,6 +1,4 @@
-import type {User} from 'firebase';
 import {useEffect, useState} from 'react';
-import {auth} from '../Firebase';
 
 export function useCurrentUser(): {
   currentUser: User | null;

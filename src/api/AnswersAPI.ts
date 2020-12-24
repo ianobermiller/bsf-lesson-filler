@@ -1,6 +1,3 @@
-import type {User} from 'firebase';
-import {auth, db} from '../Firebase';
-
 type Answer = {
   answerText: string;
   encoding?: 'base64';
@@ -88,39 +85,5 @@ export async function saveAllAnswers(
   for (const [questionID, answer] of answerByQuestionID) {
     batch.set(answerDoc(userID, questionID), encodeAnswer(answer));
   }
-  batch.delete(userDoc(userID));
   return batch.commit();
-}
-
-export async function migrateUser(
-  anonymousUser: User,
-  newCreds: firebase.auth.AuthCredential,
-): Promise<void> {
-  const anonymousAnswers = await fetchAnswersByQuestionID(anonymousUser.uid);
-
-  // Delete the anonymous user's data
-  let batch = db.batch();
-  for (const questionID of anonymousAnswers.keys()) {
-    batch.delete(answerDoc(anonymousUser.uid, questionID));
-  }
-  batch.delete(userDoc(anonymousUser.uid));
-  await batch.commit();
-
-  // Migrate the anonymous user's data to the real user
-  const newUser = await auth.signInWithCredential(newCreds);
-  const newUserID = newUser.user!.uid;
-  const realAnswers = await fetchAnswersByQuestionID(newUserID);
-  batch = db.batch();
-  for (const [questionID, anonymousAnswer] of anonymousAnswers) {
-    const realAnswer = realAnswers.get(questionID);
-    const mergedAnswer = realAnswer
-      ? realAnswer + '\n\n' + anonymousAnswer
-      : anonymousAnswer;
-    batch.set(answerDoc(newUserID, questionID), encodeAnswer(mergedAnswer), {
-      merge: true,
-    });
-  }
-  await batch.commit();
-
-  await anonymousUser.delete();
 }
