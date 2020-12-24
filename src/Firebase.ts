@@ -1,9 +1,6 @@
-import firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/firestore';
+export const API_KEY = 'AIzaSyDIB_TDku-kof_ni16-YWl9Jb6CZoTzwNA';
 
-// Initialize Cloud Firestore through Firebase, these values are safe to be public
-const firebaseConfig = {
+export const FirebaseConfig = {
   apiKey: 'AIzaSyDIB_TDku-kof_ni16-YWl9Jb6CZoTzwNA',
   authDomain: 'bsf-lesson-filler.firebaseapp.com',
   databaseURL: 'https://bsf-lesson-filler.firebaseio.com',
@@ -13,10 +10,3 @@ const firebaseConfig = {
   appId: '1:469474314174:web:2fb7c3e3d8a7b52fe99bef',
   measurementId: 'G-E8CEK6EJJN',
 };
-
-export const app = firebase.initializeApp(firebaseConfig);
-export const auth = firebase.auth();
-export const db = firebase.firestore(app);
-
-// Note that this could throw with an error code, though it is unlikely
-db.enablePersistence({synchronizeTabs: true});

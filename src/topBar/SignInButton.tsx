@@ -21,8 +21,6 @@ export default function SignInButton(props: Props): JSX.Element | null {
   let text;
   if (!currentUser) {
     text = 'Sign In';
-  } else if (currentUser.isAnonymous) {
-    text = 'Sign In with Email';
   } else {
     text = 'Sign Out';
   }
