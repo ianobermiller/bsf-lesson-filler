@@ -1,10 +1,10 @@
 import {css, cx} from 'emotion';
 import React, {useEffect, useState} from 'react';
-import {saveAllAnswers, subscribeToAnswersByQuestionID} from './api/AnswersAPI';
+import {fetchAnswersByQuestionID, saveAllAnswers} from './api/AnswersAPI';
 import {exportAnswers, importAnswers} from './api/ImportExport';
 import {fetchStudies, Study} from './api/StudiesAPI';
 import {LessonEditor} from './editor/LessonEditor';
-import {useCurrentUser} from './hooks/useCurrentUser';
+import {useCurrentUser, User} from './hooks/useCurrentUser';
 import './styles/Colors';
 import TopBar from './topBar/TopBar';
 
@@ -24,7 +24,8 @@ export default function App() {
     });
   }, []);
 
-  const answersByQuestionID = useSubscribeToAnswersByQuestionID();
+  const {currentUser} = useCurrentUser();
+  const answersByQuestionID = useAnswersByQuestionID(currentUser);
 
   if (!studies) {
     return null;
@@ -56,18 +57,18 @@ export default function App() {
   );
 }
 
-function useSubscribeToAnswersByQuestionID(): Map<string, string> {
-  const {currentUser} = useCurrentUser();
+function useAnswersByQuestionID(currentUser: User | null): Map<string, string> {
   const [answersByQuestionID, setAnswersByQuestionID] = useState<
     Map<string, string>
   >(new Map());
   useEffect(() => {
-    if (currentUser) {
-      return subscribeToAnswersByQuestionID(
-        currentUser.uid,
-        setAnswersByQuestionID,
-      );
+    if (!currentUser) {
+      setAnswersByQuestionID(new Map());
+      return;
     }
+    fetchAnswersByQuestionID(currentUser.id, currentUser.idToken).then(
+      setAnswersByQuestionID,
+    );
   }, [currentUser]);
   return answersByQuestionID;
 }
