@@ -88,7 +88,7 @@ function useSaveAnswer({
 
   useEffect(() => {
     if (currentUser && answer !== savedAnswer) {
-      saveAnswerDebounced(currentUser.uid, questionID, answer);
+      saveAnswerDebounced(currentUser.id, questionID, answer);
     }
   }, [answer, currentUser, questionID, saveAnswerDebounced, savedAnswer]);
 }
