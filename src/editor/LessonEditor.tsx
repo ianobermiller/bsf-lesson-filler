@@ -16,7 +16,7 @@ export const SelectedPassageContext = React.createContext<
 >(() => {});
 
 type Props = {
-  answersByQuestionID: Map<string, string>;
+  answersByQuestionID: Map<string, string> | null;
   lessonID: string;
   studies: Study[];
 };

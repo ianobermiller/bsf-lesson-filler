@@ -1,4 +1,8 @@
-export function exportAnswers(answersByQuestionID: Map<string, string>) {
+export function exportAnswers(answersByQuestionID: Map<string, string> | null) {
+  if (!answersByQuestionID) {
+    return;
+  }
+
   // Convert the map to an object
   const answersObject = Array.from(answersByQuestionID).reduce(
     (result, [questionID, answer]) => {
