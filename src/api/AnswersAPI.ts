@@ -1,4 +1,5 @@
 import {FirebaseConfig} from '../Firebase';
+import {User} from '../hooks/useCurrentUser';
 
 interface Answer {
   answerText: string;
@@ -17,7 +18,7 @@ export async function fetchAnswersByQuestionID(
   userID: string,
   idToken: string,
 ): Promise<Map<string, string>> {
-  const url = `https://firestore.googleapis.com/v1beta1/projects/${FirebaseConfig.projectId}/databases/(default)/documents/users/${userID}/answers`;
+  const url = `https://firestore.googleapis.com/v1/projects/${FirebaseConfig.projectId}/databases/(default)/documents/users/${userID}/answers`;
   const response = await fetch(url, {
     headers: {
       Authorization: `Bearer ${idToken}`,
@@ -58,10 +59,27 @@ function encodeAnswer(text: string): Answer {
 }
 
 export async function saveAnswer(
-  userID: string,
+  user: User,
   questionID: string,
   answerText: string,
-): Promise<void> {}
+): Promise<void> {
+  const answer = encodeAnswer(answerText);
+  const url = `https://firestore.googleapis.com/v1/projects/${FirebaseConfig.projectId}/databases/(default)/documents/users/${user.id}/answers/${questionID}`;
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${user.idToken}`,
+    },
+    body: JSON.stringify({
+      fields: {
+        encoding: {stringValue: answer.encoding},
+        answerText: {stringValue: answer.answerText},
+      },
+    }),
+    method: 'PATCH',
+  });
+  const json = await response.json();
+  console.log(json);
+}
 
 export async function saveAllAnswers(
   userID: string,
