@@ -57,18 +57,19 @@ export default function App() {
   );
 }
 
-function useAnswersByQuestionID(currentUser: User | null): Map<string, string> {
-  const [answersByQuestionID, setAnswersByQuestionID] = useState<
-    Map<string, string>
-  >(new Map());
+function useAnswersByQuestionID(
+  currentUser: User | null,
+): Map<string, string> | null {
+  const [answersByQuestionID, setAnswersByQuestionID] = useState<Map<
+    string,
+    string
+  > | null>(null);
   useEffect(() => {
     if (!currentUser) {
-      setAnswersByQuestionID(new Map());
+      setAnswersByQuestionID(null);
       return;
     }
-    fetchAnswersByQuestionID(currentUser.id, currentUser.idToken).then(
-      setAnswersByQuestionID,
-    );
+    fetchAnswersByQuestionID(currentUser).then(setAnswersByQuestionID);
   }, [currentUser]);
   return answersByQuestionID;
 }

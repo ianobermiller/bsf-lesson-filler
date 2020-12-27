@@ -11,11 +11,16 @@ import {SelectedPassageContext} from './LessonEditor';
 const SAVE_DEBOUNCE_MS = 2000;
 
 type Props = {
+  areAnswersLoaded: boolean;
   question: Question;
   savedAnswer: string;
 };
 
-export function LessonEditorQuestion({question, savedAnswer}: Props) {
+export function LessonEditorQuestion({
+  areAnswersLoaded,
+  question,
+  savedAnswer,
+}: Props) {
   const setSelectedPassage = useContext(SelectedPassageContext);
   const [answer, setAnswer] = useLocalStorage<string>(
     `answer-backup-${question.id}`,
@@ -32,7 +37,12 @@ export function LessonEditorQuestion({question, savedAnswer}: Props) {
   }
 
   // Save data to Firebase
-  useSaveAnswer({answer, questionID: question.id, savedAnswer});
+  useSaveAnswer({
+    answer,
+    areAnswersLoaded,
+    questionID: question.id,
+    savedAnswer,
+  });
   function onChange(e: React.FormEvent<HTMLTextAreaElement>) {
     setAnswer(e.currentTarget.value);
   }
@@ -76,10 +86,12 @@ function useAutoResize(content: string) {
 
 function useSaveAnswer({
   answer,
+  areAnswersLoaded,
   questionID,
   savedAnswer,
 }: {
   answer: string;
+  areAnswersLoaded: boolean;
   questionID: string;
   savedAnswer: string;
 }) {
@@ -87,10 +99,17 @@ function useSaveAnswer({
   const saveAnswerDebounced = useDebounced(saveAnswer, SAVE_DEBOUNCE_MS);
 
   useEffect(() => {
-    if (currentUser && answer !== savedAnswer) {
+    if (areAnswersLoaded && currentUser && answer !== savedAnswer) {
       saveAnswerDebounced(currentUser, questionID, answer);
     }
-  }, [answer, currentUser, questionID, saveAnswerDebounced, savedAnswer]);
+  }, [
+    answer,
+    areAnswersLoaded,
+    currentUser,
+    questionID,
+    saveAnswerDebounced,
+    savedAnswer,
+  ]);
 }
 
 const styles = {

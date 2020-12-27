@@ -6,7 +6,7 @@ import {SelectedPassageContext} from './LessonEditor';
 import {LessonEditorQuestion} from './LessonEditorQuestion';
 
 type Props = {
-  answersByQuestionID: Map<string, string>;
+  answersByQuestionID: Map<string, string> | null;
   day: LessonDay;
 };
 
@@ -23,7 +23,8 @@ export function LessonEditorDay({answersByQuestionID, day}: Props) {
       <i>{day.note}</i>
       {day.questions.map(question => (
         <LessonEditorQuestion
-          savedAnswer={answersByQuestionID.get(question.id) ?? ''}
+          areAnswersLoaded={answersByQuestionID != null}
+          savedAnswer={answersByQuestionID?.get(question.id) ?? ''}
           key={question.id}
           question={question}
         />

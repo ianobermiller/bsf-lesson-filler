@@ -14,14 +14,23 @@ interface AnswerDoc {
   };
 }
 
+function getAnswersURL(userID: string): string {
+  return (
+    'https://firestore.googleapis.com/v1/projects/' +
+    FirebaseConfig.projectId +
+    '/databases/(default)/documents/users/' +
+    userID +
+    '/answers'
+  );
+}
+
 export async function fetchAnswersByQuestionID(
-  userID: string,
-  idToken: string,
+  user: User,
 ): Promise<Map<string, string>> {
-  const url = `https://firestore.googleapis.com/v1/projects/${FirebaseConfig.projectId}/databases/(default)/documents/users/${userID}/answers`;
+  const url = getAnswersURL(user.id);
   const response = await fetch(url, {
     headers: {
-      Authorization: `Bearer ${idToken}`,
+      Authorization: `Bearer ${user.idToken}`,
     },
   });
   const json = await response.json();
@@ -64,7 +73,7 @@ export async function saveAnswer(
   answerText: string,
 ): Promise<void> {
   const answer = encodeAnswer(answerText);
-  const url = `https://firestore.googleapis.com/v1/projects/${FirebaseConfig.projectId}/databases/(default)/documents/users/${user.id}/answers/${questionID}`;
+  const url = getAnswersURL(user.id) + '/' + questionID;
   const response = await fetch(url, {
     headers: {
       Authorization: `Bearer ${user.idToken}`,
