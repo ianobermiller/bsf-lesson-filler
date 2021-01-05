@@ -32,7 +32,9 @@ export default function SignInButton(props: Props): JSX.Element | null {
         }}>
         {text}
       </Button>
-      {!currentUser && isShowingModal && <SignInModal />}
+      {!currentUser && isShowingModal && (
+        <SignInModal onClose={() => setIsShowingModal(false)} />
+      )}
     </>
   );
 }

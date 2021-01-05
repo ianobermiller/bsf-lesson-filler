@@ -41,7 +41,7 @@ export default function TextWithBibleReferences({
     }
     const endIndex = verse.textIndex + verse.textLength;
     parts.push(
-      <abbr
+      <button
         className={styles.verse}
         key={verse.textIndex}
         onClick={() => {
@@ -49,7 +49,7 @@ export default function TextWithBibleReferences({
         }}
         title={verse.passage}>
         {text.slice(verse.textIndex, endIndex)}
-      </abbr>,
+      </button>,
     );
     index = endIndex;
   }
@@ -62,7 +62,13 @@ export default function TextWithBibleReferences({
 
 const styles = {
   verse: css`
+    background: none;
+    border: none;
+    color: inherit;
     cursor: pointer;
+    font-size: inherit;
+    font-weight: inherit;
+    padding: 0;
     text-decoration: underline;
   `,
 };

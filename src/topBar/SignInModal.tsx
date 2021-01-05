@@ -1,22 +1,39 @@
 import {css} from 'emotion';
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import Button from '../components/Button';
 import {UserContext} from '../hooks/useCurrentUser';
 
-export function SignInModal(): JSX.Element {
+interface Props {
+  onClose: () => void;
+}
+
+export function SignInModal({onClose}: Props): JSX.Element {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const {isLoadingUser, loginError, startSignIn, startSignUp} = useContext(
     UserContext,
   );
+
+  const emailRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    emailRef.current?.focus();
+  }, []);
+
   return (
     <>
-      <div className={styles.modalBackground} />
-      <div className={styles.modalRoot}>
+      <div className={styles.modalBackground} onClick={onClose} />
+      <div
+        className={styles.modalRoot}
+        onKeyDown={e => {
+          if (e.key === 'Escape') {
+            onClose();
+          }
+        }}>
         <label htmlFor="email">Email</label>
         <input
           name="email"
           onChange={e => setEmail(e.currentTarget.value)}
+          ref={emailRef}
           type="email"
           value={email}
         />

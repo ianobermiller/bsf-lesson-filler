@@ -25,34 +25,39 @@ export default function LessonSelector({
   return (
     <div className={styles.root}>
       {isBig && (
-        <select
-          className={styles.selector}
-          onChange={e => {
-            onSelectLesson(e.currentTarget.value);
-          }}
-          value={selectedLessonID ?? undefined}>
-          {studies.map(study => (
-            <optgroup
-              key={study.title}
-              label={`${study.title} ${study.startYear}-${study.endYear}`}>
-              {study.lessons.map(lesson => (
-                <option key={lesson.id} value={lesson.id}>
-                  {lesson.verses} - Lesson {lesson.number}
-                  {lesson.date.getTime() !== 0
-                    ? ' - ' + lesson.date.toLocaleDateString()
-                    : ''}
-                </option>
-              ))}
-            </optgroup>
-          ))}
-        </select>
+        <label>
+          <span className="accessible_elem">Select a lesson</span>
+          <select
+            className={styles.selector}
+            onChange={e => {
+              onSelectLesson(e.currentTarget.value);
+            }}
+            value={selectedLessonID ?? undefined}>
+            {studies.map(study => (
+              <optgroup
+                key={study.title}
+                label={`${study.title} ${study.startYear}-${study.endYear}`}>
+                {study.lessons.map(lesson => (
+                  <option key={lesson.id} value={lesson.id}>
+                    {lesson.verses} - Lesson {lesson.number}
+                    {lesson.date.getTime() !== 0
+                      ? ' - ' + lesson.date.toLocaleDateString()
+                      : ''}
+                  </option>
+                ))}
+              </optgroup>
+            ))}
+          </select>
+        </label>
       )}
       <Button
+        aria-label="Previous lesson"
         disabled={!previousLessonID}
         onClick={() => onSelectLesson(previousLessonID)}>
         <TiChevronLeft />
       </Button>
       <Button
+        aria-label="Next lesson"
         disabled={!nextLessonID}
         onClick={() => onSelectLesson(nextLessonID)}>
         <TiChevronRight />
@@ -106,8 +111,7 @@ const styles = {
     font-family: system-ui;
     font-size: var(--font-size-m);
     height: 32px;
-    margin-left: var(--m);
     padding: var(--s) var(--xl) var(--s) var(--m);
-    width: 20em;
+    width: 24em;
   `,
 };

@@ -51,7 +51,7 @@ export function LessonEditorQuestion({
   const textAreaRef = useAutoResize(answer);
 
   return (
-    <div key={question.id}>
+    <label key={question.id}>
       <h3 className={styles.question}>
         <TextWithBibleReferences
           text={question.questionText}
@@ -65,7 +65,7 @@ export function LessonEditorQuestion({
         rows={2}
         value={answer}
       />
-    </div>
+    </label>
   );
 }
 
