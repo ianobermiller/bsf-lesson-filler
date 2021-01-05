@@ -6,6 +6,7 @@ import {Study} from '../api/StudiesAPI';
 import {FullSizeLoadingIndicator} from '../components/FullSizeLoadingIndicator';
 import {useAbortableFetch} from '../hooks/useAbortableFetch';
 import useIsBigScreen from '../hooks/useIsBigScreen';
+import {Footer} from './Footer';
 import {LessonEditorDay} from './LessonEditorDay';
 import {PassageViewer} from './PassageViewer';
 
@@ -66,6 +67,7 @@ export function LessonEditor({
               key={index}
             />
           ))}
+          <Footer />
         </div>
         {selectedPassage === 'notes' ? (
           <Suspense fallback={null}>
