@@ -7,7 +7,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import {refreshUser, signIn} from '../api/UserAPI';
+import {refreshUser, signIn, signUp} from '../api/UserAPI';
 
 export interface User {
   email: string;
@@ -21,6 +21,7 @@ interface UserContext {
   loginError: string | null;
   signOut: () => void;
   startSignIn: (args: {email: string; password: string}) => void;
+  startSignUp: (args: {email: string; password: string}) => void;
 }
 
 export const UserContext = createContext<UserContext>({
@@ -29,6 +30,7 @@ export const UserContext = createContext<UserContext>({
   loginError: null,
   signOut() {},
   startSignIn() {},
+  startSignUp() {},
 });
 
 interface UserProviderProps {
@@ -58,7 +60,6 @@ export function UserProvider({children}: UserProviderProps): ReactElement {
             id: result.localId,
             idToken: result.idToken,
           });
-          setIsLoadingUser(false);
           setLoginError(null);
 
           localStorage.setItem(
@@ -71,6 +72,39 @@ export function UserProvider({children}: UserProviderProps): ReactElement {
         })
         .catch(err => {
           setLoginError(err.message);
+        })
+        .finally(() => {
+          setIsLoadingUser(false);
+        });
+    },
+    [],
+  );
+
+  const startSignUp = useCallback(
+    ({email, password}: {email: string; password: string}) => {
+      setIsLoadingUser(true);
+      signUp(email, password)
+        .then(result => {
+          setCurrentUser({
+            email: result.email,
+            id: result.localId,
+            idToken: result.idToken,
+          });
+          setLoginError(null);
+
+          localStorage.setItem(
+            'auth',
+            JSON.stringify({
+              email: result.email,
+              refreshToken: result.refreshToken,
+            }),
+          );
+        })
+        .catch(err => {
+          setLoginError(err.message);
+        })
+        .finally(() => {
+          setIsLoadingUser(false);
         });
     },
     [],
@@ -107,8 +141,9 @@ export function UserProvider({children}: UserProviderProps): ReactElement {
       loginError,
       signOut,
       startSignIn,
+      startSignUp,
     }),
-    [currentUser, isLoadingUser, loginError, signOut, startSignIn],
+    [currentUser, isLoadingUser, loginError, signOut, startSignIn, startSignUp],
   );
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 }

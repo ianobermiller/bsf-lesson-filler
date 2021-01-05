@@ -34,7 +34,18 @@ export async function fetchAnswersByQuestionID(
       Authorization: `Bearer ${user.idToken}`,
     },
   });
+
+  if (response.status !== 200) {
+    throw new Error('Could not load answers');
+  }
+
   const json = await response.json();
+
+  if (!json.documents) {
+    // No answers saved yet
+    return new Map();
+  }
+
   return new Map(
     json.documents.map((doc: AnswerDoc) => {
       const split = doc.name.split('/');
