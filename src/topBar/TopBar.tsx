@@ -1,9 +1,11 @@
 import {css} from 'emotion';
-import React from 'react';
+import React, {useContext} from 'react';
 import {Study} from '../api/StudiesAPI';
+import {UserContext} from '../hooks/useCurrentUser';
 import useIsBigScreen from '../hooks/useIsBigScreen';
 import LessonSelector from './LessonSelector';
 import Menu from './Menu';
+import SignInButton from './SignInButton';
 
 type Props = {
   exportAnswers: () => void;
@@ -15,6 +17,7 @@ type Props = {
 
 export default function TopBar(props: Props) {
   const isBig = useIsBigScreen();
+  const {currentUser} = useContext(UserContext);
   return (
     <div className={styles.root}>
       <div className={styles.left}>
@@ -25,10 +28,19 @@ export default function TopBar(props: Props) {
           studies={props.studies}
         />
       </div>
-      <Menu
-        exportAnswers={props.exportAnswers}
-        importAnswers={props.importAnswers}
-      />
+      {isBig ? (
+        <div>
+          {currentUser?.email && (
+            <span className={styles.email}>{currentUser?.email}</span>
+          )}
+          <SignInButton />
+        </div>
+      ) : (
+        <Menu
+          exportAnswers={props.exportAnswers}
+          importAnswers={props.importAnswers}
+        />
+      )}
     </div>
   );
 }
@@ -49,5 +61,9 @@ const styles = {
   title: css`
     font-size: var(--font-size-xl);
     margin: var(--m) 0;
+  `,
+  email: css`
+    display: inline-block;
+    margin-right: 12px;
   `,
 };
