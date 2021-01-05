@@ -1,7 +1,8 @@
 import {css, cx} from 'emotion';
-import React, {useRef, useState} from 'react';
+import React, {useContext, useRef, useState} from 'react';
 import {TiThMenu} from 'react-icons/ti';
 import Button from '../components/Button';
+import {UserContext} from '../hooks/useCurrentUser';
 import {useOnClickOutside} from '../hooks/useOnClickOutside';
 import SignInButton from './SignInButton';
 
@@ -13,6 +14,7 @@ type Props = {
 export default function Menu(props: Props): JSX.Element {
   const rootRef = useRef<HTMLDivElement | null>(null);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
+  const {currentUser} = useContext(UserContext);
   useOnClickOutside(rootRef, () => setIsMenuVisible(false));
   return (
     <div className={styles.root} ref={rootRef}>
@@ -21,21 +23,28 @@ export default function Menu(props: Props): JSX.Element {
       </Button>
       <ul className={cx(styles.menu, isMenuVisible && styles.menuVisible)}>
         <li>
+          {currentUser?.email && (
+            <div className={styles.email}>{currentUser?.email}</div>
+          )}
           <SignInButton className={styles.button} />
         </li>
-        <li>
-          <Button className={styles.button} onClick={props.exportAnswers}>
-            Export Data
-          </Button>
-        </li>
-        <li>
-          <Button
-            className={styles.button}
-            disabled={true}
-            onClick={props.importAnswers}>
-            Import Data
-          </Button>
-        </li>
+        {window.location.search.includes('?export') && (
+          <>
+            <li>
+              <Button className={styles.button} onClick={props.exportAnswers}>
+                Export Data
+              </Button>
+            </li>
+            <li>
+              <Button
+                className={styles.button}
+                disabled={true}
+                onClick={props.importAnswers}>
+                Import Data
+              </Button>
+            </li>
+          </>
+        )}
       </ul>
     </div>
   );
@@ -69,5 +78,8 @@ const styles = {
   `,
   menuVisible: css`
     display: block;
+  `,
+  email: css`
+    padding: var(--s) var(--m);
   `,
 };
