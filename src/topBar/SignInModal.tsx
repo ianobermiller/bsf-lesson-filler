@@ -6,7 +6,9 @@ import {UserContext} from '../hooks/useCurrentUser';
 export function SignInModal(): JSX.Element {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const {isLoadingUser, loginError, startSignIn} = useContext(UserContext);
+  const {isLoadingUser, loginError, startSignIn, startSignUp} = useContext(
+    UserContext,
+  );
   return (
     <>
       <div className={styles.modalBackground} />
@@ -33,6 +35,13 @@ export function SignInModal(): JSX.Element {
           }}>
           Sign In
         </Button>
+        <Button
+          disabled={isLoadingUser || !email || !password}
+          onClick={() => {
+            startSignUp({email, password});
+          }}>
+          Sign Up
+        </Button>
       </div>
     </>
   );
@@ -50,6 +59,7 @@ const styles = {
   `,
   modalRoot: css`
     background: var(--background-empty);
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
     padding: var(--m);
@@ -57,6 +67,8 @@ const styles = {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    width: 400px;
+    max-width: 100vw;
     z-index: 1;
 
     & > label {
@@ -74,11 +86,15 @@ const styles = {
       line-height: 32px;
       margin-bottom: var(--m);
       padding: 0 var(--s);
-      width: 240px;
+    }
+
+    & > button:not(:last-of-type) {
+      margin-bottom: var(--m);
+      margin-top: var(--s);
     }
   `,
   loginError: css`
     color: var(--content-negative);
-    margin: var(--m) 0;
+    margin-bottom: var(--m);
   `,
 };
