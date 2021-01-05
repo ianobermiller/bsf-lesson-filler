@@ -31,7 +31,7 @@ export function LessonEditorQuestion({
   const [previousSavedAnswer, setPreviousSavedAnswer] = useState<string>(
     savedAnswer,
   );
-  if (savedAnswer !== previousSavedAnswer) {
+  if (savedAnswer && savedAnswer !== previousSavedAnswer) {
     setAnswer(savedAnswer);
     setPreviousSavedAnswer(savedAnswer);
   }
