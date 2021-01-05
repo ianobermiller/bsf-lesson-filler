@@ -69,7 +69,11 @@ function useAnswersByQuestionID(
       setAnswersByQuestionID(null);
       return;
     }
-    fetchAnswersByQuestionID(currentUser).then(setAnswersByQuestionID);
+    fetchAnswersByQuestionID(currentUser)
+      .then(setAnswersByQuestionID)
+      .catch(e => {
+        alert(e.message);
+      });
   }, [currentUser]);
   return answersByQuestionID;
 }
