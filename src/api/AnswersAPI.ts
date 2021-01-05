@@ -1,6 +1,7 @@
 import * as Base64 from 'js-base64';
 import {FirebaseConfig} from '../Firebase';
 import {User} from '../hooks/useCurrentUser';
+import {jsonOrThrow} from './APIUtils';
 
 interface Answer {
   answerText: string;
@@ -25,6 +26,10 @@ function getAnswersURL(userID: string): string {
   );
 }
 
+interface FetchAnswersResponse {
+  documents?: Array<AnswerDoc>;
+}
+
 export async function fetchAnswersByQuestionID(
   user: User,
 ): Promise<Map<string, string>> {
@@ -35,11 +40,10 @@ export async function fetchAnswersByQuestionID(
     },
   });
 
-  if (response.status !== 200) {
-    throw new Error('Could not load answers');
-  }
-
-  const json = await response.json();
+  const json = await jsonOrThrow<FetchAnswersResponse>(
+    response,
+    'Could not load answers',
+  );
 
   if (!json.documents) {
     // No answers saved yet
@@ -47,7 +51,7 @@ export async function fetchAnswersByQuestionID(
   }
 
   return new Map(
-    json.documents.map((doc: AnswerDoc) => {
+    json.documents.map(doc => {
       const split = doc.name.split('/');
       const questionID = split[split.length - 1];
       const answer = {
