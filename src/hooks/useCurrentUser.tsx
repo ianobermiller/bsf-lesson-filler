@@ -44,6 +44,8 @@ export function UserProvider({children}: UserProviderProps): ReactElement {
     setCurrentUser(null);
     setIsLoadingUser(false);
     setLoginError(null);
+
+    localStorage.removeItem('auth');
   }, []);
 
   const startSignIn = useCallback(
