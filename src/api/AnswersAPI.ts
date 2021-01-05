@@ -1,3 +1,4 @@
+import * as Base64 from 'js-base64';
 import {FirebaseConfig} from '../Firebase';
 import {User} from '../hooks/useCurrentUser';
 
@@ -27,7 +28,7 @@ function getAnswersURL(userID: string): string {
 export async function fetchAnswersByQuestionID(
   user: User,
 ): Promise<Map<string, string>> {
-  const url = getAnswersURL(user.id);
+  const url = getAnswersURL(user.id) + '?pageSize=1000';
   const response = await fetch(url, {
     headers: {
       Authorization: `Bearer ${user.idToken}`,
@@ -51,7 +52,7 @@ function decodeAnswer(answer: Answer): string {
   switch (answer.encoding) {
     case 'base64':
       try {
-        return atob(answer.answerText);
+        return Base64.decode(answer.answerText);
       } catch {
         console.log('Could not decode answer: ', answer);
         return '';
@@ -64,7 +65,7 @@ function encodeAnswer(text: string): Answer {
   // Simple obfuscation so the text isn't trivially readable. Not intended
   // to be secure, just so that you don't accidentally read a user's private
   // thoughts while viewing the database.
-  return {answerText: btoa(text), encoding: 'base64'};
+  return {answerText: Base64.encode(text), encoding: 'base64'};
 }
 
 export async function saveAnswer(
@@ -74,7 +75,7 @@ export async function saveAnswer(
 ): Promise<void> {
   const answer = encodeAnswer(answerText);
   const url = getAnswersURL(user.id) + '/' + questionID;
-  const response = await fetch(url, {
+  await fetch(url, {
     headers: {
       Authorization: `Bearer ${user.idToken}`,
     },
@@ -86,8 +87,6 @@ export async function saveAnswer(
     }),
     method: 'PATCH',
   });
-  const json = await response.json();
-  console.log(json);
 }
 
 export async function saveAllAnswers(
