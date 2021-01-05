@@ -31,7 +31,7 @@ export async function jsonOrThrow<T>(
   if (response.status === 200) {
     return json;
   }
-  debugger;
+
   const code = json?.error?.message ?? '';
   let message = MESSAGE_BY_ERROR_CODE[code];
   if (!message && response.status === 401) {
