@@ -53,10 +53,14 @@ export function LessonEditor({
         <div className={styles.lesson}>
           <h1 className={styles.title}>
             {verses && (
-              <span onClick={() => verses && setSelectedPassage(verses)}>
-                {verses}
+              <>
+                <span
+                  className={styles.verses}
+                  onClick={() => verses && setSelectedPassage(verses)}>
+                  {verses}
+                </span>
                 {' - '}
-              </span>
+              </>
             )}
             Lesson {lesson.number}
           </h1>
@@ -97,5 +101,9 @@ const styles = {
     flex: 1 1 0;
     overflow: auto;
     padding: 0 var(--l) var(--l) var(--l);
+  `,
+  verses: css`
+    cursor: pointer;
+    text-decoration: underline;
   `,
 };
