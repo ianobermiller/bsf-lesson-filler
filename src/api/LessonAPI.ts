@@ -76,4 +76,5 @@ async function fetchLessonUncached(
 export const fetchLesson = cacheInLocalStorage(
   fetchLessonUncached,
   lessonID => `lesson-${lessonID}`,
+  {alwaysFetch: true},
 );
