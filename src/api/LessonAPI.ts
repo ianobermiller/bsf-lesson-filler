@@ -1,5 +1,4 @@
-import {cacheInLocalStorage} from './cacheInLocalStorage';
-import {HOST} from './StudiesAPI';
+import STUDIES_DATA from './data.json';
 
 type APILesson = {
   id: string;
@@ -50,14 +49,18 @@ type Quote = {
   verse: string;
 };
 
-async function fetchLessonUncached(
+export async function fetchLesson(
   lessonID: string,
   signal: AbortSignal,
 ): Promise<Lesson> {
-  const result = await fetch(`${HOST}/lessons/${lessonID}?lang=eng`, {
-    signal,
-  });
-  const {dayQuestions, ...otherApiLesson}: APILesson = await result.json();
+  // const result = await fetch(`${HOST}/lessons/${lessonID}?lang=eng`, {
+  //   signal,
+  // });
+  // const {dayQuestions, ...otherApiLesson}: APILesson = await result.json();
+
+  const {dayQuestions, ...otherApiLesson}: APILesson =
+    // @ts-ignore
+    STUDIES_DATA[`LESSON/${lessonID}?lang=eng`];
   return {
     ...otherApiLesson,
     number: Number(/(\d+$)/.exec(lessonID)?.[1]),
@@ -73,8 +76,8 @@ async function fetchLessonUncached(
   };
 }
 
-export const fetchLesson = cacheInLocalStorage(
-  fetchLessonUncached,
-  lessonID => `lesson-${lessonID}`,
-  {alwaysFetch: true},
-);
+// export const fetchLesson = cacheInLocalStorage(
+//   fetchLessonUncached,
+//   lessonID => `lesson-${lessonID}`,
+//   {alwaysFetch: true},
+// );

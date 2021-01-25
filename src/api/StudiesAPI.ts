@@ -1,4 +1,5 @@
-import {cacheInLocalStorage} from './cacheInLocalStorage';
+import STUDIES_DATA from './data.json';
+
 export const HOST = 'https://bsf.turbozv.com';
 
 type APILessonEntry = {
@@ -57,9 +58,11 @@ const GENESIS_LESSON_DATES = [
   '2021-05-10',
 ];
 
-async function fetchStudiesUncached(): Promise<Study[]> {
-  const result = await fetch(`${HOST}/lessons?lang=eng`);
-  const json = await result.json();
+export async function fetchStudies(): Promise<Study[]> {
+  // const result = await fetch(`${HOST}/lessons?lang=eng`);
+  // const json = await result.json();
+  const json = STUDIES_DATA['BOOK/?lang=eng'];
+
   return json.booklist.map((study: APIStudy) => {
     let title = '';
     let startYear = 2000;
@@ -117,8 +120,8 @@ async function fetchStudiesUncached(): Promise<Study[]> {
   });
 }
 
-export const fetchStudies = cacheInLocalStorage(
-  fetchStudiesUncached,
-  () => 'studies',
-  {alwaysFetch: true},
-);
+// export const fetchStudies = cacheInLocalStorage(
+//   fetchStudiesUncached,
+//   () => 'studies',
+//   {alwaysFetch: true},
+// );
