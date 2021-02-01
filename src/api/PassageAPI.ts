@@ -27,7 +27,7 @@ async function fetchNLTPassageHTMLUncached(
 ): Promise<string> {
   // http://api.nlt.to/Documentation
   const result = await fetch(
-    `http://api.nlt.to/api/passages?ref=${encodeVerse(
+    `https://api.nlt.to/api/passages?ref=${encodeVerse(
       verse,
     )}&version=NLT&key=${NLT_API_KEY}`,
     {signal},
