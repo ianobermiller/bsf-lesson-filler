@@ -35,6 +35,9 @@ export function LessonEditorDay({answersByQuestionID, day}: Props) {
 
 const styles = {
   dayHeading: css`
+    background: var(--background-primary);
     font-size: var(--font-size-l);
+    position: sticky;
+    top: 0;
   `,
 };
