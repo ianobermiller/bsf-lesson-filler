@@ -67,7 +67,7 @@ export async function fetchLesson(
     days: Object.values(dayQuestions).map(apiDay => {
       const [title, note] = apiDay.title.split('\n');
       return {
-        title,
+        title: title.replace(/ ?\.$/, ''),
         note,
         questions: apiDay.questions,
         readVerse: apiDay.readVerse,
