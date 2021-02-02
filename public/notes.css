@@ -153,6 +153,7 @@ a {
 .sidebar {
   background-color: var(--background-secondary);
   border-radius: var(--radius-l);
+  box-sizing: border-box;
   padding: var(--xl);
 }
 

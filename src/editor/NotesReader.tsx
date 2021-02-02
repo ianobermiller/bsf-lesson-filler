@@ -1,15 +1,15 @@
-import {css} from 'emotion';
 import React from 'react';
 import {EpubView} from 'react-reader';
+import {ReferencePane} from './ReferencePane';
 
-export default function NotesReader({lessonID}: {lessonID: string}) {
+interface Props {
+  lessonID: string;
+  onClose: () => void;
+}
+
+export default function NotesReader({lessonID, onClose}: Props) {
   return (
-    <div
-      className={css`
-        flex: 1 1 0;
-        overflow: scroll;
-        position: relative;
-      `}>
+    <ReferencePane onClose={onClose} isVisible={true}>
       <EpubView
         epubOptions={{
           manager: 'continuous',
@@ -18,6 +18,6 @@ export default function NotesReader({lessonID}: {lessonID: string}) {
         }}
         url={`${process.env.PUBLIC_URL}/notes/${lessonID}.epub`}
       />
-    </div>
+    </ReferencePane>
   );
 }

@@ -75,11 +75,14 @@ export function LessonEditor({
         </div>
         {selectedPassage === 'notes' ? (
           <Suspense fallback={null}>
-            <NotesReader lessonID={lessonID} />
+            <NotesReader
+              lessonID={lessonID}
+              onClose={() => setSelectedPassage(null)}
+            />
           </Suspense>
         ) : (
           <PassageViewer
-            onSwipeClose={() => setSelectedPassage(null)}
+            onClose={() => setSelectedPassage(null)}
             selectedPassage={viewingPassage ?? null}
           />
         )}

@@ -1,5 +1,5 @@
 import {css, cx} from 'emotion';
-import React, {useCallback, useContext} from 'react';
+import React, {useCallback} from 'react';
 import {
   fetchESVPassageHTML,
   fetchNIVPassageHTML,
@@ -8,21 +8,17 @@ import {
 import Button from '../components/Button';
 import {FullSizeLoadingIndicator} from '../components/FullSizeLoadingIndicator';
 import {useAbortableFetch} from '../hooks/useAbortableFetch';
-import useIsBigScreen from '../hooks/useIsBigScreen';
 import useLocalStorage from '../hooks/useLocalStorage';
-import useSwipeToDismiss from '../hooks/useSwipeToDismiss';
 import {BIG, NOT_BIG} from '../styles/MediaQueries';
-import {SelectedPassageContext} from './LessonEditor';
+import {ReferencePane} from './ReferencePane';
 
 export function PassageViewer({
-  onSwipeClose,
+  onClose,
   selectedPassage,
 }: {
-  onSwipeClose: () => void;
+  onClose: () => void;
   selectedPassage: string | null;
 }): JSX.Element {
-  const isBig = useIsBigScreen();
-  const setSelectedPassage = useContext(SelectedPassageContext);
   const [bible, setBible] = useLocalStorage<keyof typeof BIBLES>(
     'selectedBible',
     'niv',
@@ -51,23 +47,9 @@ export function PassageViewer({
     );
   }
 
-  const props = useSwipeToDismiss(onSwipeClose);
-
   return (
-    <div
-      className={cx(
-        styles.passageViewer,
-        !selectedPassage && styles.passageViewerHidden,
-      )}
-      {...props}>
-      <div className={styles.buttons}>
-        {!isBig && (
-          <Button
-            className={styles.backButton}
-            onClick={() => setSelectedPassage(null)}>
-            {'\u25c0'}
-          </Button>
-        )}
+    <ReferencePane
+      buttons={
         <div className={styles.switchBibles}>
           {(Object.keys(BIBLES) as [keyof typeof BIBLES]).map(key => (
             <Button
@@ -78,54 +60,17 @@ export function PassageViewer({
             </Button>
           ))}
         </div>
-      </div>
+      }
+      onClose={onClose}
+      isVisible={!!selectedPassage}>
       {content}
-    </div>
+    </ReferencePane>
   );
 }
 
 const styles = {
-  passageViewer: css`
-    @media ${NOT_BIG} {
-      background: var(--background-primary);
-      bottom: 0;
-      display: flex;
-      flex-direction: column;
-      left: 0;
-      position: fixed;
-      right: 0;
-      top: 0;
-      transition: transform ease-in-out 100ms;
-    }
-
-    @media ${BIG} {
-      flex: 1 1 0;
-      overflow: scroll;
-      position: relative;
-    }
-  `,
-  passageViewerHidden: css`
-    transform: translateX(100%);
-  `,
   content: css`
     padding: 0 var(--l) var(--l) var(--l);
-    @media ${NOT_BIG} {
-      flex: 1 1 auto;
-      overflow: scroll;
-    }
-  `,
-  backButton: css`
-    border-radius: 0;
-    margin-right: var(--m);
-  `,
-  buttons: css`
-    display: flex;
-    flex-shrink: 0;
-
-    @media ${BIG} {
-      float: right;
-      margin: var(--s) var(--s) var(--l) var(--l);
-    }
   `,
   switchBibles: css`
     @media ${NOT_BIG} {
