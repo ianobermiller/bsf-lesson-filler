@@ -8,6 +8,7 @@ type TouchState = {
 
 export default function useSwipeToDismiss(onSwipeClose: () => void) {
   const ref = useRef<HTMLDivElement | null>(null);
+  const isTransformingRef = useRef<boolean>(false);
   const touchStateRef = useRef<TouchState>({
     startTime: 0,
     startX: 0,
@@ -28,9 +29,19 @@ export default function useSwipeToDismiss(onSwipeClose: () => void) {
     }
 
     const touch = evt.changedTouches[0];
-    const delta = touch.pageX - touchStateRef.current.startX;
-    root.style.transform = `translateX(${delta}px)`;
-    root.style.transition = 'none';
+    const deltaX = touch.pageX - touchStateRef.current.startX;
+    const absDeltaX = Math.abs(deltaX);
+    const absDeltaY = Math.abs(touch.pageY - touchStateRef.current.startY);
+
+    if (absDeltaX > absDeltaY && absDeltaY < 16 && absDeltaX > 16) {
+      isTransformingRef.current = true;
+      root.style.touchAction = 'none';
+    }
+
+    if (isTransformingRef.current) {
+      root.style.transform = `translateX(${Math.max(0, deltaX)}px)`;
+      root.style.transition = 'none';
+    }
   }
 
   function onTouchEnd(evt: React.TouchEvent<HTMLDivElement>) {
@@ -38,13 +49,16 @@ export default function useSwipeToDismiss(onSwipeClose: () => void) {
     if (!root) {
       return;
     }
+    isTransformingRef.current = false;
+    root.style.touchAction = 'unset';
+
     const touch = evt.changedTouches[0];
     const deltaX = touch.pageX - touchStateRef.current.startX;
     const deltaY = touch.pageY - touchStateRef.current.startY;
     const deltaTime = Date.now() - touchStateRef.current.startTime;
 
     // We want a primarily horizontal drag
-    if (deltaX > deltaY) {
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
       // Then check for a drag more than halfway across or a quick drag with a minimum distance
       if (deltaX > window.innerWidth / 2 || (deltaX > 60 && deltaTime < 500)) {
         onSwipeClose();
