@@ -2,15 +2,18 @@ import {useCallback, useEffect, useState} from 'react';
 import {saveAnswer} from '../api/AnswersAPI';
 import {useCurrentUser, User} from '../hooks/useCurrentUser';
 import useDebounced from '../hooks/useDebounced';
-import {SAVE_DEBOUNCE_MS} from './LessonEditorQuestion';
+
+const SAVE_DEBOUNCE_MS = 1000;
 
 export type SaveState =
+  | {
+      type: 'none';
+    }
   | {
       type: 'saving';
     }
   | {
       type: 'saved';
-      timestamp: number;
     }
   | {
       type: 'error';
@@ -28,16 +31,12 @@ export function useSaveAnswer({
   questionID: string;
   savedAnswer: string;
 }) {
-  const [saveState, setSaveState] = useState<SaveState>({
-    type: 'saved',
-    timestamp: 0,
-  });
+  const [saveState, setSaveState] = useState<SaveState>({type: 'none'});
   const {currentUser} = useCurrentUser();
   const saveAnswerWrapped = useCallback(
     (user: User, questionID: string, answerText: string) => {
-      setSaveState({type: 'saving'});
       saveAnswer(user, questionID, answerText)
-        .then(() => setSaveState({type: 'saved', timestamp: Date.now()}))
+        .then(() => setSaveState({type: 'saved'}))
         .catch(error => setSaveState({type: 'error', error}));
     },
     [],
@@ -46,6 +45,7 @@ export function useSaveAnswer({
 
   useEffect(() => {
     if (areAnswersLoaded && currentUser && answer !== savedAnswer) {
+      setSaveState({type: 'saving'});
       saveAnswerDebounced(currentUser, questionID, answer);
     }
   }, [

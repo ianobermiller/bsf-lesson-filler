@@ -7,8 +7,6 @@ import {SelectedPassageContext} from './LessonEditor';
 import {SaveIndicator} from './SaveIndicator';
 import {useSaveAnswer} from './useSaveAnswer';
 
-export const SAVE_DEBOUNCE_MS = 2000;
-
 type Props = {
   areAnswersLoaded: boolean;
   question: Question;

@@ -39,5 +39,6 @@ const styles = {
     font-size: var(--font-size-l);
     position: sticky;
     top: 0;
+    z-index: 1; /* required to cover a child with position relative (LessonEditorQuestion) */
   `,
 };
