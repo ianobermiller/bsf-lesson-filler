@@ -4,6 +4,7 @@ import {Question} from '../api/LessonAPI';
 import TextWithBibleReferences from '../components/TextWithBibleReferences';
 import useLocalStorage from '../hooks/useLocalStorage';
 import {SelectedPassageContext} from './LessonEditor';
+import {SaveIndicator} from './SaveIndicator';
 import {useSaveAnswer} from './useSaveAnswer';
 
 export const SAVE_DEBOUNCE_MS = 2000;
@@ -56,7 +57,7 @@ export function LessonEditorQuestion({
           onPassageClicked={setSelectedPassage}
         />
       </h3>
-      <div className={styles.saveState}>{saveState.type}</div>
+      <SaveIndicator saveState={saveState} />
       <textarea
         className={styles.textarea}
         onChange={onChange}
@@ -101,9 +102,5 @@ const styles = {
     font-size: var(--font-size-m);
     padding: var(--s);
     width: 100%;
-  `,
-  saveState: css`
-    position: absolute;
-    right: 0;
   `,
 };
