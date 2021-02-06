@@ -154,6 +154,7 @@ a {
   background-color: var(--background-secondary);
   border-radius: var(--radius-l);
   box-sizing: border-box;
+  margin: 1.5em auto;
   padding: var(--xl);
 }
 
