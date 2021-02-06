@@ -1,9 +1,15 @@
 import {css} from 'emotion';
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import {saveAnswer} from '../api/AnswersAPI';
 import {Question} from '../api/LessonAPI';
 import TextWithBibleReferences from '../components/TextWithBibleReferences';
-import {useCurrentUser} from '../hooks/useCurrentUser';
+import {useCurrentUser, User} from '../hooks/useCurrentUser';
 import useDebounced from '../hooks/useDebounced';
 import useLocalStorage from '../hooks/useLocalStorage';
 import {SelectedPassageContext} from './LessonEditor';
@@ -37,7 +43,7 @@ export function LessonEditorQuestion({
   }
 
   // Save data to Firebase
-  useSaveAnswer({
+  const saveState = useSaveAnswer({
     answer,
     areAnswersLoaded,
     questionID: question.id,
@@ -51,13 +57,14 @@ export function LessonEditorQuestion({
   const textAreaRef = useAutoResize(answer);
 
   return (
-    <label key={question.id}>
+    <label className={styles.root} key={question.id}>
       <h3 className={styles.question}>
         <TextWithBibleReferences
           text={question.questionText}
           onPassageClicked={setSelectedPassage}
         />
       </h3>
+      <div className={styles.saveState}>{saveState.type}</div>
       <textarea
         className={styles.textarea}
         onChange={onChange}
@@ -84,6 +91,19 @@ function useAutoResize(content: string) {
   return textAreaRef;
 }
 
+type SaveState =
+  | {
+      type: 'saving';
+    }
+  | {
+      type: 'saved';
+      timestamp: number;
+    }
+  | {
+      type: 'error';
+      error: Error;
+    };
+
 function useSaveAnswer({
   answer,
   areAnswersLoaded,
@@ -95,8 +115,21 @@ function useSaveAnswer({
   questionID: string;
   savedAnswer: string;
 }) {
+  const [saveState, setSaveState] = useState<SaveState>({
+    type: 'saved',
+    timestamp: 0,
+  });
   const {currentUser} = useCurrentUser();
-  const saveAnswerDebounced = useDebounced(saveAnswer, SAVE_DEBOUNCE_MS);
+  const saveAnswerWrapped = useCallback(
+    (user: User, questionID: string, answerText: string) => {
+      setSaveState({type: 'saving'});
+      saveAnswer(user, questionID, answerText)
+        .then(() => setSaveState({type: 'saved', timestamp: Date.now()}))
+        .catch(error => setSaveState({type: 'error', error}));
+    },
+    [],
+  );
+  const saveAnswerDebounced = useDebounced(saveAnswerWrapped, SAVE_DEBOUNCE_MS);
 
   useEffect(() => {
     if (areAnswersLoaded && currentUser && answer !== savedAnswer) {
@@ -110,9 +143,13 @@ function useSaveAnswer({
     saveAnswerDebounced,
     savedAnswer,
   ]);
+  return saveState;
 }
 
 const styles = {
+  root: css`
+    position: relative;
+  `,
   question: css`
     font-size: var(--font-size-m);
     font-weight: normal;
@@ -127,5 +164,9 @@ const styles = {
     font-size: var(--font-size-m);
     padding: var(--s);
     width: 100%;
+  `,
+  saveState: css`
+    position: absolute;
+    right: 0;
   `,
 };
