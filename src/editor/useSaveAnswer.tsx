@@ -37,7 +37,15 @@ export function useSaveAnswer({
     (user: User, questionID: string, answerText: string) => {
       saveAnswer(user, questionID, answerText)
         .then(() => setSaveState({type: 'saved'}))
-        .catch(error => setSaveState({type: 'error', error}));
+        .catch(error => {
+          setSaveState({type: 'error', error});
+          // Save to local storage on failure
+          localStorage.setItem(
+            `answer-backup-${questionID}`,
+            // Stringify for backwards compatibility
+            JSON.stringify(answerText),
+          );
+        });
     },
     [],
   );

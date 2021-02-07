@@ -2,7 +2,6 @@ import {css} from 'emotion';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import {Question} from '../api/LessonAPI';
 import TextWithBibleReferences from '../components/TextWithBibleReferences';
-import useLocalStorage from '../hooks/useLocalStorage';
 import {SelectedPassageContext} from './LessonEditor';
 import {SaveIndicator} from './SaveIndicator';
 import {useSaveAnswer} from './useSaveAnswer';
@@ -19,10 +18,16 @@ export function LessonEditorQuestion({
   savedAnswer,
 }: Props) {
   const setSelectedPassage = useContext(SelectedPassageContext);
-  const [answer, setAnswer] = useLocalStorage<string>(
-    `answer-backup-${question.id}`,
-    savedAnswer,
-  );
+  const [answer, setAnswer] = useState(savedAnswer);
+
+  useEffect(() => {
+    const answerBackup = localStorage.getItem(`answer-backup-${question.id}`);
+    if (answerBackup) {
+      const parsed = JSON.parse(answerBackup);
+      localStorage.removeItem(`answer-backup-${question.id}`);
+      setAnswer(existing => [existing, parsed].join('\n\n'));
+    }
+  }, [question.id]);
 
   // Update local answer when a new one is loaded
   const [previousSavedAnswer, setPreviousSavedAnswer] = useState<string>(
