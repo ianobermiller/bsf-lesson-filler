@@ -3,6 +3,7 @@ import {injectGlobal} from 'emotion';
 injectGlobal`
   ::-webkit-scrollbar {
     -webkit-appearance: none;
+    height: 7px;
     width: 7px;
   }
   ::-webkit-scrollbar-thumb {

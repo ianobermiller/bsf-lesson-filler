@@ -54,7 +54,7 @@ const styles = {
 
     @media ${BIG} {
       flex: 1 1 0;
-      overflow: scroll;
+      overflow-y: scroll;
       position: relative;
     }
   `,
@@ -64,7 +64,7 @@ const styles = {
   contentWrapper: css`
     @media ${NOT_BIG} {
       flex: 1 1 auto;
-      overflow: scroll;
+      overflow-y: scroll;
     }
   `,
   backButton: css`
