@@ -5,10 +5,12 @@ import {exportAnswers, importAnswers} from './api/ImportExport';
 import {fetchStudies, Study} from './api/StudiesAPI';
 import {LessonEditor} from './editor/LessonEditor';
 import {useCurrentUser, User} from './hooks/useCurrentUser';
+import {SideNav} from './nav/SideNav';
 import './styles/Colors';
 import TopBar from './topBar/TopBar';
 
 export default function App() {
+  const [isSideNavVisible, setIsSideNavVisible] = useState(false);
   const [studies, setStudies] = useState<Study[] | null>(null);
   const [selectedLessonID, setSelectedLessonID] = useState<string | null>(null);
   useEffect(() => {
@@ -37,11 +39,19 @@ export default function App() {
         styles.app,
         navigator.userAgent.includes('Chrome/81') && styles.chrome81FontFix,
       )}>
+      <SideNav
+        isVisible={isSideNavVisible}
+        onClose={() => setIsSideNavVisible(false)}
+        onSelectLesson={setSelectedLessonID}
+        selectedLessonID={selectedLessonID}
+        studies={studies}
+      />
       <TopBar
         exportAnswers={() => exportAnswers(answersByQuestionID)}
         importAnswers={() => importAnswers(saveAllAnswers)}
         onSelectLesson={setSelectedLessonID}
         selectedLessonID={selectedLessonID}
+        showSideNav={() => setIsSideNavVisible(true)}
         studies={studies}
       />
       <div className={styles.underTop}>

@@ -1,21 +1,24 @@
 import {css, cx} from 'emotion';
-import React from 'react';
+import React, {forwardRef} from 'react';
 
-export default function Button({
-  className,
-  isSelected,
-  ...otherProps
-}: React.DetailedHTMLProps<
+type Props = React.DetailedHTMLProps<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
   HTMLButtonElement
-> & {isSelected?: boolean}): JSX.Element {
+> & {isSelected?: boolean};
+
+const Button = forwardRef<HTMLButtonElement, Props>(function Button(
+  {className, isSelected, ...otherProps}: Props,
+  ref,
+): JSX.Element {
   return (
     <button
       {...otherProps}
       className={cx(styles.root, isSelected && styles.selected, className)}
+      ref={ref}
     />
   );
-}
+});
+export default Button;
 
 const styles = {
   root: css`

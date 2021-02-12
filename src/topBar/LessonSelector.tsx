@@ -1,6 +1,6 @@
 import {css} from 'emotion';
 import React from 'react';
-import {TiChevronLeft, TiChevronRight} from 'react-icons/ti';
+import {RiArrowLeftLine, RiArrowRightLine} from 'react-icons/ri';
 import {Study} from '../api/StudiesAPI';
 import Button from '../components/Button';
 import useIsBigScreen from '../hooks/useIsBigScreen';
@@ -54,13 +54,13 @@ export default function LessonSelector({
         aria-label="Previous lesson"
         disabled={!previousLessonID}
         onClick={() => onSelectLesson(previousLessonID)}>
-        <TiChevronLeft />
+        <RiArrowLeftLine />
       </Button>
       <Button
         aria-label="Next lesson"
         disabled={!nextLessonID}
         onClick={() => onSelectLesson(nextLessonID)}>
-        <TiChevronRight />
+        <RiArrowRightLine />
       </Button>
     </div>
   );

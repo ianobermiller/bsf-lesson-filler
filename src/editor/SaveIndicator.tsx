@@ -1,6 +1,6 @@
 import {css, cx} from 'emotion';
 import React, {useEffect, useState} from 'react';
-import {TiArrowSync, TiInputChecked, TiWarning} from 'react-icons/ti';
+import {RiAlertLine, RiCheckFill, RiRepeat2Line} from 'react-icons/ri';
 import {SaveState} from './useSaveAnswer';
 
 const SHOW_SAVED_INDICATOR_MS = 2000;
@@ -31,17 +31,17 @@ export function SaveIndicator({saveState}: Props): JSX.Element | null {
     case 'none':
       break;
     case 'saving':
-      icon = <TiArrowSync />;
+      icon = <RiRepeat2Line />;
       title = 'Saving';
       break;
     case 'saved':
       if (isSavedVisible) {
-        icon = <TiInputChecked />;
+        icon = <RiCheckFill />;
         title = 'Saved';
       }
       break;
     case 'error':
-      icon = <TiWarning />;
+      icon = <RiAlertLine />;
       title = 'Error Saving';
       break;
   }

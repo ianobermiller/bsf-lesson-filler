@@ -1,6 +1,6 @@
 import {css, cx} from 'emotion';
 import React, {useContext, useRef, useState} from 'react';
-import {TiThMenu} from 'react-icons/ti';
+import {RiMenuLine} from 'react-icons/ri';
 import Button from '../components/Button';
 import {UserContext} from '../hooks/useCurrentUser';
 import {useOnClickOutside} from '../hooks/useOnClickOutside';
@@ -20,7 +20,7 @@ export default function Menu(props: Props): JSX.Element {
   return (
     <div className={styles.root} ref={rootRef}>
       <Button onClick={() => setIsMenuVisible(v => !v)}>
-        <TiThMenu />
+        <RiMenuLine />
       </Button>
       <ul className={cx(styles.menu, isMenuVisible && styles.menuVisible)}>
         <li>

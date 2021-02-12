@@ -1,6 +1,8 @@
 import {css} from 'emotion';
 import React, {useContext} from 'react';
+import {RiMenuLine} from 'react-icons/ri';
 import {Study} from '../api/StudiesAPI';
+import Button from '../components/Button';
 import {UserContext} from '../hooks/useCurrentUser';
 import useIsBigScreen from '../hooks/useIsBigScreen';
 import LessonSelector from './LessonSelector';
@@ -12,6 +14,7 @@ type Props = {
   importAnswers: () => void;
   onSelectLesson: (lessonID: string) => void;
   selectedLessonID: string | null;
+  showSideNav: () => void;
   studies: Study[];
 };
 
@@ -21,6 +24,9 @@ export default function TopBar(props: Props) {
   return (
     <div className={styles.root}>
       <div className={styles.left}>
+        <Button onClick={props.showSideNav}>
+          <RiMenuLine size={20} />
+        </Button>
         <div className={styles.title}>{isBig ? 'BSF Lessons' : 'BSF'}</div>
         <LessonSelector
           onSelectLesson={props.onSelectLesson}
