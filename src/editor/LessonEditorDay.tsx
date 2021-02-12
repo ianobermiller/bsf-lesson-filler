@@ -2,6 +2,7 @@ import {css} from 'emotion';
 import React, {useContext} from 'react';
 import {LessonDay} from '../api/LessonAPI';
 import TextWithBibleReferences from '../components/TextWithBibleReferences';
+import ZIndex from '../styles/ZIndex';
 import {SelectedPassageContext} from './LessonEditor';
 import {LessonEditorQuestion} from './LessonEditorQuestion';
 
@@ -39,6 +40,6 @@ const styles = {
     font-size: var(--font-size-l);
     position: sticky;
     top: 0;
-    z-index: 1; /* required to cover a child with position relative (LessonEditorQuestion) */
+    z-index: ${ZIndex.DayHeading}; /* required to cover a child with position relative (LessonEditorQuestion) */
   `,
 };

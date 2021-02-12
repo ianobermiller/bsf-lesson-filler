@@ -2,6 +2,7 @@ import {css} from 'emotion';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import Button from '../components/Button';
 import {UserContext} from '../hooks/useCurrentUser';
+import ZIndex from '../styles/ZIndex';
 
 interface Props {
   onClose: () => void;
@@ -72,7 +73,7 @@ const styles = {
     position: fixed;
     right: 0;
     top: 0;
-    z-index: 1;
+    z-index: ${ZIndex.ModalBackground};
   `,
   modalRoot: css`
     background: var(--background-empty);
@@ -86,7 +87,7 @@ const styles = {
     transform: translate(-50%, -50%);
     width: 400px;
     max-width: 100vw;
-    z-index: 1;
+    z-index: ${ZIndex.Modal};
 
     & > label {
       display: block;

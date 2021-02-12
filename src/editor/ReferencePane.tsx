@@ -4,6 +4,7 @@ import Button from '../components/Button';
 import useIsBigScreen from '../hooks/useIsBigScreen';
 import useSwipeToDismiss from '../hooks/useSwipeToDismiss';
 import {BIG, NOT_BIG} from '../styles/MediaQueries';
+import ZIndex from '../styles/ZIndex';
 
 interface Props {
   buttons?: ReactElement;
@@ -50,6 +51,7 @@ const styles = {
       right: 0;
       top: 0;
       transition: transform ease-in-out 100ms;
+      z-index: ${ZIndex.ReferencePane};
     }
 
     @media ${BIG} {

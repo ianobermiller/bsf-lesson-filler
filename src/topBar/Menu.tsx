@@ -4,6 +4,7 @@ import {TiThMenu} from 'react-icons/ti';
 import Button from '../components/Button';
 import {UserContext} from '../hooks/useCurrentUser';
 import {useOnClickOutside} from '../hooks/useOnClickOutside';
+import ZIndex from '../styles/ZIndex';
 import SignInButton from './SignInButton';
 
 type Props = {
@@ -65,7 +66,7 @@ const styles = {
     right: 0;
     top: 100%;
     width: 200px;
-    z-index: 1;
+    z-index: ${ZIndex.Menu};
 
     > li {
       list-style-type: none;
