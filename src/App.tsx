@@ -1,7 +1,6 @@
 import {css, cx} from 'emotion';
 import React, {useEffect, useState} from 'react';
-import {fetchAnswersByQuestionID, saveAllAnswers} from './api/AnswersAPI';
-import {exportAnswers, importAnswers} from './api/ImportExport';
+import {fetchAnswersByQuestionID} from './api/AnswersAPI';
 import {fetchStudies, Study} from './api/StudiesAPI';
 import {LessonEditor} from './editor/LessonEditor';
 import {useCurrentUser, User} from './hooks/useCurrentUser';
@@ -41,14 +40,15 @@ export default function App() {
       )}>
       <SideNav
         isVisible={isSideNavVisible}
-        onClose={() => setIsSideNavVisible(false)}
+        onClose={() => {
+          setIsSideNavVisible(false);
+          document.getElementById('show-side-nav')?.focus();
+        }}
         onSelectLesson={setSelectedLessonID}
         selectedLessonID={selectedLessonID}
         studies={studies}
       />
       <TopBar
-        exportAnswers={() => exportAnswers(answersByQuestionID)}
-        importAnswers={() => importAnswers(saveAllAnswers)}
         onSelectLesson={setSelectedLessonID}
         selectedLessonID={selectedLessonID}
         showSideNav={() => setIsSideNavVisible(true)}
@@ -63,6 +63,7 @@ export default function App() {
           />
         )}
       </div>
+      <div id="modal"></div>
     </div>
   );
 }

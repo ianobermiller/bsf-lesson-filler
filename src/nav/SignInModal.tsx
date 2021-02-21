@@ -2,13 +2,13 @@ import {css} from 'emotion';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import Button from '../components/Button';
 import {UserContext} from '../hooks/useCurrentUser';
-import ZIndex from '../styles/ZIndex';
+import {Modal} from './Modal';
 
 interface Props {
   onClose: () => void;
 }
 
-export function SignInModal({onClose}: Props): JSX.Element {
+export function SignInModal({onClose}: Props): JSX.Element | null {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const {isLoadingUser, loginError, startSignIn, startSignUp} = useContext(
@@ -21,8 +21,7 @@ export function SignInModal({onClose}: Props): JSX.Element {
   }, []);
 
   return (
-    <>
-      <div className={styles.modalBackground} onClick={onClose} />
+    <Modal onClose={onClose}>
       <div
         className={styles.modalRoot}
         onKeyDown={e => {
@@ -61,33 +60,15 @@ export function SignInModal({onClose}: Props): JSX.Element {
           Sign Up
         </Button>
       </div>
-    </>
+    </Modal>
   );
 }
 
 const styles = {
-  modalBackground: css`
-    background: #000a;
-    bottom: 0;
-    left: 0;
-    position: fixed;
-    right: 0;
-    top: 0;
-    z-index: ${ZIndex.ModalBackground};
-  `,
   modalRoot: css`
-    background: var(--background-empty);
-    box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    padding: var(--m);
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     width: 400px;
-    max-width: 100vw;
-    z-index: ${ZIndex.Modal};
 
     & > label {
       display: block;

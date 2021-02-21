@@ -4,16 +4,21 @@ import React, {forwardRef} from 'react';
 type Props = React.DetailedHTMLProps<
   React.ButtonHTMLAttributes<HTMLButtonElement>,
   HTMLButtonElement
-> & {isSelected?: boolean};
+> & {isSelected?: boolean; use?: 'flat'};
 
 const Button = forwardRef<HTMLButtonElement, Props>(function Button(
-  {className, isSelected, ...otherProps}: Props,
+  {className, isSelected, use, ...otherProps}: Props,
   ref,
 ): JSX.Element {
   return (
     <button
       {...otherProps}
-      className={cx(styles.root, isSelected && styles.selected, className)}
+      className={cx(
+        styles.root,
+        isSelected && styles.selected,
+        use === 'flat' && styles.flat,
+        className,
+      )}
       ref={ref}
     />
   );
@@ -53,5 +58,8 @@ const styles = {
     &:active {
       background: var(--control-background-selected);
     }
+  `,
+  flat: css`
+    background: transparent;
   `,
 };
