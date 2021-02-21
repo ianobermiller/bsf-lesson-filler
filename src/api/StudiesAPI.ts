@@ -43,7 +43,6 @@ const GENESIS_LESSON_DATES = [
   '2021-01-25',
   '2021-02-01',
   '2021-02-08',
-  '2021-02-15',
   '2021-02-22',
   '2021-03-01',
   '2021-03-08',
@@ -56,6 +55,7 @@ const GENESIS_LESSON_DATES = [
   '2021-04-26',
   '2021-05-03',
   '2021-05-10',
+  '2021-05-17',
 ];
 
 export async function fetchStudies(): Promise<Study[]> {
