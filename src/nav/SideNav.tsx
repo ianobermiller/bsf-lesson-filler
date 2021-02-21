@@ -117,10 +117,10 @@ const styles = {
     right: 0;
   `,
   bottom: css`
-    box-shadow: 0 0 12px #1115;
     padding: var(--m) var(--m) var(--m) var(--m);
   `,
   navItems: css`
+    box-shadow: inset 0px 11px 8px -10px #1115, inset 0px -11px 8px -11px #1115;
     display: flex;
     flex-direction: column;
     list-style: none;
