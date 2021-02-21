@@ -5,6 +5,7 @@ import {Study} from '../api/StudiesAPI';
 import Button from '../components/Button';
 import {UserContext} from '../hooks/useCurrentUser';
 import useIsBigScreen from '../hooks/useIsBigScreen';
+import {NOT_BIG} from '../styles/MediaQueries';
 import LessonSelector from './LessonSelector';
 import Menu from './Menu';
 import SignInButton from './SignInButton';
@@ -59,6 +60,9 @@ const styles = {
     flex-shrink: 0;
     justify-content: space-between;
     padding: 0 var(--m) 0 var(--l);
+    @media ${NOT_BIG} {
+      padding: 0 var(--m) 0 var(--m);
+    }
   `,
   left: css`
     align-items: center;

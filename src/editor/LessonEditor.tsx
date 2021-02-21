@@ -6,6 +6,7 @@ import {Study} from '../api/StudiesAPI';
 import {FullSizeLoadingIndicator} from '../components/FullSizeLoadingIndicator';
 import {useAbortableFetch} from '../hooks/useAbortableFetch';
 import useIsBigScreen from '../hooks/useIsBigScreen';
+import {NOT_BIG} from '../styles/MediaQueries';
 import {Footer} from './Footer';
 import {LessonEditorDay} from './LessonEditorDay';
 import {PassageViewer} from './PassageViewer';
@@ -104,6 +105,10 @@ const styles = {
     flex: 1 1 0;
     overflow: auto;
     padding: 0 var(--l) var(--l) var(--l);
+
+    @media ${NOT_BIG} {
+      padding: 0 var(--m) var(--m) var(--m);
+    }
   `,
   verses: css`
     cursor: pointer;
