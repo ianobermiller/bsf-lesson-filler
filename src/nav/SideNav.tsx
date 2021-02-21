@@ -117,7 +117,8 @@ const styles = {
     right: 0;
   `,
   bottom: css`
-    padding: var(--l) var(--m) var(--m) var(--m);
+    box-shadow: 0 0 12px #1115;
+    padding: var(--m) var(--m) var(--m) var(--m);
   `,
   navItems: css`
     display: flex;
@@ -139,7 +140,7 @@ const styles = {
     margin-bottom: var(--xs);
   `,
   email: css`
-    margin-bottom: var(--s);
+    margin-bottom: var(--m);
   `,
   signIn: css`
     width: 100%;
