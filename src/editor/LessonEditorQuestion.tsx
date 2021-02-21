@@ -26,7 +26,7 @@ export function LessonEditorQuestion({
       const parsed = JSON.parse(answerBackup);
       localStorage.removeItem(`answer-backup-${question.id}`);
       if (parsed) {
-        setAnswer(existing => [existing, parsed].join('\n\n'));
+        setAnswer(existing => [existing, parsed].join('\n\n').trim());
       }
     }
   }, [question.id]);
