@@ -58,7 +58,7 @@ export async function fetchAnswersByQuestionID(
         encoding: doc.fields.encoding?.stringValue,
         answerText: doc.fields.answerText.stringValue,
       };
-      return [questionID, decodeAnswer(answer)];
+      return [questionID, decodeAnswer(answer).trim()];
     }),
   );
 }
@@ -88,7 +88,7 @@ export async function saveAnswer(
   questionID: string,
   answerText: string,
 ): Promise<void> {
-  const answer = encodeAnswer(answerText);
+  const answer = encodeAnswer(answerText.trim());
   const url = getAnswersURL(user.id) + '/' + questionID;
   await fetch(url, {
     headers: {
