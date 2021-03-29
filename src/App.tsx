@@ -16,9 +16,10 @@ export default function App() {
     fetchStudies().then(studies => {
       setStudies(studies);
 
+      // Truncate to the 12am of today
+      const today = new Date(new Date().toDateString()).getTime();
       const nextLesson = studies[0].lessons.find(
-        lesson =>
-          lesson.date.getTime() === 0 || lesson.date.getTime() > Date.now(),
+        lesson => lesson.date.getTime() === 0 || lesson.date.getTime() > today,
       );
       const selectedLesson = nextLesson ?? studies?.[0].lessons.slice(-1)[0];
       setSelectedLessonID(selectedLesson?.id ?? null);
