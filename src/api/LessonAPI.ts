@@ -21,7 +21,7 @@ type APILessonDay = {
 type APIQuestion = {
   id: string;
   questionText: string;
-  quotes: APIQuote;
+  quotes: APIQuote[];
 };
 type APIQuote = {
   book: string;
@@ -42,7 +42,7 @@ export type LessonDay = {
 export type Question = {
   id: string;
   questionText: string;
-  quotes: Quote;
+  quotes: Quote[];
 };
 type Quote = {
   book: string;
@@ -65,12 +65,22 @@ export async function fetchLesson(
     ...otherApiLesson,
     number: Number(/(\d+$)/.exec(lessonID)?.[1]),
     days: Object.values(dayQuestions).map(apiDay => {
-      const [title, note] = apiDay.title.split('\n');
+      const [title, note = ''] = apiDay.title.split('\n');
       return {
-        title: title.replace(/ ?\.$/, ''),
-        note,
-        questions: apiDay.questions,
-        readVerse: apiDay.readVerse,
+        title: title.replace(/ ?\.$/, '').trim(),
+        note: note.trim(),
+        questions: apiDay.questions.map(({id, questionText, quotes}) => ({
+          id: id.trim(),
+          questionText: questionText.trim(),
+          quotes: quotes.map(({book, verse}) => ({
+            book: book.trim(),
+            verse: verse.trim(),
+          })),
+        })),
+        readVerse: apiDay.readVerse?.map(({book, verse}) => ({
+          book: book.trim(),
+          verse: verse.trim(),
+        })),
       };
     }),
   };
