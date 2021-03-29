@@ -20,9 +20,11 @@ export function SignInModal({onClose}: Props): JSX.Element | null {
     emailRef.current?.focus();
   }, []);
 
+  const canSignInOrUp = !isLoadingUser && email && password;
+
   return (
     <Modal onClose={onClose}>
-      <div
+      <form
         className={styles.modalRoot}
         onKeyDown={e => {
           if (e.key === 'Escape') {
@@ -46,20 +48,17 @@ export function SignInModal({onClose}: Props): JSX.Element | null {
         />
         {loginError && <div className={styles.loginError}>{loginError}</div>}
         <Button
-          disabled={isLoadingUser || !email || !password}
-          onClick={() => {
-            startSignIn({email, password});
-          }}>
+          disabled={!canSignInOrUp}
+          onClick={() => startSignIn({email, password})}
+          type="submit">
           Sign In
         </Button>
         <Button
-          disabled={isLoadingUser || !email || !password}
-          onClick={() => {
-            startSignUp({email, password});
-          }}>
+          disabled={!canSignInOrUp}
+          onClick={() => startSignUp({email, password})}>
           Sign Up
         </Button>
-      </div>
+      </form>
     </Modal>
   );
 }
