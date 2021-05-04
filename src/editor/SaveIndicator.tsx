@@ -42,7 +42,7 @@ export function SaveIndicator({saveState}: Props): JSX.Element | null {
       break;
     case 'error':
       icon = <RiAlertLine />;
-      title = 'Error Saving';
+      title = 'Error Saving: ' + saveState.error.message;
       break;
   }
 

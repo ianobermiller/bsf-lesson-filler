@@ -1,7 +1,7 @@
 import * as Base64 from 'js-base64';
 import {FirebaseConfig} from '../Firebase';
 import {User} from '../hooks/useCurrentUser';
-import {jsonOrThrow} from './APIUtils';
+import {fetchJSON} from './APIUtils';
 
 interface Answer {
   answerText: string;
@@ -34,16 +34,13 @@ export async function fetchAnswersByQuestionID(
   user: User,
 ): Promise<Map<string, string>> {
   const url = getAnswersURL(user.id) + '?pageSize=1000';
-  const response = await fetch(url, {
+  const json = await fetchJSON<FetchAnswersResponse>({
+    url,
     headers: {
       Authorization: `Bearer ${user.idToken}`,
     },
+    defaultErrorMessage: 'Could not load answers',
   });
-
-  const json = await jsonOrThrow<FetchAnswersResponse>(
-    response,
-    'Could not load answers',
-  );
 
   if (!json.documents) {
     // No answers saved yet
@@ -90,7 +87,8 @@ export async function saveAnswer(
 ): Promise<void> {
   const answer = encodeAnswer(answerText.trim());
   const url = getAnswersURL(user.id) + '/' + questionID;
-  await fetch(url, {
+  return await fetchJSON({
+    url,
     headers: {
       Authorization: `Bearer ${user.idToken}`,
     },
@@ -101,6 +99,7 @@ export async function saveAnswer(
       },
     }),
     method: 'PATCH',
+    defaultErrorMessage: 'Failed to save answer',
   });
 }
 

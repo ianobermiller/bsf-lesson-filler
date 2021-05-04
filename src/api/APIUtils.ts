@@ -22,7 +22,17 @@ interface ErrorWithCode extends Error {
   code: string;
 }
 
-export async function jsonOrThrow<T>(
+interface FetchParams extends RequestInit {
+  url: string;
+  defaultErrorMessage: string;
+}
+
+export async function fetchJSON<T>(params: FetchParams): Promise<T> {
+  const result = await fetch(params.url, params);
+  return jsonOrThrow(result, params.defaultErrorMessage);
+}
+
+async function jsonOrThrow<T>(
   response: Response,
   defaultMessage: string,
 ): Promise<T> {

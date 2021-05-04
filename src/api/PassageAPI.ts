@@ -1,3 +1,4 @@
+import {fetchJSON} from './APIUtils';
 import {cacheInLocalStorage} from './cacheInLocalStorage';
 
 const ESV_API_KEY = 'af6bd99bf499439955bc65857f56eb432ab657ad';
@@ -6,11 +7,12 @@ async function fetchESVPassageHTMLUncached(
   verse: string,
   signal: AbortSignal,
 ): Promise<string> {
-  const result = await fetch(
-    `https://api.esv.org/v3/passage/html/?q=${encodeVerse(verse)}`,
-    {headers: {Authorization: `Token ${ESV_API_KEY}`}, signal},
-  );
-  const json = await result.json();
+  const json = await fetchJSON<{passages: string[]}>({
+    url: `https://api.esv.org/v3/passage/html/?q=${encodeVerse(verse)}`,
+    headers: {Authorization: `Token ${ESV_API_KEY}`},
+    signal,
+    defaultErrorMessage: 'Failed to fetch ESV passage',
+  });
   return json.passages[0];
 }
 

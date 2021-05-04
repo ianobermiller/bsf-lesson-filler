@@ -1,5 +1,5 @@
 import {API_KEY} from '../Firebase';
-import {jsonOrThrow} from './APIUtils';
+import {fetchJSON} from './APIUtils';
 
 interface SignUpResult {
   idToken: string; //	A Firebase Auth ID token for the newly created user.
@@ -14,19 +14,16 @@ export async function signUp(
   password: string,
 ): Promise<SignUpResult> {
   // https://firebase.google.com/docs/reference/rest/auth#section-create-email-password
-  const response = await fetch(
-    `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`,
-    {
-      method: 'POST',
-      body: JSON.stringify({
-        email,
-        password,
-        returnSecureToken: true,
-      }),
-    },
-  );
-
-  return jsonOrThrow(response, 'Could not sign up user');
+  return await fetchJSON({
+    url: `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`,
+    method: 'POST',
+    body: JSON.stringify({
+      email,
+      password,
+      returnSecureToken: true,
+    }),
+    defaultErrorMessage: 'Could not sign up user',
+  });
 }
 
 interface SignInResult {
@@ -43,19 +40,16 @@ export async function signIn(
   password: string,
 ): Promise<SignInResult> {
   // https://firebase.google.com/docs/reference/rest/auth#section-sign-in-email-password
-  const response = await fetch(
-    `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`,
-    {
-      method: 'POST',
-      body: JSON.stringify({
-        email,
-        password,
-        returnSecureToken: true,
-      }),
-    },
-  );
-
-  return jsonOrThrow(response, 'Could not authenticate user');
+  return await fetchJSON({
+    url: `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`,
+    method: 'POST',
+    body: JSON.stringify({
+      email,
+      password,
+      returnSecureToken: true,
+    }),
+    defaultErrorMessage: 'Could not authenticate user',
+  });
 }
 
 interface RefreshUserResult {
@@ -72,16 +66,13 @@ export async function refreshUser(
   refreshToken: string,
 ): Promise<RefreshUserResult> {
   // https://firebase.google.com/docs/reference/rest/auth#section-refresh-token
-  const response = await fetch(
-    `https://securetoken.googleapis.com/v1/token?key=${API_KEY}`,
-    {
-      method: 'POST',
-      body: JSON.stringify({
-        grant_type: 'refresh_token',
-        refresh_token: refreshToken,
-      }),
-    },
-  );
-
-  return jsonOrThrow(response, 'Could not refresh token');
+  return await fetchJSON({
+    url: `https://securetoken.googleapis.com/v1/token?key=${API_KEY}`,
+    method: 'POST',
+    body: JSON.stringify({
+      grant_type: 'refresh_token',
+      refresh_token: refreshToken,
+    }),
+    defaultErrorMessage: 'Could not refresh token',
+  });
 }
