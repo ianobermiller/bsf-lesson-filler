@@ -41,6 +41,7 @@ export function UserProvider({children}: UserProviderProps): ReactElement {
   const [isLoadingUser, setIsLoadingUser] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [loginError, setLoginError] = useState<string | null>(null);
+  const [expiresAt, setExpiresAt] = useState<number | null>(null);
 
   const signOut = useCallback(() => {
     setCurrentUser(null);
@@ -110,29 +111,51 @@ export function UserProvider({children}: UserProviderProps): ReactElement {
     [],
   );
 
-  useEffect(() => {
+  const refresh = useCallback(async () => {
     const authJSON = localStorage.getItem('auth');
     const parsed = authJSON && JSON.parse(authJSON);
-    if (parsed) {
-      refreshUser(parsed.refreshToken).then(result => {
-        setCurrentUser({
-          email: parsed.email,
-          id: result.user_id,
-          idToken: result.id_token,
-        });
-        setIsLoadingUser(false);
-        setLoginError(null);
-
-        localStorage.setItem(
-          'auth',
-          JSON.stringify({
-            email: parsed.email,
-            refreshToken: result.refresh_token,
-          }),
-        );
-      });
+    if (!parsed) {
+      return;
     }
+
+    const result = await refreshUser(parsed.refreshToken);
+
+    setCurrentUser({
+      email: parsed.email,
+      id: result.user_id,
+      idToken: result.id_token,
+    });
+    setIsLoadingUser(false);
+    setLoginError(null);
+    setExpiresAt(Math.floor(Date.now() / 1000) + parseInt(result.expires_in));
+
+    localStorage.setItem(
+      'auth',
+      JSON.stringify({
+        email: parsed.email,
+        refreshToken: result.refresh_token,
+      }),
+    );
   }, []);
+
+  // Refresh the token on first load
+  useEffect(() => {
+    refresh();
+  }, [refresh]);
+
+  // Refresh the token if it expires
+  useEffect(() => {
+    if (expiresAt == null) {
+      return;
+    }
+
+    const intervalID = setInterval(() => {
+      if (Date.now() / 1000 >= expiresAt) {
+        refresh();
+      }
+    }, 1000);
+    return () => clearInterval(intervalID);
+  }, [expiresAt, refresh]);
 
   const value = useMemo(
     () => ({
